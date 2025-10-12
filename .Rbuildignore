@@ -1,3 +1,5 @@
 .Rbuildignore
+.gitignore
+.git
 ^doc$
 ^Meta$
