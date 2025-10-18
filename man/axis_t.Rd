@@ -48,7 +48,7 @@ of the same index type as \code{x}. The results can be used for manual creation
 of axes in plots.
 }
 \examples{
-\dontrun{
+\donttest{
 # load graphics
 library(graphics)
 # artificial data

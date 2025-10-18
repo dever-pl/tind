@@ -32,14 +32,18 @@
 #' @examples
 #' today()
 #' now()
-#' # milisecond accuracy
+#' # millisecond accuracy
 #' now(digits = 3)
 #' # check current date and time in different time zones
-#' \dontrun{
+#' if ("Asia/Tokyo" %in% OlsonNames()) {
 #' now("Asia/Tokyo")
 #' today("Asia/Tokyo")
+#' }
+#' if ("Europe/Warsaw" %in% OlsonNames()) {
 #' now("Europe/Warsaw")
 #' today("Europe/Warsaw")
+#' }
+#' if ("America/New_York" %in% OlsonNames()) {
 #' now("America/New_York")
 #' today("America/New_York")
 #' }
@@ -72,18 +76,14 @@ now <- function(tz = NULL, digits = 0)
 #' selected locale and character set / code page setting.
 #'
 #' @section Locale Settings:
-#' Unfortunately, locale and character set naming is not standardised across
-#' different operating systems. Under Linux, Mac, and other Unixes
-#' locale is usually of the form \code{xx_XX} (\code{xx} for language,
+#' Unfortunately, locale and character set naming were not standardised across
+#' different operating systems for many years. On modern operating systems,
+#' however, locale is usually of the form \code{xx_XX} (\code{xx} for language,
 #' \code{XX} for country) optionally followed by a dot and a character set
-#' identifier, for example, \code{UTF-8}. Under Windows locale should be of the form
-#' \code{Language} or \code{Language_Country} optionally followed by a dot
-#' and a 3-5 digit code page identifier. See Examples for the most popular
-#' operating systems.
+#' identifier, for example, \code{UTF-8}.
 #'
 #' \code{"C"} is a special locale that should always be available and
 #' defaults to American English.
-#'
 #'
 #' @param locale a character value determining locale or \code{NULL} (default,
 #'               interpreted as the current system locale).
@@ -98,51 +98,35 @@ now <- function(tz = NULL, digits = 0)
 #' @seealso \code{\link{format}} for formatting objects of \code{tind} class.
 #'
 #' @examples
-#' \dontrun{
-#' ## Linux, Unix, Mac
-#' # English abbreviated month names
-#' month_names("en_GB")
-#' # French month names
-#' month_names("fr_FR.UTF-8", FALSE)
-#' # German abbreviated month names
-#' month_names("de_DE.UTF-8")
-#' # Polish abbreviated month names
-#' month_names("pl_PL.UTF-8")
-#' # English weekday names
-#' weekday_names("en_GB", FALSE)
-#' # French abbreviated weekday names
-#' weekday_names("fr_FR.UTF-8")
-#' # German weekday names
-#' weekday_names("de_DE.UTF-8", FALSE)
-#' # Polish abbreviated weekday names
-#' weekday_names("pl_PL.UTF-8")
-#' # US am/pm indicators
-#' ampm_indicators("en_US")
-#' # UK am/pm indicators
-#' ampm_indicators("en_GB")
+#' # current system locale
+#' month_names()
+#' weekday_names()
+#' try(
+#' ampm_indicators()
+#' )
 #'
-#' ## Windows
+#' try({
 #' # English abbreviated month names
-#' month_names("English")
+#' print(month_names("en_GB"))
 #' # French month names
-#' month_names("French", FALSE)
+#' print(month_names("fr_FR.UTF-8", FALSE))
 #' # German abbreviated month names
-#' month_names("German")
+#' print(month_names("de_DE.UTF-8"))
 #' # Polish abbreviated month names
-#' month_names("Polish")
+#' print(month_names("pl_PL.UTF-8"))
 #' # English weekday names
-#' weekday_names("English", FALSE)
+#' print(weekday_names("en_GB", FALSE))
 #' # French abbreviated weekday names
-#' weekday_names("French")
+#' print(weekday_names("fr_FR.UTF-8"))
 #' # German weekday names
-#' weekday_names("German", FALSE)
+#' print(weekday_names("de_DE.UTF-8", FALSE))
 #' # Polish abbreviated weekday names
-#' weekday_names("Polish")
+#' print(weekday_names("pl_PL.UTF-8"))
 #' # US am/pm indicators
-#' ampm_indicators("English_United States")
+#' print(ampm_indicators("en_US"))
 #' # UK am/pm indicators
-#' ampm_indicators("English_United Kingdom")
-#' }
+#' print(ampm_indicators("en_GB"))
+#' })
 #'
 NULL
 
@@ -764,16 +748,14 @@ easter <- function(y)
 #' date_time_split(nw)
 #'
 #' # corner cases (with warnings)
-#' \dontrun{
-#' if ("Europe/Warsaw" %in% OlsonNames()) {
+#' if ("Europe/Warsaw" %in% OlsonNames()) try({
 #'     # 2020-10-25 had 25h with 02:00 repeated
 #'     date_time("2020-10-25", 0:2, tz = "Europe/Warsaw")
-#' }
-#' if ("Europe/Warsaw" %in% OlsonNames()) {
+#' })
+#' if ("Europe/Warsaw" %in% OlsonNames()) try({
 #'     # 2021-03-28 had 23h with 02:00 missing
 #'     date_time("2021-03-28", 0:2, tz = "Europe/Warsaw")
-#' }
-#' }
+#' })
 #'
 #' @name date_time
 #'

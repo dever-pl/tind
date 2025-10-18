@@ -71,6 +71,17 @@
 #'
 #' @param e1,e2 a \code{tind}, \code{tdiff}, \code{tinterval}, or a numeric vector.
 #'
+#' @return Comparison operators and \code{!} return logical vectors.
+#'
+#' Differences of time indices are returned as objects of \code{tdiff} class,
+#' except for arguments of type \code{"i"} or \code{"n"} (integer/numeric
+#' indices), in which case an integer or numeric vector is returned.
+#'
+#' Shifting time indices and time intervals produces time indices and time
+#' intervals, respectively.
+#'
+#' Operations involving time differences return time differences.
+#'
 #' @seealso \code{\link{tind}} class and its constructor,
 #' \code{\link{calendrical-computations}} for calendrical computations.
 #'
@@ -116,14 +127,14 @@
 #' }
 #'
 #' @name Ops
-#' @aliases + - * / %% %/% == != < <= > >=
+#' @aliases + - * / %% %/% == != < <= > >= !
 #'
 NULL
 
 
 
 ## NOTE: Below, there is a workaround to address limitations of S3 dispatch
-## mechanism esp. prior to introduction of 'chooseOpsMethod' in 4.3.0.
+## mechanism, esp. prior to the introduction of 'chooseOpsMethod' in 4.3.0.
 ## Here, we first forward everything to `Ops.tind` and dispatch from there.
 ## This might be adjusted to use 'chooseOpsMethod' (or maybe a newer mechanism)
 ## at some point.
@@ -507,14 +518,19 @@ NULL
 #' @param differences an integer value.
 #' @param ... (ignored) further arguments passed to or from other methods.
 #'
+#' @return An object of \code{tdiff} class, except for \code{x} argument
+#' of \code{tind} class of type \code{"i"} or \code{"n"} (integer/numeric
+#' indices), in which case an integer or numeric vector is returned.
+#'
 #' @seealso \link{Ops}.
 #'
 #' @examples
 #' (nn <- sample(1:10))
 #' (x <- today() + nn)
-#' # should be the same
+#' # all 3 should be the same
 #' diff(x, 2, 2)
 #' as.tdiff(diff(nn, 2, 2), "d")
+#' diff(as.tdiff(nn, "d"), 2, 2)
 #'
 #' @name diff
 #'

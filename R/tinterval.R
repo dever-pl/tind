@@ -8,7 +8,6 @@
 # ############## #
 
 
-
 # tinterval constructor
 # ###################################################################
 
@@ -56,9 +55,6 @@
 #' all date-time indices falling on one of those two days, so exactly \code{2025-08-02 00:00}
 #' or after but before \code{2025-08-04 00:00}.
 #'
-#' @seealso \link{set-ops} for description of set operations on time intervals,
-#' \code{\link{match_t}} for matching time indices to time intervals.
-#'
 #' @param start an object of \code{tind} class or an R object coercible to it,
 #'              beginning of the interval(s).
 #' @param end an object of \code{tind} class or an R object coercible to it,
@@ -77,9 +73,29 @@
 #'             (\code{"..."} by default).
 #' @param aux a logical value, if \code{TRUE} (the default), auxiliary
 #'            information (time spans of intervals) is added to the output.
+#' @param i an integer vector of indices or a logical vector indicating selection.
+#' @param value replacement value, should be coercible to \code{tinterval}.
 #' @param empty a character string used to mark empty intervals (\code{"-"} by default).
 #' @param object an object of \code{tinterval} class.
 #'
+#' @return \code{tinterval}, \code{\%--\%}, and \code{as.tinterval} return
+#' objects of \code{tinterval} class.
+#'
+#' \code{is.tinterval} returns a logical value.
+#'
+#' In general, methods for \code{tinterval} return objects of \code{tinterval} class.
+#'
+#' \code{as.character} and \code{format} return character vectors.
+#'
+#' \code{as.list} and \code{as.data.frame} return a two-element list and
+#' a two-column data frame, respectively. Names are set to \code{c("start", "end")}.
+#'
+#' \code{print} returns its argument invisibly and is used for its side effect.
+#'
+#' \code{summary} returns an object of class \code{c("summaryDefault", "table")}.
+#'
+#' @seealso \link{set-ops} for the description of set operations on time intervals,
+#' \code{\link{match_t}} for matching time indices to time intervals.
 #'
 #' @name tinterval
 #'
@@ -443,7 +459,7 @@ length.tinterval <- function(x) length(x$start)
 # indexing
 # ###################################################################
 
-#' @keywords internal
+#' @rdname tinterval
 #' @export
 `[.tinterval` <- function(x, i)
 {
@@ -452,12 +468,12 @@ length.tinterval <- function(x) length(x$start)
 }
 
 
-#' @keywords internal
+#' @rdname tinterval
 #' @export
 `[[.tinterval` <- function(x, i) .tinterval(x$start[[i]], x$end[[i]])
 
 
-#' @keywords internal
+#' @rdname tinterval
 #' @export
 `[<-.tinterval` <- function(x, i, value)
 {
@@ -480,7 +496,7 @@ length.tinterval <- function(x) length(x$start)
 }
 
 
-#' @keywords internal
+#' @rdname tinterval
 #' @export
 `[[<-.tinterval` <- function(x, i, value)
 {

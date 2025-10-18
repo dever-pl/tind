@@ -303,7 +303,7 @@
 #' \code{\link{scale_tind}} for creating axes with \pkg{ggplot2}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load graphics
 #' library(graphics)
 #' # artificial data
@@ -368,12 +368,15 @@ axis_t <- function(x, limits = NULL, format = NULL, locale = NULL,
 #' @param n.breaks an integer value, desired number of breaks.
 #' @param ... further arguments passed to \code{\link[graphics]{axis}}.
 #'
+#' @return Same as for \code{\link[graphics]{axis}}, used for its side effect,
+#' which is to add time axis to an existing plot.
+#'
 #' @seealso \code{\link{pretty}} for computing pretty breakpoints,
 #' \code{\link{axis_t}} for calculating axis parameters,
 #' \code{\link{scale_tind}} for creating axes with \pkg{ggplot2}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load graphics
 #' library(graphics)
 #' # artificial data
@@ -497,12 +500,14 @@ scale_type.tind <- function(x) c("tind", "continuous")
 #'               for formatting labels, see \link{calendar-names} for information
 #'               on locale settings.
 #'
+#' @return A continuous scale as returned by \code{\link[ggplot2]{continuous_scale}}.
+#'
 #' @seealso \code{\link{pretty}} for computing pretty breakpoints,
 #' \code{\link{axis_t}} for computing time axis parameters,
 #' \code{\link{axis.tind}} for creating axes with \pkg{graphics} package.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load ggplot2
 #' library(ggplot2)
 #' # artificial data

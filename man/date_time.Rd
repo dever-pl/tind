@@ -82,16 +82,14 @@ date_time(today() + 0:2, c(8, 12, 16), grid = TRUE)
 date_time_split(nw)
 
 # corner cases (with warnings)
-\dontrun{
-if ("Europe/Warsaw" \%in\% OlsonNames()) {
+if ("Europe/Warsaw" \%in\% OlsonNames()) try({
     # 2020-10-25 had 25h with 02:00 repeated
     date_time("2020-10-25", 0:2, tz = "Europe/Warsaw")
-}
-if ("Europe/Warsaw" \%in\% OlsonNames()) {
+})
+if ("Europe/Warsaw" \%in\% OlsonNames()) try({
     # 2021-03-28 had 23h with 02:00 missing
     date_time("2021-03-28", 0:2, tz = "Europe/Warsaw")
-}
-}
+})
 
 }
 \seealso{

@@ -73,6 +73,8 @@
 #'           \code{NULL} is interpreted as the system time zone).
 #'           See \code{\link{tzone}} documentation for information on time zones.
 #'
+#' @return An object of \code{tind} class.
+#'
 #' @seealso \code{\link{strptind}} for index parsing requiring strict format
 #' specification, \link{calendar-names} for information on locale settings.
 #'

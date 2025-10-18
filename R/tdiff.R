@@ -42,8 +42,8 @@
 #' inferred and used.
 #'
 #' Valid ranges for \code{tdiff} values depend on unit. These are defined
-#' by differences of maximal and minimal valid time indices of type
-#' corresponding to time unit.
+#' by differences of the maximal and minimal valid time indices of the type
+#' corresponding to the time unit.
 #'
 #' @note
 #' Since \code{as.difftime} is not implemented in \pkg{base} as an S3 generic,
@@ -58,6 +58,22 @@
 #' @param na.rm a logical value indicating whether missing values should be removed.
 #' @param object an object of \code{tdiff} class.
 #' @param ... further arguments passed to or from other methods.
+#'
+#' @return \code{as.tdiff} as well as convenience functions \code{years},
+#' \code{qrtrs}, etc., return objects of \code{tdiff} class.
+#'
+#' \code{is.tdiff} returns a logical value.
+#'
+#' In general, methods for \code{tdiff} return objects of \code{tdiff} class.
+#'
+#' \code{as.character} and \code{format} return character vectors.
+#'
+#' \code{as.data.frame} returns a data frame with a single
+#' column and the number of rows equal to the length of the argument.
+#'
+#' \code{print} returns its argument invisibly and is used for its side effect.
+#'
+#' \code{summary} returns an object of class \code{c("summaryDefault", "table")}.
 #'
 #' @seealso \link{Ops} for operations on time indices and
 #' time differences.

@@ -62,25 +62,24 @@
 #' as.regular(ds)
 #'
 #' # corner cases
-#' if ("Europe/Warsaw" %in% OlsonNames()) {
+#' tz <- "Europe/Warsaw"
+#' if (tz %in% OlsonNames()) {
 #'     # switch to DST
-#'     print(hours_in_day("2025-03-30"))
+#'     print(hours_in_day("2025-03-30", tz = tz))
 #'     # this will work with step from 1am to 3am
-#'     tt <- date_time("2025-03-30", H = c(0, 4:8))
+#'     tt <- date_time("2025-03-30", H = c(0, 4:8), tz = tz)
 #'     print(resolution_t(tt))
 #'     as.regular(tt)
 #' }
-#' \dontrun{
-#' if ("Europe/Warsaw" %in% OlsonNames()) {
+#' if (tz %in% OlsonNames()) {
 #'     # this will fail due to missing 2am
-#'     tt <- date_time("2025-03-30", H = c(0, 4, 6, 8))
+#'     tt <- date_time("2025-03-30", H = c(0, 4, 6, 8), tz = tz)
 #'     print(resolution_t(tt))
-#'     as.regular(tt)
+#'     try(as.regular(tt))
 #' }
-#' }
-#' if ("Europe/Warsaw" %in% OlsonNames()) {
+#' if (tz %in% OlsonNames()) {
 #'     # this will work again (step by 4h)
-#'     tt <- date_time("2025-03-30", H = c(0, 4, 12))
+#'     tt <- date_time("2025-03-30", H = c(0, 4, 12), tz = tz)
 #'     print(resolution_t(tt))
 #'     as.regular(tt)
 #' }

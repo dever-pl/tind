@@ -68,6 +68,9 @@ or \code{tind} of length 2.}
 for formatting labels, see \link{calendar-names} for information
 on locale settings.}
 }
+\value{
+A continuous scale as returned by \code{\link[ggplot2]{continuous_scale}}.
+}
 \description{
 These functions provide \pkg{ggplot2} scales for \code{tind}. Scales will
 be added automatically by \pkg{ggplot2}, but the default behaviour
@@ -111,7 +114,7 @@ Due to the fact that \code{\link[ggplot2]{limits}} method is currently
 using \code{limits} argument to \code{scale_*_tind}.
 }
 \examples{
-\dontrun{
+\donttest{
 # load ggplot2
 library(ggplot2)
 # artificial data

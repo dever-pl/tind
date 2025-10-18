@@ -37,13 +37,17 @@ be placed at tick-marks or a character vector of labels.}
 
 \item{...}{further arguments passed to \code{\link[graphics]{axis}}.}
 }
+\value{
+Same as for \code{\link[graphics]{axis}}, used for its side effect,
+which is to add time axis to an existing plot.
+}
 \description{
 \code{axis.tind} adds time axis to a plot. Axes will be added automatically
 by \pkg{graphics}, but the default behaviour can be overridden by plotting
 without axis and then calling \code{axis.tind}, see Examples.
 }
 \examples{
-\dontrun{
+\donttest{
 # load graphics
 library(graphics)
 # artificial data

@@ -76,16 +76,23 @@ tzone(nw)
 tzone(nw) <- "UTC"
 nw
 tzone(nw)
-\dontrun{
 # check time in different time zones
+if ("Asia/Tokyo" \%in\% OlsonNames()) {
 tzone(nw) <- "Asia/Tokyo"
 nw
+}
+if ("Europe/Warsaw" \%in\% OlsonNames()) {
 tzone(nw) <- "Europe/Warsaw"
 nw
+}
+if ("America/New_York" \%in\% OlsonNames()) {
 tzone(nw) <- "America/New_York"
 nw
+}
 # try invalid time zone => error
+try(
 tzone(nw) <- "Hasdfg/Qwerty"
+)
 # unambiguous city names are automatically recognised
 tzone(nw) <- "Tokyo"
 nw
@@ -94,24 +101,25 @@ nw
 tzone(nw) <- "New York"
 nw
 # incomplete names and approximate matches are also recognised with a warning
+if ("Europe/Warsaw" \%in\% OlsonNames()) try({
 tzone(nw) <- "Warsa"
 nw
+})
+if ("America/New_York" \%in\% OlsonNames()) try({
 tzone(nw) <- "NewYork"
 nw
-}
+})
 
-\dontrun{
-# list all supported time zones using base::OlsonNames
-OlsonNames()
-# list all supported time zones with string "Europe"
-grep("Europe", OlsonNames(), value = TRUE)
-# list all supported time zones with string "Asia"
-grep("Asia", OlsonNames(), value = TRUE)
-# list all supported time zones with string "Africa"
-grep("Africa", OlsonNames(), value = TRUE)
-# list all supported time zones with string "America"
-grep("America", OlsonNames(), value = TRUE)
-}
+# list first 6 supported time zones using base::OlsonNames
+head(OlsonNames())
+# list first 6 supported time zones with string "Europe"
+head(grep("Europe", OlsonNames(), value = TRUE))
+# list first 6 supported time zones with string "Asia"
+head(grep("Asia", OlsonNames(), value = TRUE))
+# list first 6 supported time zones with string "Africa"
+head(grep("Africa", OlsonNames(), value = TRUE))
+# list first 6 supported time zones with string "America"
+head(grep("America", OlsonNames(), value = TRUE))
 
 }
 \seealso{

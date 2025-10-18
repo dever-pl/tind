@@ -13,6 +13,10 @@
 \alias{format.tinterval}
 \alias{as.list.tinterval}
 \alias{as.data.frame.tinterval}
+\alias{[.tinterval}
+\alias{[[.tinterval}
+\alias{[<-.tinterval}
+\alias{[[<-.tinterval}
 \alias{c.tinterval}
 \alias{print.tinterval}
 \alias{summary.tinterval}
@@ -41,6 +45,14 @@ as.tinterval(x, ...)
 \method{as.list}{tinterval}(x, ...)
 
 \method{as.data.frame}{tinterval}(x, ...)
+
+\method{[}{tinterval}(x, i)
+
+\method{[[}{tinterval}(x, i)
+
+\method{[}{tinterval}(x, i) <- value
+
+\method{[[}{tinterval}(x, i) <- value
 
 \method{c}{tinterval}(...)
 
@@ -78,7 +90,28 @@ information (time spans of intervals) is added to the output.}
 
 \item{empty}{a character string used to mark empty intervals (\code{"-"} by default).}
 
+\item{i}{an integer vector of indices or a logical vector indicating selection.}
+
+\item{value}{replacement value, should be coercible to \code{tinterval}.}
+
 \item{object}{an object of \code{tinterval} class.}
+}
+\value{
+\code{tinterval}, \code{\%--\%}, and \code{as.tinterval} return
+objects of \code{tinterval} class.
+
+\code{is.tinterval} returns a logical value.
+
+In general, methods for \code{tinterval} return objects of \code{tinterval} class.
+
+\code{as.character} and \code{format} return character vectors.
+
+\code{as.list} and \code{as.data.frame} return a two-element list and
+a two-column data frame, respectively. Names are set to \code{c("start", "end")}.
+
+\code{print} returns its argument invisibly and is used for its side effect.
+
+\code{summary} returns an object of class \code{c("summaryDefault", "table")}.
 }
 \description{
 Objects of auxiliary \code{tinterval} class represent time intervals as pairs
@@ -165,6 +198,6 @@ as.tinterval(x, "t")
 
 }
 \seealso{
-\link{set-ops} for description of set operations on time intervals,
+\link{set-ops} for the description of set operations on time intervals,
 \code{\link{match_t}} for matching time indices to time intervals.
 }

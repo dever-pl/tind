@@ -19,6 +19,11 @@
 
 \item{...}{(ignored) further arguments passed to or from other methods.}
 }
+\value{
+An object of \code{tdiff} class, except for \code{x} argument
+of \code{tind} class of type \code{"i"} or \code{"n"} (integer/numeric
+indices), in which case an integer or numeric vector is returned.
+}
 \description{
 \code{diff} method for \code{tind} and \code{tdiff} works in a standard way.
 For all index types except for integer and numeric indices, differences
@@ -27,9 +32,10 @@ of time indices are retuned as objects of \code{tdiff} class.
 \examples{
 (nn <- sample(1:10))
 (x <- today() + nn)
-# should be the same
+# all 3 should be the same
 diff(x, 2, 2)
 as.tdiff(diff(nn, 2, 2), "d")
+diff(as.tdiff(nn, "d"), 2, 2)
 
 }
 \seealso{

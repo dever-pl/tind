@@ -82,7 +82,7 @@ see \link{calendar-names} for information on locale settings.}
 for seconds to be preserved during conversion (0 by default).}
 }
 \value{
-An object of \code{tind} class of length equal to the length of argument.
+An object of \code{tind} class of length equal to the length of the argument.
 For data frame version the length of the result is equal to the number of rows
 in the data frame.
 }

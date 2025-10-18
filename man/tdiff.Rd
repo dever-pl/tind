@@ -105,6 +105,23 @@ an object of \code{tdiff} class for methods.}
 
 \item{object}{an object of \code{tdiff} class.}
 }
+\value{
+\code{as.tdiff} as well as convenience functions \code{years},
+\code{qrtrs}, etc., return objects of \code{tdiff} class.
+
+\code{is.tdiff} returns a logical value.
+
+In general, methods for \code{tdiff} return objects of \code{tdiff} class.
+
+\code{as.character} and \code{format} return character vectors.
+
+\code{as.data.frame} returns a data frame with a single
+column and the number of rows equal to the length of the argument.
+
+\code{print} returns its argument invisibly and is used for its side effect.
+
+\code{summary} returns an object of class \code{c("summaryDefault", "table")}.
+}
 \description{
 Objects of \code{tdiff} class represent time differences and are similar
 to \code{\link[base]{difftime}} objects. \code{tdiff} objects are created
@@ -137,8 +154,8 @@ but when printing the actual time unit (hour, minute, second) is automatically
 inferred and used.
 
 Valid ranges for \code{tdiff} values depend on unit. These are defined
-by differences of maximal and minimal valid time indices of type
-corresponding to time unit.
+by differences of the maximal and minimal valid time indices of the type
+corresponding to the time unit.
 }
 \note{
 Since \code{as.difftime} is not implemented in \pkg{base} as an S3 generic,

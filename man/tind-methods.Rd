@@ -46,6 +46,13 @@ and \code{range}) or additional arguments passed to or from methods.}
 
 \item{object}{an object of \code{tind} class.}
 }
+\value{
+In general, methods return objects of \code{tind} class.
+
+\code{print} returns its argument invisibly and is used for its side effect.
+
+\code{summary} returns an object of class \code{c("summaryDefault", "table")}.
+}
 \description{
 \code{tind} class supports all standard methods for vectors and
 and vector-based classes like \code{Date} or \code{POSIXct}.
@@ -65,7 +72,7 @@ all arguments are of the same type. Arguments that are not of \code{tind} class
 are converted.
 
 \code{min}, \code{max}, and \code{range} work in a standard way. If the results
-are not proper time indices (for example maximum over a vector of length 0)
+are not proper time indices (for example maximum over a vector of length 0),
 \code{NA}s are returned.
 
 \code{unique}, \code{duplicated}, \code{order}, \code{sort}, etc.
@@ -87,9 +94,9 @@ dd
 dd[2:3] <- dd[2:3] + 1
 dd
 # this will generate an error
-\dontrun{
+try(
 dd[10] <- now()
-}
+)
 # length, length<-
 length(dd)
 length(dd) <- 7
@@ -112,9 +119,9 @@ sort(dd)
 # concatenation
 c(dd, rev(dd))
 # attempt at concatenating different types will result in an error
-\dontrun{
+try(
 c(today(), now())
-}
+)
 
 
 }

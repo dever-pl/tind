@@ -55,16 +55,23 @@
 #' tzone(nw) <- "UTC"
 #' nw
 #' tzone(nw)
-#' \dontrun{
 #' # check time in different time zones
+#' if ("Asia/Tokyo" %in% OlsonNames()) {
 #' tzone(nw) <- "Asia/Tokyo"
 #' nw
+#' }
+#' if ("Europe/Warsaw" %in% OlsonNames()) {
 #' tzone(nw) <- "Europe/Warsaw"
 #' nw
+#' }
+#' if ("America/New_York" %in% OlsonNames()) {
 #' tzone(nw) <- "America/New_York"
 #' nw
+#' }
 #' # try invalid time zone => error
+#' try(
 #' tzone(nw) <- "Hasdfg/Qwerty"
+#' )
 #' # unambiguous city names are automatically recognised
 #' tzone(nw) <- "Tokyo"
 #' nw
@@ -73,24 +80,25 @@
 #' tzone(nw) <- "New York"
 #' nw
 #' # incomplete names and approximate matches are also recognised with a warning
+#' if ("Europe/Warsaw" %in% OlsonNames()) try({
 #' tzone(nw) <- "Warsa"
 #' nw
+#' })
+#' if ("America/New_York" %in% OlsonNames()) try({
 #' tzone(nw) <- "NewYork"
 #' nw
-#' }
+#' })
 #'
-#' \dontrun{
-#' # list all supported time zones using base::OlsonNames
-#' OlsonNames()
-#' # list all supported time zones with string "Europe"
-#' grep("Europe", OlsonNames(), value = TRUE)
-#' # list all supported time zones with string "Asia"
-#' grep("Asia", OlsonNames(), value = TRUE)
-#' # list all supported time zones with string "Africa"
-#' grep("Africa", OlsonNames(), value = TRUE)
-#' # list all supported time zones with string "America"
-#' grep("America", OlsonNames(), value = TRUE)
-#' }
+#' # list first 6 supported time zones using base::OlsonNames
+#' head(OlsonNames())
+#' # list first 6 supported time zones with string "Europe"
+#' head(grep("Europe", OlsonNames(), value = TRUE))
+#' # list first 6 supported time zones with string "Asia"
+#' head(grep("Asia", OlsonNames(), value = TRUE))
+#' # list first 6 supported time zones with string "Africa"
+#' head(grep("Africa", OlsonNames(), value = TRUE))
+#' # list first 6 supported time zones with string "America"
+#' head(grep("America", OlsonNames(), value = TRUE))
 #'
 #' @name tzone
 #'
@@ -233,20 +241,24 @@ tzone.POSIXlt <- function(x)
 #' @param tz a character value determining the new time zone.
 #'           See \code{\link{tzone}} documentation for information on time zones.
 #'
+#' @return An object of the same class and length as \code{x} with adjusted
+#' underlying date-time representation and time zone set to \code{tz}.
+#'
 #' @name as.tzone
 #'
 #' @seealso \code{\link{tzone}} method and \code{\link{date_time}} for construction
 #' od date-time indices from its components.
 #'
 #' @examples
-#' \dontrun{
+#' if (all(c("Europe/Warsaw", "America/New_York") %in% OlsonNames())) {
 #' # check time in one time zone
-#' (nw <- now(tz = "Europe/Warsaw"))
+#' print(nw <- now(tz = "Europe/Warsaw"))
 #' # the same date-time in a new time zone
-#' (nw2 <- as.tzone(nw, "America/New_York"))
-#' # note the time difference (equal to difference of UTC offsets)
+#' print(nw2 <- as.tzone(nw, "America/New_York"))
+#' # note the time difference (equal to the difference of UTC offsets)
 #' # warning on different time zones will be issued
-#' nw2 - nw
+#' print(suppressWarnings(nw2 - nw))
+#' try(nw2 - nw)
 #' }
 #'
 NULL

@@ -14,6 +14,7 @@
 \alias{<=}
 \alias{>}
 \alias{>=}
+\alias{!}
 \alias{Ops.tind}
 \alias{\%+y\%}
 \alias{\%-y\%}
@@ -69,6 +70,18 @@ e1 \%-s\% e2
 }
 \arguments{
 \item{e1, e2}{a \code{tind}, \code{tdiff}, \code{tinterval}, or a numeric vector.}
+}
+\value{
+Comparison operators and \code{!} return logical vectors.
+
+Differences of time indices are returned as objects of \code{tdiff} class,
+except for arguments of type \code{"i"} or \code{"n"} (integer/numeric
+indices), in which case an integer or numeric vector is returned.
+
+Shifting time indices and time intervals produces time indices and time
+intervals, respectively.
+
+Operations involving time differences return time differences.
 }
 \description{
 Basic arithmetic and comparison operators are implemented

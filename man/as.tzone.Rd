@@ -25,6 +25,10 @@ classes (or of other class for which the method was implemented).}
 \item{tz}{a character value determining the new time zone.
 See \code{\link{tzone}} documentation for information on time zones.}
 }
+\value{
+An object of the same class and length as \code{x} with adjusted
+underlying date-time representation and time zone set to \code{tz}.
+}
 \description{
 This method allows to determine time index representing the same date and
 time in a different time zone.
@@ -45,14 +49,15 @@ List of time zones supported by the particular R installation can be obtained
 via a call to \code{\link[base]{OlsonNames}} function.
 }
 \examples{
-\dontrun{
+if (all(c("Europe/Warsaw", "America/New_York") \%in\% OlsonNames())) {
 # check time in one time zone
-(nw <- now(tz = "Europe/Warsaw"))
+print(nw <- now(tz = "Europe/Warsaw"))
 # the same date-time in a new time zone
-(nw2 <- as.tzone(nw, "America/New_York"))
-# note the time difference (equal to difference of UTC offsets)
+print(nw2 <- as.tzone(nw, "America/New_York"))
+# note the time difference (equal to the difference of UTC offsets)
 # warning on different time zones will be issued
-nw2 - nw
+print(suppressWarnings(nw2 - nw))
+try(nw2 - nw)
 }
 
 }

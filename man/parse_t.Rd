@@ -22,6 +22,9 @@ see \link{calendar-names} for information on locale settings.}
 \code{NULL} is interpreted as the system time zone).
 See \code{\link{tzone}} documentation for information on time zones.}
 }
+\value{
+An object of \code{tind} class.
+}
 \description{
 \code{parse_t} parses character vector to create an object of \code{tind}
 class based on provided order(s) of time index components. Index type is inferred

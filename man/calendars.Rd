@@ -268,15 +268,10 @@ eval_calendar(dcurrmnth, calendar_US)
 calendar(calendar = calendar_PL, name = "PL")
 calendar(calendar = calendar_US, name = "US (federal)")
 
-# print Polish calendar using Polish locale on Linux/Mac/Unix
-\dontrun{
+# print Polish calendar using Polish locale
+try(
 calendar(calendar = calendar_PL, locale = "pl_PL.UTF-8")
-}
-
-# print Polish calendar using Polish locale on Windows
-\dontrun{
-calendar(calendar = calendar_PL, locale = "Polish")
-}
+)
 
 }
 \seealso{

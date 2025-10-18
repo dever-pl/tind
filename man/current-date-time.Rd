@@ -30,14 +30,18 @@ date and time (in the system time zone or the time zone provided by the user).
 \examples{
 today()
 now()
-# milisecond accuracy
+# millisecond accuracy
 now(digits = 3)
 # check current date and time in different time zones
-\dontrun{
+if ("Asia/Tokyo" \%in\% OlsonNames()) {
 now("Asia/Tokyo")
 today("Asia/Tokyo")
+}
+if ("Europe/Warsaw" \%in\% OlsonNames()) {
 now("Europe/Warsaw")
 today("Europe/Warsaw")
+}
+if ("America/New_York" \%in\% OlsonNames()) {
 now("America/New_York")
 today("America/New_York")
 }

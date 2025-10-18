@@ -33,65 +33,46 @@ selected locale and character set / code page setting.
 }
 \section{Locale Settings}{
 
-Unfortunately, locale and character set naming is not standardised across
-different operating systems. Under Linux, Mac, and other Unixes
-locale is usually of the form \code{xx_XX} (\code{xx} for language,
+Unfortunately, locale and character set naming were not standardised across
+different operating systems for many years. On modern operating systems,
+however, locale is usually of the form \code{xx_XX} (\code{xx} for language,
 \code{XX} for country) optionally followed by a dot and a character set
-identifier, for example, \code{UTF-8}. Under Windows locale should be of the form
-\code{Language} or \code{Language_Country} optionally followed by a dot
-and a 3-5 digit code page identifier. See Examples for the most popular
-operating systems.
+identifier, for example, \code{UTF-8}.
 
 \code{"C"} is a special locale that should always be available and
 defaults to American English.
 }
 
 \examples{
-\dontrun{
-## Linux, Unix, Mac
-# English abbreviated month names
-month_names("en_GB")
-# French month names
-month_names("fr_FR.UTF-8", FALSE)
-# German abbreviated month names
-month_names("de_DE.UTF-8")
-# Polish abbreviated month names
-month_names("pl_PL.UTF-8")
-# English weekday names
-weekday_names("en_GB", FALSE)
-# French abbreviated weekday names
-weekday_names("fr_FR.UTF-8")
-# German weekday names
-weekday_names("de_DE.UTF-8", FALSE)
-# Polish abbreviated weekday names
-weekday_names("pl_PL.UTF-8")
-# US am/pm indicators
-ampm_indicators("en_US")
-# UK am/pm indicators
-ampm_indicators("en_GB")
+# current system locale
+month_names()
+weekday_names()
+try(
+ampm_indicators()
+)
 
-## Windows
+try({
 # English abbreviated month names
-month_names("English")
+print(month_names("en_GB"))
 # French month names
-month_names("French", FALSE)
+print(month_names("fr_FR.UTF-8", FALSE))
 # German abbreviated month names
-month_names("German")
+print(month_names("de_DE.UTF-8"))
 # Polish abbreviated month names
-month_names("Polish")
+print(month_names("pl_PL.UTF-8"))
 # English weekday names
-weekday_names("English", FALSE)
+print(weekday_names("en_GB", FALSE))
 # French abbreviated weekday names
-weekday_names("French")
+print(weekday_names("fr_FR.UTF-8"))
 # German weekday names
-weekday_names("German", FALSE)
+print(weekday_names("de_DE.UTF-8", FALSE))
 # Polish abbreviated weekday names
-weekday_names("Polish")
+print(weekday_names("pl_PL.UTF-8"))
 # US am/pm indicators
-ampm_indicators("English_United States")
+print(ampm_indicators("en_US"))
 # UK am/pm indicators
-ampm_indicators("English_United Kingdom")
-}
+print(ampm_indicators("en_GB"))
+})
 
 }
 \seealso{

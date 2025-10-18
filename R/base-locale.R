@@ -19,19 +19,11 @@
     suppressWarnings(res <- Sys.setlocale("LC_TIME", locale))
 
     if (res == "") {
-        os <- .Platform$OS.type
         msg <- gettextf("operating system did not accept locale %s", dQuote(locale))
-        if (os == "unix") {
-            hint <- gettextf("Hint: under Linux, Mac, and other Unixes locale is usually of the form %s (%s for language, %s for country) optionally followed by a dot and a character set identifier, for example, %s",
-                             dQuote("xx_XX"), dQuote("xx"), dQuote("XX"),
-                             dQuote("pl_PL.UTF-8"))
-            stop(paste0(msg, "\n", hint), call. = FALSE, domain = NA)
-        } else if (os == "windows") {
-            hint <- gettextf("Hint: under Windows locale should be of the form %s (language) or %s (language and country) optionally followed by a dot and a 3-5 digit code page identifier",
-                             sQuote("Xxxxxxxxx"), sQuote("Xxxxxxxxx_Yyyyyyyyyy"))
-            stop(paste0(msg, "\n", hint), call. = FALSE, domain = NA)
-        }
-        stop(msg, call. = FALSE, domain = NA)
+        hint <- gettextf("Hint: on majority of modern operating systems locale is of the form %s (%s for language, %s for country) optionally followed by a dot and a character set identifier, for example, %s",
+                         dQuote("xx_XX"), dQuote("xx"), dQuote("XX"),
+                         dQuote("pl_PL.UTF-8"))
+        stop(paste0(msg, "\n", hint), call. = FALSE, domain = NA)
     }
 }
 

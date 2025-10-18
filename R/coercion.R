@@ -151,7 +151,7 @@
 #'
 #' @name as.tind
 #'
-#' @return An object of \code{tind} class of length equal to the length of argument.
+#' @return An object of \code{tind} class of length equal to the length of the argument.
 #' For data frame version the length of the result is equal to the number of rows
 #' in the data frame.
 #'
