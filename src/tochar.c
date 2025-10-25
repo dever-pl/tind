@@ -17,7 +17,7 @@
 // inlines
 // ==================================================================
 
-// print fixed-length non-negative number to buffer
+// print fixed-length non-negative number to a buffer
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -35,7 +35,7 @@ print_n0(char *c, int num, int n)
 }
 
 
-// print fixed-length non-negative number to buffer and increment pointer
+// print fixed-length non-negative number to a buffer and increment pointer
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -71,7 +71,7 @@ nchar_num(int num)
 }
 
 
-// print variable-length number to buffer and increment pointer
+// print variable-length number to a buffer and increment pointer
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -82,7 +82,7 @@ print_num(char **c, int num)
 }
 
 
-// determine number of significant digits (up to 6), assumes x >= 0
+// determine the number of significant digits (up to 6), assumes x >= 0
 static inline
 TIND__ATTRIBUTE_INLINE
 int
@@ -95,7 +95,7 @@ digits(double x)
 }
 
 
-// print decimal places (up to 6) to buffer
+// print decimal places (up to 6) to a buffer
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -107,7 +107,7 @@ print_d0(char *c, double x, int n)
 }
 
 
-// print decimal places (up to 6) to buffer and increment pointer
+// print decimal places (up to 6) to a buffer and increment pointer
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -129,7 +129,7 @@ strcpy0(char *dest, const char *src)
 }
 
 
-// copy centered string given destination length
+// copy centered string given destination's length
 static inline
 TIND__ATTRIBUTE_INLINE
 void
@@ -245,8 +245,8 @@ yqmwd2char(SEXP sx, SEXP stype)
         SET_STRING_ELT(sy, i, mkChar(buf));
     }
 
-    UNPROTECT(1);
     setAttrib(sy, R_NamesSymbol, getAttrib(sx, R_NamesSymbol));
+    UNPROTECT(1);
     return sy;
 }
 

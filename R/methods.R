@@ -53,7 +53,6 @@
 #'
 #' \code{summary} returns an object of class \code{c("summaryDefault", "table")}.
 #'
-#'
 #' @seealso \code{\link{format}} for formatting time indices,
 #' \link{Ops} for operations on time indices.
 #'

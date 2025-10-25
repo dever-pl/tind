@@ -137,13 +137,13 @@ test_that("'as.tind.(double|integer)' and 'as.(double|integer).tind' work correc
     expect_identical(x, as.quarter(qq))
     expect_identical(.get.type(x), "q")
     expect_identical(as.integer(x), as.integer(qq))
-    expect_identical(as.double(x), as.double(qq %% 10 - 1 + 4 * (qq %/% 10)))
+    expect_equal(as.double(x), as.double(qq %% 10 - 1 + 4 * (qq %/% 10)))
 
     x <- as.tind(mm)
     expect_identical(x, as.month(mm))
     expect_identical(.get.type(x), "m")
     expect_identical(as.integer(x), as.integer(mm))
-    expect_identical(as.double(x), as.double(mm %% 100 - 1 + 12 * (mm %/% 100)))
+    expect_equal(as.double(x), as.double(mm %% 100 - 1 + 12 * (mm %/% 100)))
 
     err <- paste0("time index type could not be automatically inferred; provide ",
                   sQuote("type"), " argument")

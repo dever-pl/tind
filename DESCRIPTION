@@ -1,7 +1,7 @@
 Package: tind
 Title: A Common Representation of Time Indices of Different Types
-Version: 0.2
-Date: 2025-10-18
+Version: 0.2.1
+Date: 2025-10-25
 Authors@R: person("Grzegorz", "Klima", , "dever@post.pl", c("aut", "cre", "cph"))
 Description: Provides an easy-to-use tind class representing time indices
     of different types (years, quarters, months, ISO 8601 weeks, dates,
