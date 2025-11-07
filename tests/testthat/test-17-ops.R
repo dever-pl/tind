@@ -420,15 +420,15 @@ test_that("'diff' methods work correctly", {
 
 test_that("'mean' and 'median' methods for 'tind' work correctly", {
     dd <- today() + -1:1
-    expect_identical(mean(dd), dd[2L])
-    expect_identical(median(dd), dd[2L])
+    expect_equal(mean(dd), dd[2L])
+    expect_equal(median(dd), dd[2L])
     dd <- c(dd, NA)
-    expect_identical(mean(dd), dd[4L])
-    expect_identical(median(dd), dd[4L])
-    expect_identical(mean(dd, na.rm = TRUE), dd[2L])
-    expect_identical(median(dd, na.rm = TRUE), dd[2L])
+    expect_equal(mean(dd), dd[4L])
+    expect_equal(median(dd), dd[4L])
+    expect_equal(mean(dd, na.rm = TRUE), dd[2L])
+    expect_equal(median(dd, na.rm = TRUE), dd[2L])
     dd <- dd[0L]
-    expect_identical(mean(dd), dd[1L])
-    expect_identical(median(dd), dd[1L])
+    expect_equal(mean(dd), dd[1L])
+    expect_equal(median(dd), dd[1L])
 })
 

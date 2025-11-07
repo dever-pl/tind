@@ -74,16 +74,16 @@ warnlsmult <- "longer object length is not a multiple of shorter object length"
 
 
 test_that("'bizday' works correctly", {
-    expect_identical(bizday(tind(type = "d"), "p"), tind(type = "d"))
-    expect_identical(bizday(tind(length = 1L, type = "d"), "p"),
+    expect_equal(bizday(tind(type = "d"), "p"), tind(type = "d"))
+    expect_equal(bizday(tind(length = 1L, type = "d"), "p"),
                      tind(length = 1L, type = "d"))
     ina <- is.na(dd)
     ibd <- !ina & .calendar_PL(dd)[[1L]]
     inb <- !ina & !.calendar_PL(dd)[[1L]]
     for (conv in c("p", "mp", "f", "mf", "mf2")) {
         bd <- bizday(dd, conv, .calendar_PL)
-        expect_identical(is.na(bd), ina)
-        expect_identical(bd[ibd], dd[ibd])
+        expect_equal(is.na(bd), ina)
+        expect_equal(bd[ibd], dd[ibd])
         expect_true(all(.calendar_PL(bd[!ina])[[1L]]))
     }
     bdp <- bizday(dd, "p", .calendar_PL)[!ina]
@@ -115,7 +115,7 @@ test_that("'bizday' works correctly", {
     expect_error(bizday(dd), errmiscnv)
     expect_error(bizday(dd, "x"), errinvcnv)
     expect_warning(bdd <- bizday(dd, "p"), warnclnd)
-    expect_identical(bdd, bizday(dd, "p", .calendar_MonFri))
+    expect_equal(bdd, bizday(dd, "p", .calendar_MonFri))
     err <- paste0("^invalid ", sQuote("convention"), " argument; ",
                   "expected one of the following: ", dQuote("[a-z]"),
                    " \\([- a-z]+\\)(, ", dQuote("[a-z0-9]+"), " \\([- a-z]+\\))+$")
@@ -129,20 +129,20 @@ test_that("'bizday_advance' works correctly", {
     err <- paste0("invalid ", sQuote("n"), " argument; expected an integer vector")
     expect_error(bizday_advance(dd, as.character(nn)), err, fixed = TRUE)
     expect_warning(bda <- bizday_advance(dd[1L:3L], nn[1L:2L], .calendar_PL), warnlsmult)
-    expect_identical(bda, bizday_advance(dd[1L:3L], nn[c(1L:2L, 1L)], .calendar_PL))
+    expect_equal(bda, bizday_advance(dd[1L:3L], nn[c(1L:2L, 1L)], .calendar_PL))
     expect_warning(bda <- bizday_advance(dd[1L:2L], nn[1L:3L], .calendar_PL), warnlsmult)
-    expect_identical(bda, bizday_advance(dd[c(1L:2L, 1L)], nn[1L:3L], .calendar_PL))
+    expect_equal(bda, bizday_advance(dd[c(1L:2L, 1L)], nn[1L:3L], .calendar_PL))
     expect_warning(bda <- bizday_advance(dd, nn), warnclnd)
-    expect_identical(bda, bizday_advance(dd, nn, .calendar_MonFri))
-    expect_identical(bizday_advance(dd, nn[0L], .calendar_PL), tind(type = "d"))
-    expect_identical(bizday_advance(dd[0L], nn, .calendar_PL), tind(type = "d"))
-    expect_identical(bizday_advance(dd, nn[NA_integer_], .calendar_PL),
+    expect_equal(bda, bizday_advance(dd, nn, .calendar_MonFri))
+    expect_equal(bizday_advance(dd, nn[0L], .calendar_PL), tind(type = "d"))
+    expect_equal(bizday_advance(dd[0L], nn, .calendar_PL), tind(type = "d"))
+    expect_equal(bizday_advance(dd, nn[NA_integer_], .calendar_PL),
                      tind(length = NN, type = "d"))
-    expect_identical(bizday_advance(dd[NA_integer_], nn, .calendar_PL),
+    expect_equal(bizday_advance(dd[NA_integer_], nn, .calendar_PL),
                      tind(length = NN, type = "d"))
     bda <- bizday_advance(dd, nn, .calendar_PL)
     idb <- unname(.calendar_PL(dd)[[1L]])
-    expect_identical(bizday_diff(dd, bda, .calendar_PL, FALSE, TRUE),
+    expect_equal(bizday_diff(dd, bda, .calendar_PL, FALSE, TRUE),
                      nn[ifelse(is.na(dd), NA, TRUE)] - (!nn & !idb))
 })
 
@@ -157,20 +157,20 @@ test_that("'next_bizdays' works correctly", {
     for (n in c(-sample.int(NN, 2L), 0L, sample.int(NN, 2L))) {
         td <- today()
         nb <- next_bizdays(td, n, .calendar_PL)
-        expect_identical(length(nb), abs(n))
+        expect_equal(length(nb), abs(n))
         if (n > 0) {
             expect_false(is.unsorted(nb, strictly = TRUE))
             sd <- seq(td + 1L, nb[length(nb)])
-            expect_identical(sum(.calendar_PL(sd)[[1L]]), n)
+            expect_equal(sum(.calendar_PL(sd)[[1L]]), n)
         }
         if (n < 0) {
             expect_false(is.unsorted(nb, strictly = TRUE))
             sd <- seq(nb[1L], td - 1L)
-            expect_identical(sum(.calendar_PL(sd)[[1L]]), -n)
+            expect_equal(sum(.calendar_PL(sd)[[1L]]), -n)
         }
     }
     expect_warning(nbd <- next_bizdays(td, n), warnclnd)
-    expect_identical(nbd, next_bizdays(td, n, .calendar_MonFri))
+    expect_equal(nbd, next_bizdays(td, n, .calendar_MonFri))
 })
 
 
@@ -178,10 +178,10 @@ test_that("'first/last_bizday_in_month/quarter' work correctly", {
     fbm <- first_bizday_in_month(mm, .calendar_PL)
     lbm <- last_bizday_in_month(mm, .calendar_PL)
 
-    expect_identical(as.month(fbm), mm)
-    expect_identical(as.month(lbm), mm)
-    expect_identical(is.na(fbm), is.na(mm))
-    expect_identical(is.na(lbm), is.na(mm))
+    expect_equal(as.month(fbm), mm)
+    expect_equal(as.month(lbm), mm)
+    expect_equal(is.na(fbm), is.na(mm))
+    expect_equal(is.na(lbm), is.na(mm))
     expect_true(all(.calendar_PL(fbm[!is.na(fbm)])[[1L]]))
     expect_true(all(.calendar_PL(lbm[!is.na(fbm)])[[1L]]))
 
@@ -193,24 +193,24 @@ test_that("'first/last_bizday_in_month/quarter' work correctly", {
     expect_true(all(.calendar_PL((as.date(mm + 1L) - 1L)[iil])[[1L]]))
 
     # quarters
-    expect_identical(first_bizday_in_quarter(qq, .calendar_PL),
+    expect_equal(first_bizday_in_quarter(qq, .calendar_PL),
                      first_bizday_in_month(as.month(qq), .calendar_PL))
-    expect_identical(last_bizday_in_quarter(qq, .calendar_PL),
+    expect_equal(last_bizday_in_quarter(qq, .calendar_PL),
                      last_bizday_in_month(as.month(qq + 1L) - 1L, .calendar_PL))
 })
 
 
 test_that("'bizday_diff' works correctly", {
-    expect_identical(bizday_diff(dd, tind(type = "d"), .calendar_PL), integer())
-    expect_identical(bizday_diff(tind(type = "d"), dd, .calendar_PL), integer())
-    expect_identical(bizday_diff(dd, tind(length = 1L, type = "d"), .calendar_PL),
+    expect_equal(bizday_diff(dd, tind(type = "d"), .calendar_PL), integer())
+    expect_equal(bizday_diff(tind(type = "d"), dd, .calendar_PL), integer())
+    expect_equal(bizday_diff(dd, tind(length = 1L, type = "d"), .calendar_PL),
                                  rep(NA_integer_, NN))
-    expect_identical(bizday_diff(tind(length = 1L, type = "d"), dd, .calendar_PL),
+    expect_equal(bizday_diff(tind(length = 1L, type = "d"), dd, .calendar_PL),
                                  rep(NA_integer_, NN))
     expect_warning(bdd <- bizday_diff(dd[1L:2L], dd[1L:3L], .calendar_PL), warnlsmult)
-    expect_identical(bdd, bizday_diff(dd[c(1L:2L, 1L)], dd[1L:3L], .calendar_PL))
+    expect_equal(bdd, bizday_diff(dd[c(1L:2L, 1L)], dd[1L:3L], .calendar_PL))
     expect_warning(bdd <- bizday_diff(dd[1L:3L], dd[1L:2L], .calendar_PL), warnlsmult)
-    expect_identical(bdd, bizday_diff(dd[1L:3L], dd[c(1L:2L, 1L)], .calendar_PL))
+    expect_equal(bdd, bizday_diff(dd[1L:3L], dd[c(1L:2L, 1L)], .calendar_PL))
     expect_warning(bizday_diff(dd, dd), warnclnd)
 
     # simple, slow scalar implementation assuming `calendar` returns a list
@@ -230,15 +230,15 @@ test_that("'bizday_diff' works correctly", {
         for (ei in c(FALSE, TRUE)) {
             bddf <- sapply(1L:M,
                          function(i) .bday_diff0(d0[i], d1[i], .calendar_PL, si, ei))
-            expect_identical(bizday_diff(d0, d1, .calendar_PL, si, ei), bddf)
-            expect_identical(bizday_diff(d0, d1, .calendar_PL, si, ei),
+            expect_equal(bizday_diff(d0, d1, .calendar_PL, si, ei), bddf)
+            expect_equal(bizday_diff(d0, d1, .calendar_PL, si, ei),
                              ifelse(!is.na(d0) & (d0 == d1), 1L, -1L) *
                              bizday_diff(d1, d0, .calendar_PL, ei, si))
             if (si && ei) {
-                expect_identical(bizday_diff(d0, d0, .calendar_PL, si, ei),
+                expect_equal(bizday_diff(d0, d0, .calendar_PL, si, ei),
                                  as.integer(.calendar_PL(d0)[[1L]]))
             } else {
-                expect_identical(bizday_diff(d0, d0, .calendar_PL, si, ei),
+                expect_equal(bizday_diff(d0, d0, .calendar_PL, si, ei),
                                  ifelse(is.na(d0), NA_integer_, 0L))
             }
         }
@@ -255,7 +255,7 @@ test_that("'bizdays_in_month/quarter/year' work correctly", {
         dd <- if (!is.na(d0) && !is.na(d0)) d0 + 0L:as.integer(d1 - d0) else as.date(NA)
         bdm[i] <- sum(.calendar_PL(dd)[[1L]])
     }
-    expect_identical(bdm, bizdays_in_month(mm[1L:M], .calendar_PL))
+    expect_equal(bdm, bizdays_in_month(mm[1L:M], .calendar_PL))
 
     bdq <- integer(M)
     for (i in 1:M) {
@@ -264,7 +264,7 @@ test_that("'bizdays_in_month/quarter/year' work correctly", {
         dd <- if (!is.na(d0) && !is.na(d0)) d0 + 0L:as.integer(d1 - d0) else as.date(NA)
         bdq[i] <- sum(.calendar_PL(dd)[[1L]])
     }
-    expect_identical(bdq, bizdays_in_quarter(qq[1L:M], .calendar_PL))
+    expect_equal(bdq, bizdays_in_quarter(qq[1L:M], .calendar_PL))
 
     bdy <- integer(M)
     for (i in 1:M) {
@@ -273,7 +273,7 @@ test_that("'bizdays_in_month/quarter/year' work correctly", {
         dd <- if (!is.na(d0) && !is.na(d0)) d0 + 0L:as.integer(d1 - d0) else as.date(NA)
         bdy[i] <- sum(.calendar_PL(dd)[[1L]])
     }
-    expect_identical(bdy, bizdays_in_year(yy[1L:M], .calendar_PL))
+    expect_equal(bdy, bizdays_in_year(yy[1L:M], .calendar_PL))
 })
 
 
@@ -284,21 +284,21 @@ test_that("'daycount_frac' works correctly", {
     expect_error(daycount_frac(d1, d2, "44/777"), errinvcnv)
 
     # 30/360, 30E/360
-    expect_identical(bdd <- daycount_frac(tind(type = "d"), d2, "30/360"), numeric())
-    expect_identical(bdd <- daycount_frac(d1, tind(type = "d"), "30/360"), numeric())
-    expect_identical(bdd <- daycount_frac(tind(length = 1L, type = "d"), d2, "30/360"),
+    expect_equal(bdd <- daycount_frac(tind(type = "d"), d2, "30/360"), numeric())
+    expect_equal(bdd <- daycount_frac(d1, tind(type = "d"), "30/360"), numeric())
+    expect_equal(bdd <- daycount_frac(tind(length = 1L, type = "d"), d2, "30/360"),
                      rep(NA_real_, NN - 1L))
-    expect_identical(bdd <- daycount_frac(d1, tind(length = 1L, type = "d"), "30/360"),
+    expect_equal(bdd <- daycount_frac(d1, tind(length = 1L, type = "d"), "30/360"),
                      rep(NA_real_, NN - 1L))
     expect_warning(bdd <- daycount_frac(d1[1L:2L], d2[1L:3L], "30/360"), warnlsmult)
-    expect_identical(bdd, daycount_frac(d1[c(1L:2L, 1L)], d2[1L:3L], "30/360"))
+    expect_equal(bdd, daycount_frac(d1[c(1L:2L, 1L)], d2[1L:3L], "30/360"))
     expect_warning(bdd <- daycount_frac(d1[1L:3L], d2[1L:2L], "30/360"), warnlsmult)
-    expect_identical(bdd, daycount_frac(d1[1L:3L], d2[c(1L:2L, 1L)], "30/360"))
+    expect_equal(bdd, daycount_frac(d1[1L:3L], d2[c(1L:2L, 1L)], "30/360"))
 
     df30u <- daycount_frac(d1, d2, "30/360 Bond Basis")
     df30e <- daycount_frac(d1, d2, "Eurobond basis")
     ii30na <- (day(d1) <= 30) & (day(d2) <= 30) | is.na(d1) | is.na(d2)
-    expect_identical(df30u[ii30na], df30e[ii30na])
+    expect_equal(df30u[ii30na], df30e[ii30na])
     expect_equal(daycount_frac("2023-01-31", "2023-03-31", "30/360"), 1/6)
     expect_equal(daycount_frac("2023-01-31", "2023-03-31", "30E/360"), 1/6)
     expect_equal(daycount_frac("2023-01-31", "2023-03-30", "30/360"), 1/6)

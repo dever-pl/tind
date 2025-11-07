@@ -48,22 +48,22 @@ test_that("'today' and 'now' work correctly", {
     nw <- now()
     td <- today()
     expect_true(is.tind(nw))
-    expect_identical(.get.type(nw), "t")
-    expect_identical(length(nw), 1L)
-    expect_identical(.get.tz(nw), Sys.timezone())
+    expect_equal(.get.type(nw), "t")
+    expect_equal(length(nw), 1L)
+    expect_equal(.get.tz(nw), Sys.timezone())
     expect_true(is.tind(td))
-    expect_identical(.get.type(td), "d")
-    expect_identical(length(td), 1L)
+    expect_equal(.get.type(td), "d")
+    expect_equal(length(td), 1L)
     for (tz in tzs) {
         td <- today(tz)
         nw <- now(tz)
         expect_true(is.tind(nw))
-        expect_identical(.get.type(nw), "t")
-        expect_identical(length(nw), 1L)
-        expect_identical(.get.tz(nw), tz)
+        expect_equal(.get.type(nw), "t")
+        expect_equal(length(nw), 1L)
+        expect_equal(.get.tz(nw), tz)
         expect_true(is.tind(td))
-        expect_identical(.get.type(td), "d")
-        expect_identical(length(td), 1L)
+        expect_equal(.get.type(td), "d")
+        expect_equal(length(td), 1L)
     }
 })
 
@@ -71,19 +71,19 @@ test_that("'today' and 'now' work correctly", {
 test_that("'month_names', 'weekday_names', and 'ampm_indicators' work correctly", {
     expect_silent(mn <- month_names())
     expect_true(is.character(mn))
-    expect_identical(length(mn), 12L)
+    expect_equal(length(mn), 12L)
     expect_silent(mn <- month_names(abbreviate = FALSE))
     expect_true(is.character(mn))
-    expect_identical(length(mn), 12L)
+    expect_equal(length(mn), 12L)
     expect_silent(wn <- weekday_names())
     expect_true(is.character(wn))
-    expect_identical(length(wn), 7L)
+    expect_equal(length(wn), 7L)
     expect_silent(wn <- weekday_names(abbreviate = FALSE))
     expect_true(is.character(wn))
-    expect_identical(length(wn), 7L)
+    expect_equal(length(wn), 7L)
     ap <- suppressWarnings(ampm_indicators())
     expect_true(is.character(ap))
-    expect_identical(length(ap), 2L)
+    expect_equal(length(ap), 2L)
 
     skip_on_cran()
 
@@ -108,16 +108,16 @@ test_that("'month_names', 'weekday_names', and 'ampm_indicators' work correctly"
                     "Saturday",  "Sunday")
         ap_en <- c("am", "pm")
         expect_silent(mn <- month_names(locale = en_locale))
-        expect_identical(mn, mn_ena)
+        expect_equal(mn, mn_ena)
         expect_silent(mn <- month_names(locale = en_locale, abbreviate = FALSE))
-        expect_identical(mn, mn_enf)
+        expect_equal(mn, mn_enf)
         expect_silent(wn <- weekday_names(locale = en_locale))
-        expect_identical(wn, wn_ena)
+        expect_equal(wn, wn_ena)
         expect_silent(wn <- weekday_names(locale = en_locale, abbreviate = FALSE))
-        expect_identical(wn, wn_enf)
-        expect_identical(wn, wn_enf)
+        expect_equal(wn, wn_enf)
+        expect_equal(wn, wn_enf)
         expect_silent(ap <- suppressWarnings(ampm_indicators(locale = en_locale)))
-        expect_identical(tolower(ap), ap_en)
+        expect_equal(tolower(ap), ap_en)
     }
 
     pl_locales <- c("pl", "pl_PL", "Polish", "Polish_Poland")
@@ -140,18 +140,18 @@ test_that("'month_names', 'weekday_names', and 'ampm_indicators' work correctly"
         expect_silent(mn <- month_names(locale = pl_locale))
         # limit check to names with ASCII-only characters
         allascii <- c(1L:9L, 11:12L)
-        expect_identical(mn[allascii], mn_pla[allascii])
+        expect_equal(mn[allascii], mn_pla[allascii])
         expect_silent(mn <- month_names(locale = pl_locale, abbreviate = FALSE))
         allascii <- c(2L:3L, 5L:7L, 11L)
         # subtr to handle different gramatical forms
-        expect_identical(substr(mn[allascii], 0L, 3L),
+        expect_equal(substr(mn[allascii], 0L, 3L),
                          substr(mn_plf[allascii], 0L, 3L))
         expect_silent(wn <- weekday_names(locale = pl_locale))
         allascii <- c(1L:2L, 4L, 6L:7L)
-        expect_identical(wn[allascii], wn_pla[allascii])
+        expect_equal(wn[allascii], wn_pla[allascii])
         expect_silent(wn <- weekday_names(locale = pl_locale, abbreviate = FALSE))
         allascii <- c(2L, 4L, 6L:7L)
-        expect_identical(wn[allascii], wn_plf[allascii])
+        expect_equal(wn[allascii], wn_plf[allascii])
         warn <- "AM/PM indicators not available in the selected / current locale"
         expect_warning(ap <- ampm_indicators(locale = pl_locale), warn, fixed = TRUE)
         expect_true(is.character(ap) && (length(ap) == 2L) && all(is.na(ap)))
@@ -160,66 +160,66 @@ test_that("'month_names', 'weekday_names', and 'ampm_indicators' work correctly"
 
 
 test_that("'year', 'quarter', 'month', 'week', 'day', 'day_of_week', and 'day_of_year' work correctly", {
-    expect_identical(year(dd), as.integer(format(DD, "%Y")))
-    expect_identical(year(tind(type = "t")), integer())
-    expect_identical(year(tind(type = "d")), integer())
-    expect_identical(year(as.tind(NA_integer_, type = "d")), NA_integer_)
-    expect_identical(year(ww), as.integer(format(DD, "%G")))
-    expect_identical(year(tind(type = "w")), integer())
-    expect_identical(year(mm), as.integer(format(DD, "%Y")))
-    expect_identical(year(tind(type = "m")), integer())
-    expect_identical(year(qq), as.integer(format(DD, "%Y")))
-    expect_identical(year(tind(type = "q")), integer())
-    expect_identical(year(yy), as.integer(format(DD, "%Y")))
-    expect_identical(year(tind(type = "y")), integer())
+    expect_equal(year(dd), as.integer(format(DD, "%Y")))
+    expect_equal(year(tind(type = "t")), integer())
+    expect_equal(year(tind(type = "d")), integer())
+    expect_equal(year(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(year(ww), as.integer(format(DD, "%G")))
+    expect_equal(year(tind(type = "w")), integer())
+    expect_equal(year(mm), as.integer(format(DD, "%Y")))
+    expect_equal(year(tind(type = "m")), integer())
+    expect_equal(year(qq), as.integer(format(DD, "%Y")))
+    expect_equal(year(tind(type = "q")), integer())
+    expect_equal(year(yy), as.integer(format(DD, "%Y")))
+    expect_equal(year(tind(type = "y")), integer())
     expect_error(year(tind(type = "n")), errcast)
     expect_error(year(tind(type = "h")), errcast)
 
-    expect_identical(quarter(dd), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
-    expect_identical(quarter(tind(type = "t")), integer())
-    expect_identical(quarter(tind(type = "d")), integer())
-    expect_identical(quarter(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(quarter(dd), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
+    expect_equal(quarter(tind(type = "t")), integer())
+    expect_equal(quarter(tind(type = "d")), integer())
+    expect_equal(quarter(as.tind(NA_integer_, type = "d")), NA_integer_)
     expect_error(quarter(ww), errcast)
-    expect_identical(quarter(mm), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
-    expect_identical(quarter(tind(type = "m")), integer())
-    expect_identical(quarter(qq), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
-    expect_identical(quarter(tind(type = "q")), integer())
+    expect_equal(quarter(mm), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
+    expect_equal(quarter(tind(type = "m")), integer())
+    expect_equal(quarter(qq), 1L + (as.integer(format(DD, "%m")) - 1L) %/% 3L)
+    expect_equal(quarter(tind(type = "q")), integer())
     expect_error(quarter(yy), errcast)
     expect_error(quarter(tind(type = "n")), errcast)
     expect_error(quarter(tind(type = "h")), errcast)
 
-    expect_identical(month(dd), as.integer(format(DD, "%m")))
-    expect_identical(month(tind(type = "t")), integer())
-    expect_identical(month(tind(type = "d")), integer())
-    expect_identical(month(as.tind(NA_integer_, type = "d")), NA_integer_)
-    expect_identical(month(mm), as.integer(format(DD, "%m")))
-    expect_identical(as.character(month(mm, labels = TRUE, abbreviate = TRUE)),
+    expect_equal(month(dd), as.integer(format(DD, "%m")))
+    expect_equal(month(tind(type = "t")), integer())
+    expect_equal(month(tind(type = "d")), integer())
+    expect_equal(month(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(month(mm), as.integer(format(DD, "%m")))
+    expect_equal(as.character(month(mm, labels = TRUE, abbreviate = TRUE)),
                      format(DD, "%b"))
-    expect_identical(as.character(month(mm, labels = TRUE, abbreviate = FALSE)),
+    expect_equal(as.character(month(mm, labels = TRUE, abbreviate = FALSE)),
                      format(DD, "%B"))
-    expect_identical(month(tind(type = "m")), integer())
+    expect_equal(month(tind(type = "m")), integer())
     expect_error(month(ww), errcast)
     expect_error(month(qq), errcast)
     expect_error(month(yy), errcast)
     expect_error(month(tind(type = "n")), errcast)
     expect_error(month(tind(type = "h")), errcast)
 
-    expect_identical(week(dd), as.integer(format(DD, "%V")))
-    expect_identical(week(tind(type = "t")), integer())
-    expect_identical(week(tind(type = "d")), integer())
-    expect_identical(week(as.tind(NA_integer_, type = "d")), NA_integer_)
-    expect_identical(week(ww), as.integer(format(DD, "%V")))
-    expect_identical(week(tind(type = "w")), integer())
+    expect_equal(week(dd), as.integer(format(DD, "%V")))
+    expect_equal(week(tind(type = "t")), integer())
+    expect_equal(week(tind(type = "d")), integer())
+    expect_equal(week(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(week(ww), as.integer(format(DD, "%V")))
+    expect_equal(week(tind(type = "w")), integer())
     expect_error(week(mm), errcast)
     expect_error(week(qq), errcast)
     expect_error(week(yy), errcast)
     expect_error(week(tind(type = "n")), errcast)
     expect_error(week(tind(type = "h")), errcast)
 
-    expect_identical(day(dd), as.integer(format(DD, "%d")))
-    expect_identical(day(tind(type = "t")), integer())
-    expect_identical(day(tind(type = "d")), integer())
-    expect_identical(day(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(day(dd), as.integer(format(DD, "%d")))
+    expect_equal(day(tind(type = "t")), integer())
+    expect_equal(day(tind(type = "d")), integer())
+    expect_equal(day(as.tind(NA_integer_, type = "d")), NA_integer_)
     expect_error(day(ww), errcast)
     expect_error(day(mm), errcast)
     expect_error(day(qq), errcast)
@@ -227,14 +227,14 @@ test_that("'year', 'quarter', 'month', 'week', 'day', 'day_of_week', and 'day_of
     expect_error(day(tind(type = "n")), errcast)
     expect_error(day(tind(type = "h")), errcast)
 
-    expect_identical(day_of_week(dd), as.integer(format(DD, "%u")))
-    expect_identical(as.character(day_of_week(dd, labels = TRUE, abbreviate = TRUE)),
+    expect_equal(day_of_week(dd), as.integer(format(DD, "%u")))
+    expect_equal(as.character(day_of_week(dd, labels = TRUE, abbreviate = TRUE)),
                      format(DD, "%a"))
-    expect_identical(as.character(day_of_week(dd, labels = TRUE, abbreviate = FALSE)),
+    expect_equal(as.character(day_of_week(dd, labels = TRUE, abbreviate = FALSE)),
                      format(DD, "%A"))
-    expect_identical(day_of_week(tind(type = "t")), integer())
-    expect_identical(day_of_week(tind(type = "d")), integer())
-    expect_identical(day_of_week(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(day_of_week(tind(type = "t")), integer())
+    expect_equal(day_of_week(tind(type = "d")), integer())
+    expect_equal(day_of_week(as.tind(NA_integer_, type = "d")), NA_integer_)
     expect_error(day_of_week(ww), errcast)
     expect_error(day_of_week(mm), errcast)
     expect_error(day_of_week(qq), errcast)
@@ -242,10 +242,10 @@ test_that("'year', 'quarter', 'month', 'week', 'day', 'day_of_week', and 'day_of
     expect_error(day_of_week(tind(type = "n")), errcast)
     expect_error(day_of_week(tind(type = "h")), errcast)
 
-    expect_identical(day_of_year(dd), as.integer(format(DD, "%j")))
-    expect_identical(day_of_year(tind(type = "t")), integer())
-    expect_identical(day_of_year(tind(type = "d")), integer())
-    expect_identical(day_of_year(as.tind(NA_integer_, type = "d")), NA_integer_)
+    expect_equal(day_of_year(dd), as.integer(format(DD, "%j")))
+    expect_equal(day_of_year(tind(type = "t")), integer())
+    expect_equal(day_of_year(tind(type = "d")), integer())
+    expect_equal(day_of_year(as.tind(NA_integer_, type = "d")), NA_integer_)
     expect_error(day_of_year(ww), errcast)
     expect_error(day_of_year(mm), errcast)
     expect_error(day_of_year(qq), errcast)
@@ -256,21 +256,21 @@ test_that("'year', 'quarter', 'month', 'week', 'day', 'day_of_week', and 'day_of
     for (tz in tzs) {
         plt <- as.POSIXlt(tt, origin = "1970-01-01 00:00:00", tz = tz)
         tit <- as.tind(tt, tz = tz)
-        expect_identical(year(tit), as.integer(format(plt, "%Y")))
-        expect_identical(quarter(tit), 1L + (as.integer(format(plt, "%m")) - 1L) %/% 3L)
-        expect_identical(month(tit), as.integer(format(plt, "%m")))
-        expect_identical(as.character(month(tit, labels = TRUE, abbreviate = TRUE)),
+        expect_equal(year(tit), as.integer(format(plt, "%Y")))
+        expect_equal(quarter(tit), 1L + (as.integer(format(plt, "%m")) - 1L) %/% 3L)
+        expect_equal(month(tit), as.integer(format(plt, "%m")))
+        expect_equal(as.character(month(tit, labels = TRUE, abbreviate = TRUE)),
                          format(plt, "%b"))
-        expect_identical(as.character(month(tit, labels = TRUE, abbreviate = FALSE)),
+        expect_equal(as.character(month(tit, labels = TRUE, abbreviate = FALSE)),
                          format(plt, "%B"))
-        expect_identical(week(tit), as.integer(format(plt, "%V")))
-        expect_identical(day(tit), as.integer(format(plt, "%d")))
-        expect_identical(day_of_week(tit), as.integer(format(plt, "%u")))
-        expect_identical(as.character(day_of_week(tit, labels = TRUE, abbreviate = TRUE)),
+        expect_equal(week(tit), as.integer(format(plt, "%V")))
+        expect_equal(day(tit), as.integer(format(plt, "%d")))
+        expect_equal(day_of_week(tit), as.integer(format(plt, "%u")))
+        expect_equal(as.character(day_of_week(tit, labels = TRUE, abbreviate = TRUE)),
                          format(plt, "%a"))
-        expect_identical(as.character(day_of_week(tit, labels = TRUE, abbreviate = FALSE)),
+        expect_equal(as.character(day_of_week(tit, labels = TRUE, abbreviate = FALSE)),
                          format(plt, "%A"))
-        expect_identical(day_of_year(tit), as.integer(format(plt, "%j")))
+        expect_equal(day_of_year(tit), as.integer(format(plt, "%j")))
     }
 })
 
@@ -278,13 +278,13 @@ test_that("'year', 'quarter', 'month', 'week', 'day', 'day_of_week', and 'day_of
 test_that("methods 'weekdays', 'months', 'quarters' from base work correctly", {
     DD[1L] <- NA
     dd[1L] <- NA
-    expect_identical(weekdays(dd), weekdays(DD))
-    expect_identical(weekdays(dd, TRUE), weekdays(DD, TRUE))
-    expect_identical(weekdays(dd, FALSE), weekdays(DD, FALSE))
-    expect_identical(months(dd), months(DD))
-    expect_identical(months(dd, TRUE), months(DD, TRUE))
-    expect_identical(months(dd, FALSE), months(DD, FALSE))
-    expect_identical(quarters(dd), quarters(DD))
+    expect_equal(weekdays(dd), weekdays(DD))
+    expect_equal(weekdays(dd, TRUE), weekdays(DD, TRUE))
+    expect_equal(weekdays(dd, FALSE), weekdays(DD, FALSE))
+    expect_equal(months(dd), months(DD))
+    expect_equal(months(dd, TRUE), months(DD, TRUE))
+    expect_equal(months(dd, FALSE), months(DD, FALSE))
+    expect_equal(quarters(dd), quarters(DD))
 })
 
 
@@ -299,35 +299,35 @@ test_that("'hour', 'am', 'pm', 'minute', and 'second' work correctly", {
         tit <- as.tind(tt, tz = tz)
         plt <- as.POSIXlt(tit)
         expect_true(is.integer(hour(tit)))
-        expect_identical(hour(tit), plt$hour)
-        expect_identical(hour(tit), hour(plt))
+        expect_equal(hour(tit), plt$hour)
+        expect_equal(hour(tit), hour(plt))
         expect_true(is.logical(am(tit)))
         expect_true(is.logical(pm(tit)))
-        expect_identical(am(tit), plt$hour < 12)
-        expect_identical(pm(tit), plt$hour >= 12)
-        expect_identical(am(tit), !pm(tit))
+        expect_equal(am(tit), plt$hour < 12)
+        expect_equal(pm(tit), plt$hour >= 12)
+        expect_equal(am(tit), !pm(tit))
         expect_true(is.integer(minute(tit)))
-        expect_identical(minute(tit), plt$min)
-        expect_identical(minute(tit), minute(plt))
+        expect_equal(minute(tit), plt$min)
+        expect_equal(minute(tit), minute(plt))
         expect_true(is.double(second(tit)))
         expect_equal(second(tit), round(plt$sec, 6L))
         expect_equal(second(tit), second(plt))
-        expect_identical(hour(tind(type = "t", tz = tz)), integer())
-        expect_identical(minute(tind(type = "t", tz = tz)), integer())
-        expect_identical(second(tind(type = "t", tz = tz)), numeric())
-        expect_identical(am(tind(type = "t", tz = tz)), logical())
-        expect_identical(pm(tind(type = "t", tz = tz)), logical())
+        expect_equal(hour(tind(type = "t", tz = tz)), integer())
+        expect_equal(minute(tind(type = "t", tz = tz)), integer())
+        expect_equal(second(tind(type = "t", tz = tz)), numeric())
+        expect_equal(am(tind(type = "t", tz = tz)), logical())
+        expect_equal(pm(tind(type = "t", tz = tz)), logical())
 
         tih <- as.time(tit)
-        expect_identical(hour(tih), as.integer(plt$hour))
-        expect_identical(am(tih), plt$hour < 12)
-        expect_identical(pm(tih), plt$hour >= 12)
-        expect_identical(am(tih), !pm(tih))
-        expect_identical(minute(tih), as.integer(plt$min))
+        expect_equal(hour(tih), as.integer(plt$hour))
+        expect_equal(am(tih), plt$hour < 12)
+        expect_equal(pm(tih), plt$hour >= 12)
+        expect_equal(am(tih), !pm(tih))
+        expect_equal(minute(tih), as.integer(plt$min))
         expect_equal(second(tih), plt$sec)
-        expect_identical(hour(tind(type = "h")), integer())
-        expect_identical(minute(tind(type = "h")), integer())
-        expect_identical(second(tind(type = "h")), numeric())
+        expect_equal(hour(tind(type = "h")), integer())
+        expect_equal(minute(tind(type = "h")), integer())
+        expect_equal(second(tind(type = "h")), numeric())
     }
 })
 
@@ -336,8 +336,8 @@ test_that("'is.leap_year' and 'days_in_year' work correctly", {
     yy <- c(1900L, 2000L:2019)
     dy <- c(365L, rep(c(366L, 365L, 365L, 365L), 5L))
     ly <- dy == 366L
-    expect_identical(is.leap_year(yy), ly)
-    expect_identical(days_in_year(yy), dy)
+    expect_equal(is.leap_year(yy), ly)
+    expect_equal(days_in_year(yy), dy)
 
     expect_error(is.leap_year(tind(type = "n")), errcast)
     expect_error(days_in_year(tind(type = "n")), errcast)
@@ -351,7 +351,7 @@ test_that("'weeks_in_year' works correctly", {
     wy[c("2004", "2009", "2015")] <- 53L
     names(wy) <- NULL
 
-    expect_identical(weeks_in_year(as.tind(yy, type = "y")), wy)
+    expect_equal(weeks_in_year(as.tind(yy, type = "y")), wy)
 
     expect_error(weeks_in_year(tind(type = "n")), errcast)
 })
@@ -368,19 +368,19 @@ test_that("'days_in_quarter' and 'days_in_month' work correctly", {
     dq2 <- as.integer(kronecker(tapply(dm2, kronecker(1:4, rep(1, 3)), sum), rep(1, 3)))
     dq3 <- dq2
 
-    expect_identical(days_in_quarter(as.tind(ymd1, type = "q")), dq1)
-    expect_identical(days_in_quarter(as.tind(ymd1, type = "d")), dq1)
-    expect_identical(days_in_quarter(as.tind(ymd2, type = "q")), dq2)
-    expect_identical(days_in_quarter(as.tind(ymd2, type = "d")), dq2)
-    expect_identical(days_in_quarter(as.tind(ymd3, type = "q")), dq3)
-    expect_identical(days_in_quarter(as.tind(ymd3, type = "d")), dq3)
+    expect_equal(days_in_quarter(as.tind(ymd1, type = "q")), dq1)
+    expect_equal(days_in_quarter(as.tind(ymd1, type = "d")), dq1)
+    expect_equal(days_in_quarter(as.tind(ymd2, type = "q")), dq2)
+    expect_equal(days_in_quarter(as.tind(ymd2, type = "d")), dq2)
+    expect_equal(days_in_quarter(as.tind(ymd3, type = "q")), dq3)
+    expect_equal(days_in_quarter(as.tind(ymd3, type = "d")), dq3)
 
-    expect_identical(days_in_month(as.tind(ymd1, type = "m")), dm1)
-    expect_identical(days_in_month(ymd1), dm1)
-    expect_identical(days_in_month(as.tind(ymd2, type = "m")), dm2)
-    expect_identical(days_in_month(ymd2), dm2)
-    expect_identical(days_in_month(as.tind(ymd3, type = "m")), dm3)
-    expect_identical(days_in_month(ymd3), dm3)
+    expect_equal(days_in_month(as.tind(ymd1, type = "m")), dm1)
+    expect_equal(days_in_month(ymd1), dm1)
+    expect_equal(days_in_month(as.tind(ymd2, type = "m")), dm2)
+    expect_equal(days_in_month(ymd2), dm2)
+    expect_equal(days_in_month(as.tind(ymd3, type = "m")), dm3)
+    expect_equal(days_in_month(ymd3), dm3)
 
     for (tp in c("y", "q", "w", "i", "n")) {
         expect_error(days_in_month(tind(type = tp)), errcast)
@@ -393,31 +393,31 @@ test_that("'days_in_quarter' and 'days_in_month' work correctly", {
 
 test_that("'hours_in_day' and 'is.dst' work correctly", {
     dd <- as.tind(c(20190310, 20190331, 20191027, 20191103))
-    expect_identical(hours_in_day(dd, "UTC"), rep(24., 4))
+    expect_equal(hours_in_day(dd, "UTC"), rep(24., 4))
 
     tt <- rep(date_time(dd, tz = "UTC"), each = 25L) + c(0:23, NA) * 3600
-    expect_identical(is.dst(tt), rep(c(rep(FALSE, 24L), NA), 4L))
-    expect_identical(is.dst(tt), is.dst(as.POSIXlt(tt)))
+    expect_equal(is.dst(tt), rep(c(rep(FALSE, 24L), NA), 4L))
+    expect_equal(is.dst(tt), is.dst(as.POSIXlt(tt)))
 
     if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
         hd <- c(24., 23, 25, 24)
-        expect_identical(hours_in_day(dd, tz), hd)
-        expect_identical(hours_in_day(as.tind(dd, tz = tz)), hd)
-        expect_identical(hours_in_day(as.tind(dd, tz = tz), tz), hd)
+        expect_equal(hours_in_day(dd, tz), hd)
+        expect_equal(hours_in_day(as.tind(dd, tz = tz)), hd)
+        expect_equal(hours_in_day(as.tind(dd, tz = tz), tz), hd)
         tt <- rep(date_time(dd, tz = tz), each = 25L) + c(0:23, NA) * 3600
-        expect_identical(is.dst(tt), c(rep(FALSE, 24L), NA,
+        expect_equal(is.dst(tt), c(rep(FALSE, 24L), NA,
                                        rep(FALSE, 2L), rep(TRUE, 22L), NA,
                                        rep(TRUE, 3L), rep(FALSE, 21L), NA,
                                        rep(FALSE, 24L), NA))
-        expect_identical(is.dst(tt), is.dst(as.POSIXlt(tt)))
+        expect_equal(is.dst(tt), is.dst(as.POSIXlt(tt)))
     }
     if ((tz <- "America/New_York") %in% OlsonNames()) {
         hd <- c(23., 24, 24, 25)
-        expect_identical(hours_in_day(dd, tz), hd)
-        expect_identical(hours_in_day(as.tind(dd, tz = tz)), hd)
-        expect_identical(hours_in_day(as.tind(dd, tz = tz), tz), hd)
+        expect_equal(hours_in_day(dd, tz), hd)
+        expect_equal(hours_in_day(as.tind(dd, tz = tz)), hd)
+        expect_equal(hours_in_day(as.tind(dd, tz = tz), tz), hd)
         tt <- rep(date_time(dd, tz = tz), each = 25L) + c(0:23, NA) * 3600
-        expect_identical(is.dst(tt), is.dst(as.POSIXlt(tt)))
+        expect_equal(is.dst(tt), is.dst(as.POSIXlt(tt)))
     }
 
     expect_error(hours_in_day(tind(type = "y")), errtype)
@@ -429,7 +429,7 @@ test_that("'hours_in_day' and 'is.dst' work correctly", {
 
 test_that("'nth_day_of_year' works correctly", {
     expect_error(nth_day_of_year(1, tind(type = "n")), errcast)
-    expect_identical(nth_day_of_year(366, 2020), as.tind(20201231))
+    expect_equal(nth_day_of_year(366, 2020), as.tind(20201231))
     expect_warning(nth_day_of_year(366, 2019), warnna)
     expect_warning(nth_day_of_year(0, 2019), warnna)
 })
@@ -440,18 +440,18 @@ test_that("'last_day_in_month' and 'last_day_in_quarter' work correctly", {
     expect_error(last_day_in_month(tind(type = "q")), errcast)
     expect_error(last_day_in_month(tind(type = "n")), errcast)
 
-    expect_identical(last_day_in_month(201902), as.tind(20190228))
-    expect_identical(last_day_in_month(202002), as.tind(20200229))
-    expect_identical(last_day_in_month(202003), as.tind(20200331))
+    expect_equal(last_day_in_month(201902), as.tind(20190228))
+    expect_equal(last_day_in_month(202002), as.tind(20200229))
+    expect_equal(last_day_in_month(202003), as.tind(20200331))
 
     expect_error(last_day_in_quarter(tind(type = "y")), errcast)
     expect_error(last_day_in_quarter(tind(type = "n")), errcast)
 
     mmti <- as.month(mm)
     ddti <- as.date(dd)
-    expect_identical(last_day_in_quarter(mmti),
+    expect_equal(last_day_in_quarter(mmti),
                      last_day_in_month(as.month(as.quarter(mmti) + 1) - 1))
-    expect_identical(last_day_in_quarter(mmti), last_day_in_quarter(ddti))
+    expect_equal(last_day_in_quarter(mmti), last_day_in_quarter(ddti))
 })
 
 
@@ -460,8 +460,8 @@ test_that("'nth_dw_in_month' works correctly", {
     expect_error(nth_dw_in_month(1, 1, tind(type = "q")), errcast)
     expect_error(nth_dw_in_month(1, 1, tind(type = "n")), errcast)
 
-    expect_identical(nth_dw_in_month(1, c(5, 6, 7), 202005), as.tind(20200501 + 0:2))
-    expect_identical(nth_dw_in_month(2, 1:4, 202005), as.tind(20200511 + 0:3))
+    expect_equal(nth_dw_in_month(1, c(5, 6, 7), 202005), as.tind(20200501 + 0:2))
+    expect_equal(nth_dw_in_month(2, 1:4, 202005), as.tind(20200511 + 0:3))
     expect_warning(nth_dw_in_month(1, 8, 202005), warnna)
     expect_warning(nth_dw_in_month(1, 0, 202005), warnna)
     expect_warning(nth_dw_in_month(0, 1, 202005), warnna)
@@ -474,7 +474,7 @@ test_that("'last_dw_in_month' works correctly", {
     expect_error(last_dw_in_month(1, tind(type = "q")), errcast)
     expect_error(last_dw_in_month(1, tind(type = "n")), errcast)
 
-    expect_identical(last_dw_in_month(1:7, 202005), as.tind(20200524 + 1:7))
+    expect_equal(last_dw_in_month(1:7, 202005), as.tind(20200524 + 1:7))
     expect_warning(last_dw_in_month(8, 202005), warnna)
     expect_warning(last_dw_in_month(0, 202005), warnna)
 })
@@ -483,7 +483,7 @@ test_that("'last_dw_in_month' works correctly", {
 test_that("'easter' works correctly", {
     expect_error(easter(tind(type = "n")), errcast)
     eas <- c(20180401L, 20190421L, 20200412L, 20210404L, 20220417L, 20230409L)
-    expect_identical(easter(eas %/% 10000L), as.tind(eas))
+    expect_equal(easter(eas %/% 10000L), as.tind(eas))
 })
 
 
@@ -520,10 +520,10 @@ test_that("'date_time' and 'date_time_split' work correctly", {
                      date_time(ymd, h, m, s, tz = tz))
         expect_equal(date_time(ymd, h, m, tz = tz) + s,
                      date_time(ymd, h, m, s, tz = tz))
-        expect_identical(date_time(ymd, tz = tz), as.date_time(as.date(ymd), tz = tz))
+        expect_equal(date_time(ymd, tz = tz), as.date_time(as.date(ymd), tz = tz))
         dtsplt <- date_time_split(dt0)
-        expect_identical(dtsplt$date, ymd)
-        expect_identical(dtsplt$time, hms)
+        expect_equal(dtsplt$date, ymd)
+        expect_equal(dtsplt$time, hms)
     }
 
     errmish <- paste0(sQuote("M"), " or ", sQuote("S"),
@@ -548,7 +548,7 @@ test_that("'date_time' and 'date_time_split' work correctly", {
     expect_warning(date_time(ymd, h, tz = tz, grid = FALSE), warn, fixed = TRUE)
     expect_warning(date_time(ymd[1L:3L], h[1L:2L], tz = tz), warn, fixed = TRUE)
     expect_silent(dt <- date_time(ymd, h, tz = tz, grid = TRUE))
-    expect_identical(diff(dt), as.tdiff(rep(1, 119), "h"))
+    expect_equal(diff(dt), as.tdiff(rep(1, 119), "h"))
     if ((tz <- "Europe/Warsaw") %in% tzs) {
         expect_warning(date_time(ymd, h, tz = tz), warn, fixed = TRUE)
         expect_warning(date_time(ymd, h, tz = tz, grid = FALSE), warn, fixed = TRUE)
@@ -557,7 +557,7 @@ test_that("'date_time' and 'date_time_split' work correctly", {
     }
 
     for (tz in tzs)
-        expect_identical(date_time(ymd, H = 24, tz = tz), date_time(ymd + 1, H = 0, tz = tz))
+        expect_equal(date_time(ymd, H = 24, tz = tz), date_time(ymd + 1, H = 0, tz = tz))
 })
 
 
@@ -573,20 +573,20 @@ test_that("'year_frac' and 'yf2tind' work correctly", {
             yf <- year_frac(x)
             expect_true(is.numeric(yf))
             expect_equal(floor(yf), as.numeric(as.tind(x, type = "y")))
-            expect_identical(year_frac(tind(type = tp)), numeric())
-            expect_identical(year_frac(tind(length = NN, type = tp)), rep(NA_real_, NN))
+            expect_equal(year_frac(tind(type = tp)), numeric())
+            expect_equal(year_frac(tind(length = NN, type = tp)), rep(NA_real_, NN))
             if (tp != "t") {
-                expect_identical(yf2tind(yf, tp), x)
+                expect_equal(yf2tind(yf, tp), x)
             } else {
                 expect_equal(yf2tind(yf, tp, tz), x)
             }
             yf[] <- NA
-            expect_identical(yf2tind(yf, tp), tind(length = NN, type = tp))
+            expect_equal(yf2tind(yf, tp), tind(length = NN, type = tp))
         }
     }
 
     yy[1] <- NA
-    expect_identical(year_frac(yy), as.numeric(yy))
+    expect_equal(year_frac(yy), as.numeric(yy))
     # errors
     errtype <- paste0("^invalid ", sQuote("type"), " argument; expected one of the following: ",
                   dQuote("[a-z]"), " \\([- a-z]+\\)(, ", dQuote("[a-z]"),
@@ -604,19 +604,19 @@ test_that("'jdn' and 'jdn2tind' work correctly", {
     expect_error(jdn(tind(type = "w")), errtype)
     expect_error(jdn(tind(type = "n")), errtype)
 
-    expect_identical(jdn(as.tind("2000-01-01")), 2451545L)
+    expect_equal(jdn(as.tind("2000-01-01")), 2451545L)
     expect_equal(jdn(as.tind("2013-01-01 00:30Z")), 2456293.520833)
-    expect_identical(jdn2tind(c(2451545L, NA)), as.tind(c("2000-01-01", NA)))
-    expect_identical(jdn2tind(c(2451545., NA)), as.tind(c("2000-01-01", NA)))
+    expect_equal(jdn2tind(c(2451545L, NA)), as.tind(c("2000-01-01", NA)))
+    expect_equal(jdn2tind(c(2451545., NA)), as.tind(c("2000-01-01", NA)))
     expect_equal(jdn2tind(2456293.520833333, "UTC"),
                  as.tind("2013-01-01 00:30Z", tz = "UTC"))
     expect_equal(jdn2tind(2456293.520833333), as.tind("2013-01-01 00:30Z"))
 
     err <- paste0("invalid ", sQuote("x"), " argument; expected a numeric vector")
     expect_error(jdn2tind(tind(type = "d")), err)
-    expect_identical(jdn2tind(integer()), tind(type = "d"))
-    expect_identical(jdn2tind(numeric()), tind(type = "t"))
-    expect_identical(jdn2tind(numeric(), tz = "UTC"), tind(tz = "UTC"))
+    expect_equal(jdn2tind(integer()), tind(type = "d"))
+    expect_equal(jdn2tind(numeric()), tind(type = "t"))
+    expect_equal(jdn2tind(numeric(), tz = "UTC"), tind(tz = "UTC"))
 
     # test name preservation
     y2k <- as.date(c(y2k = "2000-01-01"))

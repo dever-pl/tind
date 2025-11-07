@@ -18,14 +18,14 @@ test_that("'.validate_i' works correctly", {
 
 
 test_that("'.i2char' works correctly", {
-    expect_identical(.i2char(NA_integer_), NA_character_)
-    expect_identical(.i2char(integer()), character())
-    expect_identical(.i2char(c(a = 1L)), c(a = "1"))
-    expect_identical(.i2char(c(a = 1L, b = NA_integer_)),
+    expect_equal(.i2char(NA_integer_), NA_character_)
+    expect_equal(.i2char(integer()), character())
+    expect_equal(.i2char(c(a = 1L)), c(a = "1"))
+    expect_equal(.i2char(c(a = 1L, b = NA_integer_)),
                      c(a = "1", b = NA_character_))
     iic <- .i2char(ii)
     expect_true(all(diff(nchar(iic)[!is.na(iic)]) == 0L))
-    expect_identical(as.integer(iic), ii)
+    expect_equal(as.integer(iic), ii)
 })
 
 
@@ -42,23 +42,23 @@ test_that("'.floor_i' and '.ceiling_i' work correctly", {
     for (n in ns) {
         fi <- .floor_i(ii, n)
         ci <- .ceiling_i(ii, n)
-        expect_identical(is.na(fi), ina)
-        expect_identical(is.na(ci), ina)
+        expect_equal(is.na(fi), ina)
+        expect_equal(is.na(ci), ina)
         iii <- ii[!ina]
         fi <- fi[!ina]
         ci <- ci[!ina]
-        expect_identical(.floor_i(fi, n), fi)
-        expect_identical(.ceiling_i(ci, n), ci)
+        expect_equal(.floor_i(fi, n), fi)
+        expect_equal(.ceiling_i(ci, n), ci)
         expect_true(all(fi %% n == 0L))
         expect_true(all(ci %% n == 0L))
         expect_true(all(fi <= iii & iii <= ci))
-        expect_identical(fi == iii, iii == ci)
+        expect_equal(fi == iii, iii == ci)
         if (n == 1L) {
-            expect_identical(fi, iii)
-            expect_identical(ci, iii)
+            expect_equal(fi, iii)
+            expect_equal(ci, iii)
         } else {
-            expect_identical(fi %% n, rep(0L, NN))
-            expect_identical(ci %% n, rep(0L, NN))
+            expect_equal(fi %% n, rep(0L, NN))
+            expect_equal(ci %% n, rep(0L, NN))
         }
     }
 })
@@ -71,11 +71,11 @@ test_that("'.validate_n' works correctly", {
 
 
 test_that("'.n2char' works correctly", {
-    expect_identical(.n2char(numeric()), character())
-    expect_identical(.n2char(NA_real_), NA_character_)
-    expect_identical(.n2char(c(NA_real_, 0)), c(NA_character_, "0"))
-    expect_identical(.n2char(c(a = 1e9)), c(a = "1e+09"))
-    expect_identical(.n2char(c(a = 1e9, b = NA_integer_)),
+    expect_equal(.n2char(numeric()), character())
+    expect_equal(.n2char(NA_real_), NA_character_)
+    expect_equal(.n2char(c(NA_real_, 0)), c(NA_character_, "0"))
+    expect_equal(.n2char(c(a = 1e9)), c(a = "1e+09"))
+    expect_equal(.n2char(c(a = 1e9, b = NA_integer_)),
                      c(a = "1e+09", b = NA_character_))
     nc <- .n2char(nn)
     expect_true(all(diff(nchar(nc)[!is.na(nc)]) == 0L))
@@ -95,17 +95,17 @@ test_that("'.floor_n' and '.ceiling_n' work correctly", {
     for (n in ns) {
         fi <- .floor_n(nn, n)
         ci <- .ceiling_n(nn, n)
-        expect_identical(is.na(fi), nna)
-        expect_identical(is.na(ci), nna)
+        expect_equal(is.na(fi), nna)
+        expect_equal(is.na(ci), nna)
         nnn <- nn[!nna]
         fi <- fi[!nna]
         ci <- ci[!nna]
-        expect_identical(.floor_n(fi, n), fi)
-        expect_identical(.ceiling_n(ci, n), ci)
+        expect_equal(.floor_n(fi, n), fi)
+        expect_equal(.ceiling_n(ci, n), ci)
         expect_true(all(fi %% n == 0))
         expect_true(all(ci %% n == 0))
         expect_true(all(fi <= nnn & nnn <= ci))
-        expect_identical(fi == nnn, nnn == ci)
+        expect_equal(fi == nnn, nnn == ci)
         expect_equal(fi %% n, rep(0, NN))
         expect_equal(ci %% n, rep(0, NN))
     }

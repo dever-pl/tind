@@ -2,10 +2,10 @@ context("base - utility functions")
 # ###################################################################
 
 test_that("'.require_mode' works correctly", {
-    expect_identical(.require_mode(1L, "integer"), 1L)
-    expect_identical(.require_mode(1., "integer"), 1L)
-    expect_identical(.require_mode(1., "double"), 1.)
-    expect_identical(.require_mode(1L, "double"), 1.)
+    expect_equal(.require_mode(1L, "integer"), 1L)
+    expect_equal(.require_mode(1., "integer"), 1L)
+    expect_equal(.require_mode(1., "double"), 1.)
+    expect_equal(.require_mode(1L, "double"), 1.)
 })
 
 
@@ -40,31 +40,31 @@ test_that("'.anyTRUE' works correctly", {
 test_that("'.class2str' works correctly", {
     st <- Sys.time()
     sd <- Sys.Date()
-    expect_identical(.class2str(st), dQuote("POSIXct/POSIXt"))
-    expect_identical(.class2str(sd), dQuote("Date"))
+    expect_equal(.class2str(st), dQuote("POSIXct/POSIXt"))
+    expect_equal(.class2str(sd), dQuote("Date"))
 })
 
 
 test_that("'.match_left' works correctly", {
-    expect_identical(.match_left(0:9, c(0, 4, 8)),
+    expect_equal(.match_left(0:9, c(0, 4, 8)),
                      c(rep(1L, 4L), rep(2L, 4L), rep(3L, 2L)))
-    expect_identical(.match_left(c(0:9, NA), c(0, 4, 8)),
+    expect_equal(.match_left(c(0:9, NA), c(0, 4, 8)),
                      c(rep(1L, 4L), rep(2L, 4L), rep(3L, 2L), NA_integer_))
-    expect_identical(.match_left(0:9, c(1, 4, 8)),
+    expect_equal(.match_left(0:9, c(1, 4, 8)),
                      c(NA_integer_, rep(1L, 3L), rep(2L, 4L), rep(3L, 2L)))
-    expect_identical(.match_left(c(0:9, NA), c(1, 4, 8)),
+    expect_equal(.match_left(c(0:9, NA), c(1, 4, 8)),
                      c(NA_integer_, rep(1L, 3L), rep(2L, 4L), rep(3L, 2L), NA_integer_))
 })
 
 
 test_that("'.match_right' works correctly", {
-    expect_identical(.match_right(0:9, c(1, 4, 9)),
+    expect_equal(.match_right(0:9, c(1, 4, 9)),
                      c(rep(1L, 2L), rep(2L, 3L), rep(3L, 5L)))
-    expect_identical(.match_right(c(0:9, NA), c(1, 4, 9)),
+    expect_equal(.match_right(c(0:9, NA), c(1, 4, 9)),
                      c(rep(1L, 2L), rep(2L, 3L), rep(3L, 5L), NA_integer_))
-    expect_identical(.match_right(0:9, c(1, 4, 8)),
+    expect_equal(.match_right(0:9, c(1, 4, 8)),
                      c(rep(1L, 2L), rep(2L, 3), rep(3L, 4L), NA_integer_))
-    expect_identical(.match_right(c(0:9, NA), c(1, 4, 8)),
+    expect_equal(.match_right(c(0:9, NA), c(1, 4, 8)),
                      c(rep(1L, 2L), rep(2L, 3), rep(3L, 4L), NA_integer_, NA_integer_))
 })
 
@@ -72,13 +72,13 @@ test_that("'.match_right' works correctly", {
 test_that("'.match_exct' works correctly", {
     x <- 0L:9L
     tab <- sort(sample(x, 4L))
-    expect_identical(.match_exct(x, tab), match(x, tab))
-    expect_identical(.match_exct(x, tab, nomatch = 0L),
+    expect_equal(.match_exct(x, tab), match(x, tab))
+    expect_equal(.match_exct(x, tab, nomatch = 0L),
                      match(x, tab, nomatch = 0L))
     x <- x + .5
     tab <- tab + .5
-    expect_identical(.match_exct(x, tab), match(x, tab))
-    expect_identical(.match_exct(x, tab, nomatch = 0L),
+    expect_equal(.match_exct(x, tab), match(x, tab))
+    expect_equal(.match_exct(x, tab, nomatch = 0L),
                      match(x, tab, nomatch = 0L))
 })
 

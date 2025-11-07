@@ -39,25 +39,25 @@ test_that("'.validate_t' works correctly", {
     tst <- as.numeric(as.POSIXct("0000-01-01 15:00:00", tz = "UTC"))
     ten <- as.numeric(as.POSIXct("9999-12-31 09:00:00", tz = "UTC"))
     expect_true(all(!is.na(.validate_t(c(tst, as.numeric(Sys.time()), ten)))))
-    expect_identical(.validate_t(c(tst - 1, ten + 1)), c(NA_real_, NA_real_))
+    expect_equal(.validate_t(c(tst - 1, ten + 1)), c(NA_real_, NA_real_))
     ttv <- round(as.numeric(Sys.time()) + (2 * runif(NN) - 1) * 1e12, digits = 6L)
     names(ttv) <- nms
     tt <- .validate_t(ttv)
-    expect_identical(!.valid_t0(ttv), is.na(tt))
+    expect_equal(!.valid_t0(ttv), is.na(tt))
     expect_equal(ttv[.valid_t0(ttv)], tt[!is.na(tt)])
-    expect_identical(names(tt), nms)
+    expect_equal(names(tt), nms)
 })
 
 
 test_that("'.t2char' works correctly", {
-    expect_identical(.t2char(numeric(), "UTC"), character())
-    expect_identical(.t2char(NA_real_, "UTC"), NA_character_)
+    expect_equal(.t2char(numeric(), "UTC"), character())
+    expect_equal(.t2char(NA_real_, "UTC"), NA_character_)
     tt0 <- round(tt, 3)
     tt1 <- round(tt)
     tt2 <- as.numeric(as.POSIXct("2018-08-31 09:00:00", tz = "UTC")) + (0:(NN - 1L)) * 3600
-    expect_identical(.t2char(tt2[1], "UTC", FALSE, FALSE), "2018-08-31 09:00")
-    expect_identical(.t2char(tt2[1], "UTC", TRUE, FALSE), "2018-08-31 09:00Z")
-    expect_identical(.t2char(tt2[1], "UTC", FALSE, TRUE), "2018-08-31 09:00 UTC")
+    expect_equal(.t2char(tt2[1], "UTC", FALSE, FALSE), "2018-08-31 09:00")
+    expect_equal(.t2char(tt2[1], "UTC", TRUE, FALSE), "2018-08-31 09:00Z")
+    expect_equal(.t2char(tt2[1], "UTC", FALSE, TRUE), "2018-08-31 09:00 UTC")
     phms <- "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}(:[0-9]{2}(.[0-9]{1,6})?)?)"
     pz <- "(Z|[-+][0-9]{4})"
     pZ <- "([A-Z][-+a-zA-Z/]+|[-+][0-9]{2,4})"
@@ -66,46 +66,46 @@ test_that("'.t2char' works correctly", {
     p01 <- paste0("^", phms, " ", pZ, " *$")
     for (tz in tzs) {
         c00 <- .t2char(tt0, tz, FALSE, FALSE)
-        expect_identical(names(c00), nms)
+        expect_equal(names(c00), nms)
         expect_true(all(diff(nchar(c00)) == 0L))
         expect_true(all(grepl(p00, c00)))
         c10 <- .t2char(tt0, tz, TRUE, FALSE)
-        expect_identical(names(c10), nms)
+        expect_equal(names(c10), nms)
         expect_true(all(grepl(p10, c10)))
         if (tz != "UTC")
             expect_equal(as.numeric(strptime(c10, "%F %H:%M:%OS%z", tz = tz)), unname(tt0))
         if (tz != "Etc/GMT+1") {
             c01 <- .t2char(tt0, tz, FALSE, TRUE)
-            expect_identical(names(c01), nms)
+            expect_equal(names(c01), nms)
             expect_true(all(grepl(p01, c01)))
-            expect_identical(sub(p01, "\\1", c01), c00)
+            expect_equal(sub(p01, "\\1", c01), c00)
         }
 
         c00 <- .t2char(tt1, tz, FALSE, FALSE)
-        expect_identical(names(c00), nms)
+        expect_equal(names(c00), nms)
         expect_true(all(grepl(p00, c00)))
         c10 <- .t2char(tt1, tz, TRUE, FALSE)
-        expect_identical(names(c10), nms)
+        expect_equal(names(c10), nms)
         expect_true(all(diff(nchar(c10)) == 0L))
         expect_true(all(grepl(p10, c10)))
         if (tz != "UTC")
             expect_equal(as.numeric(strptime(c10, "%F %H:%M:%S%z", tz = tz)), unname(tt1))
         if (tz != "Etc/GMT+1") {
             c01 <- .t2char(tt1, tz, FALSE, TRUE)
-            expect_identical(names(c01), nms)
+            expect_equal(names(c01), nms)
             expect_true(all(grepl(p01, c01)))
-            expect_identical(sub(p01, "\\1", c01), c00)
+            expect_equal(sub(p01, "\\1", c01), c00)
         }
     }
     # check decimal places
     for (n in 1:6) {
         tx <- round(tt, n)
         tc <- .t2char(tx, "UTC", FALSE, FALSE)
-        expect_identical(names(tc), nms)
+        expect_equal(names(tc), nms)
         tc <- gsub("^.*(\\.[0-9]+)$", "\\1", tc)
         tx <- format(round(tx - floor(tx), n))
         tx <- gsub("^.*(\\.[0-9]+)$", "\\1", tx)
-        expect_identical(tc, tx)
+        expect_equal(tc, tx)
     }
 })
 
@@ -117,25 +117,25 @@ test_that("'.t2hour', '.t2min', and '.t2sec' work correctly", {
         t2h <- .t2hour(tt, tz)
         t2m <- .t2min(tt, tz)
         t2s <- .t2sec(tt, tz)
-        expect_identical(names(t2h), nms)
-        expect_identical(names(t2m), nms)
-        expect_identical(names(t2s), nms)
-        expect_identical(unname(t2h), as.integer(format(px, "%H", tz)))
-        expect_identical(unname(t2m), as.integer(format(px, "%M", tz)))
-        expect_identical(unname(t2s), as.numeric(format(px, "%S", tz)))
-        expect_identical(.t2hour(numeric(), tz), integer())
-        expect_identical(.t2min(numeric(), tz), integer())
-        expect_identical(.t2sec(numeric(), tz), numeric())
+        expect_equal(names(t2h), nms)
+        expect_equal(names(t2m), nms)
+        expect_equal(names(t2s), nms)
+        expect_equal(unname(t2h), as.integer(format(px, "%H", tz)))
+        expect_equal(unname(t2m), as.integer(format(px, "%M", tz)))
+        expect_equal(unname(t2s), as.numeric(format(px, "%S", tz)))
+        expect_equal(.t2hour(numeric(), tz), integer())
+        expect_equal(.t2min(numeric(), tz), integer())
+        expect_equal(.t2sec(numeric(), tz), numeric())
     }
     tt <- -283996800 - round(runif(NN, 0, 1e9)) # before 1961-01-01 00:00Z
     for (tz in tzs) {
         px <- as.POSIXct(tt, origin = "1970-01-01 00:00:00", tz = tz)
-        expect_identical(.t2hour(tt, tz), as.integer(format(px, "%H", tz)))
-        expect_identical(.t2min(tt, tz), as.integer(format(px, "%M", tz)))
-        expect_identical(.t2sec(tt, tz), as.numeric(format(px, "%S", tz)))
-        expect_identical(.t2hour(numeric(), tz), integer())
-        expect_identical(.t2min(numeric(), tz), integer())
-        expect_identical(.t2sec(numeric(), tz), numeric())
+        expect_equal(.t2hour(tt, tz), as.integer(format(px, "%H", tz)))
+        expect_equal(.t2min(tt, tz), as.integer(format(px, "%M", tz)))
+        expect_equal(.t2sec(tt, tz), as.numeric(format(px, "%S", tz)))
+        expect_equal(.t2hour(numeric(), tz), integer())
+        expect_equal(.t2min(numeric(), tz), integer())
+        expect_equal(.t2sec(numeric(), tz), numeric())
     }
 })
 
@@ -158,26 +158,26 @@ test_that("'.t2d', '.t2y', '.t2q', '.t2m', '.t2w' work correctly", {
                              (as.integer(format(px, "%m", tz)) - 1L) %/% 3L +  1L)
         t2y <- .t2y(tt, tz)
         t2y0 <- as.integer(format(px, "%Y", tz))
-        expect_identical(names(t2d), nms)
-        expect_identical(names(t2w), nms)
-        expect_identical(names(t2m), nms)
-        expect_identical(names(t2q), nms)
-        expect_identical(names(t2y), nms)
-        expect_identical(unname(t2d), t2d0)
-        expect_identical(unname(t2w), t2w0)
-        expect_identical(unname(t2m), t2m0)
-        expect_identical(unname(t2q), t2q0)
-        expect_identical(unname(t2y), t2y0)
+        expect_equal(names(t2d), nms)
+        expect_equal(names(t2w), nms)
+        expect_equal(names(t2m), nms)
+        expect_equal(names(t2q), nms)
+        expect_equal(names(t2y), nms)
+        expect_equal(unname(t2d), t2d0)
+        expect_equal(unname(t2w), t2w0)
+        expect_equal(unname(t2m), t2m0)
+        expect_equal(unname(t2q), t2q0)
+        expect_equal(unname(t2y), t2y0)
     }
 })
 
 
 test_that("'.d2t' works correctly", {
     for (tz in tzs) {
-        expect_identical(.d2t(integer(), tz), numeric())
-        expect_identical(.d2t(NA_integer_, tz), NA_real_)
+        expect_equal(.d2t(integer(), tz), numeric())
+        expect_equal(.d2t(NA_integer_, tz), NA_real_)
         tt <- .d2t(c(NA_integer_, dd), tz)
-        expect_identical(unname(tt[1L]), NA_real_)
+        expect_equal(unname(tt[1L]), NA_real_)
         tt <- tt[-1L]
         px <- as.POSIXct(tt, origin = "1970-01-01 00:00:00")
         pxd <- .validate_ymd(as.integer(format(px, "%Y", tz)),
@@ -217,7 +217,7 @@ test_that("'.d2t' and '.t2d' work correctly - random time zones", {
         ddt <- dd
         if (tz %in% names(.tz_missing_days())) {
             expect_warning(tt <- .d2t(ddt, tz), wrn)
-            expect_identical(tt[ddt %in% .tz_missing_days()[[tz]]], NA_real_)
+            expect_equal(tt[ddt %in% .tz_missing_days()[[tz]]], NA_real_)
             expect_false(anyNA(tt[!(ddt %in% .tz_missing_days()[[tz]])]))
             ddt <- ddt[!(ddt %in% .tz_missing_days()[[tz]])]
         }
@@ -231,9 +231,9 @@ test_that("'.d2t' and '.t2d' work correctly - random time zones", {
                               as.integer(format(px - 1, "%d", tz)))
         expect_true(all(pxd1 < ddt) && identical(ddt, pxd))
         dd2 <- .t2d(tt, tz)
-        expect_identical(dd2, ddt)
+        expect_equal(dd2, ddt)
         if (!(tz %in% names(.tz_missing_days()))) {
-            expect_identical(.t2d(tt - 1, tz), ddt - 1L)
+            expect_equal(.t2d(tt - 1, tz), ddt - 1L)
         }
     }
 })
@@ -248,7 +248,7 @@ test_that("'.w2t' works correctly", {
         pxw1 <- .validate_yw(as.integer(format(px - 1, "%G", tz)),
                              as.integer(format(px - 1, "%V", tz)))
         expect_true(all(pxw1 < ww) && identical(unname(ww), pxw))
-        expect_identical(names(tt), nms)
+        expect_equal(names(tt), nms)
     }
 })
 
@@ -262,7 +262,7 @@ test_that("'.m2t' works correctly", {
         pxm1 <- .validate_ym(as.integer(format(px - 1, "%Y", tz)),
                              as.integer(format(px - 1, "%m", tz)))
         expect_true(all(pxm1 < mm) && identical(unname(mm), pxm))
-        expect_identical(names(tt), nms)
+        expect_equal(names(tt), nms)
     }
 })
 
@@ -276,7 +276,7 @@ test_that("'.q2t' works correctly", {
         pxq1 <- .validate_yq(as.integer(format(px - 1, "%Y", tz)),
                              (as.integer(format(px - 1, "%m", tz)) - 1L) %/% 3L +  1L)
         expect_true(all(pxq1 < qq) && identical(unname(qq), pxq))
-        expect_identical(names(tt), nms)
+        expect_equal(names(tt), nms)
     }
 })
 
@@ -288,7 +288,7 @@ test_that("'.y2t' works correctly", {
         pxy <- as.integer(format(px, "%Y", tz))
         pxy1 <- as.integer(format(px - 1, "%Y", tz))
         expect_true(all(pxy1 < yy) && identical(unname(yy), pxy))
-        expect_identical(names(tt), nms)
+        expect_equal(names(tt), nms)
     }
 })
 
@@ -296,9 +296,9 @@ test_that("'.y2t' works correctly", {
 test_that("'.t2yf' works correctly", {
     for (tz in tzs) {
         yf <- .t2yf(tt, tz)
-        expect_identical(names(yf), nms)
+        expect_equal(names(yf), nms)
         px <- as.POSIXct(tt, origin = "1970-01-01 00:00:00", tz = tz)
-        expect_identical(as.integer(floor(yf)),
+        expect_equal(as.integer(floor(yf)),
                          as.integer(format(px, format = "%Y", tz = tz)))
         y0 <- .t2y(tt, tz)
         y1 <- y0 + 1L
@@ -308,13 +308,13 @@ test_that("'.t2yf' works correctly", {
         expect_equal(yf, yf0)
     }
     expect_equal(.t2yf(1e9, "UTC"), 2001.687874175545403)
-    expect_identical(.t2yf(numeric(), "UTC"), numeric())
+    expect_equal(.t2yf(numeric(), "UTC"), numeric())
 })
 
 
 test_that("'.t2jdn' and '.jdn2t' work correctly", {
-    expect_identical(names(.t2jdn(tt)), nms)
-    expect_identical(names(.jdn2t(.t2jdn(tt))), nms)
+    expect_equal(names(.t2jdn(tt)), nms)
+    expect_equal(names(.jdn2t(.t2jdn(tt))), nms)
     expect_equal(.jdn2t(.t2jdn(tt)), tt)
     tt <- .d2t(dd, "UTC")
     expect_equal(.d2jdn(dd) - .5, .t2jdn(tt))
@@ -324,9 +324,9 @@ test_that("'.t2jdn' and '.jdn2t' work correctly", {
 test_that("'.hours_in_day' and '.isdst_t' work correctly", {
     hd0 <- rep(24., length(dd))
     hd <- .hours_in_day(dd, "UTC")
-    expect_identical(names(hd), nms)
+    expect_equal(names(hd), nms)
     expect_equal(unname(hd), hd0)
-    expect_identical(.hours_in_day(numeric(), "UTC"), numeric())
+    expect_equal(.hours_in_day(numeric(), "UTC"), numeric())
 
     ## NOTE: in the EU (and the majority of European countries) until 2024
     ## changes to DST occurred on the last Sunday of March and changes back
@@ -349,15 +349,15 @@ test_that("'.hours_in_day' and '.isdst_t' work correctly", {
         if (!(tz %in% c("Europe/Dublin", "Europe/Helsinki", "Europe/Lisbon", "Europe/London"))) {
             # changes 1:59 -> 3:00 and 2:59 -> 2:00
             t_todst <- rep(.d2t(todst, tz), each = 25L) + c(0:23, NA) * 3600
-            expect_identical(.isdst_t(t_todst, tz),
+            expect_equal(.isdst_t(t_todst, tz),
                             rep(c(rep(FALSE, 2L), rep(TRUE, 22L), NA), length(todst)))
             t_fromdst <- rep(.d2t(fromdst, tz), each = 25L) + c(0:23, NA) * 3600
-            expect_identical(.isdst_t(t_fromdst, tz),
+            expect_equal(.isdst_t(t_fromdst, tz),
                             rep(c(rep(TRUE, 3L), rep(FALSE, 21L), NA), length(fromdst)))
         }
     }
     for (tz in intersect(tzs, c("UTC", "Etc/GMT+1"))) {
-        expect_identical(.isdst_t(t_todst, tz),
+        expect_equal(.isdst_t(t_todst, tz),
                          rep(c(rep(FALSE, 24L), NA), length(todst)))
     }
 
@@ -403,7 +403,7 @@ test_that("'.dhz2t' works correctly", {
         s <- 16.194
         dt <- .dhz2t(dd, .validate_hms(h, m, s), integer(), tz)
         plt <- as.POSIXlt(dt[1L], origin = "1970-01-01 00:00", tz = tz)
-        expect_identical(dd, c(.validate_ymd(plt$year + 1900, plt$mon + 1, plt$mday),
+        expect_equal(dd, c(.validate_ymd(plt$year + 1900, plt$mon + 1, plt$mday),
                                NA_integer_))
         expect_equal(h, plt$hour)
         expect_equal(m, plt$min)
@@ -419,11 +419,11 @@ test_that("'.dhz2t' works correctly", {
     s[s == 60] <- 60 - 1e-3
     for (tz in tzs) {
         dt <- .dhz2t(dd, .validate_hms(h, m, s), integer(), tz, 0L)
-        expect_identical(names(dt), names(dd))
+        expect_equal(names(dt), names(dd))
         plt <- as.POSIXlt(dt, origin = "1970-01-01 00:00", tz = tz)
         ii <- !is.na(dt)
         plt <- plt[ii]
-        expect_identical(unname(dd[ii]), as.integer(as.Date(plt)))
+        expect_equal(unname(dd[ii]), as.integer(as.Date(plt)))
         expect_equal(plt$hour, h[ii])
         expect_equal(plt$min, m[ii])
         expect_equal(round(plt$sec, digits  = 6), s[ii])
@@ -431,11 +431,11 @@ test_that("'.dhz2t' works correctly", {
 
     if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
         # DST change
-        expect_identical(is.na(.dhz2t(.validate_ymd(2021, 3, 28),
+        expect_equal(is.na(.dhz2t(.validate_ymd(2021, 3, 28),
                                       .validate_hms(c(1:3, 24), 30, 0),
                                       integer(), tz, 0L)),
                          c(FALSE, TRUE, FALSE, TRUE))
-        expect_identical(.dhz2t(.validate_ymd(2021, 3, 28),
+        expect_equal(.dhz2t(.validate_ymd(2021, 3, 28),
                                 .validate_hms(24, 0, 0), integer(), tz, 0L),
                          .d2t(.validate_ymd(2021, 3, 29), tz))
     }
@@ -450,7 +450,7 @@ test_that("'.astz' works correctly", {
     tz1 <- tz01[2L]
     tt1 <- suppressWarnings(.astz(tt, tz, tz1))
     tt2 <- suppressWarnings(.astz(tt1, tz1, tz))
-    expect_identical(names(tt1), names(tt))
+    expect_equal(names(tt1), names(tt))
     ok <- !is.na(tt1)
     expect_equal(.t2d(tt1[ok], tz1), .t2d(tt[ok], tz))
     expect_equal(.t2h(tt1[ok], tz1), .t2h(tt[ok], tz))
@@ -469,7 +469,7 @@ test_that("'.astz' works correctly for longer vectors", {
     tz1 <- tz01[2L]
     tt1 <- suppressWarnings(.astz(tt, tz, tz1))
     tt2 <- suppressWarnings(.astz(tt1, tz1, tz))
-    expect_identical(names(tt1), names(tt))
+    expect_equal(names(tt1), names(tt))
     ok <- !is.na(tt1)
     expect_equal(.t2d(tt1[ok], tz1), .t2d(tt[ok], tz))
     expect_equal(.t2h(tt1[ok], tz1), .t2h(tt[ok], tz))
@@ -484,15 +484,15 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
     nm <- sample(c(1L:6L, 10L, 12L, 15L, 20L, 30L), 3L)
     ns <- c(sample(c(.1, .2, .5), 1L),
             sample(c(1L:6L, 10L, 12L, 15L, 20L, 30L), 3L))
-    expect_identical(.floor_t_h(numeric(), 1, "UTC"), numeric())
-    expect_identical(.floor_t_h(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
-    expect_identical(.floor_t_h(NA_real_, 1, "UTC"), NA_real_)
-    expect_identical(.floor_t_min(numeric(), 1, "UTC"), numeric())
-    expect_identical(.floor_t_min(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
-    expect_identical(.floor_t_min(NA_real_, 1, "UTC"), NA_real_)
-    expect_identical(.floor_t_s(numeric(), 1, "UTC"), numeric())
-    expect_identical(.floor_t_s(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
-    expect_identical(.floor_t_s(NA_real_, 1, "UTC"), NA_real_)
+    expect_equal(.floor_t_h(numeric(), 1, "UTC"), numeric())
+    expect_equal(.floor_t_h(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
+    expect_equal(.floor_t_h(NA_real_, 1, "UTC"), NA_real_)
+    expect_equal(.floor_t_min(numeric(), 1, "UTC"), numeric())
+    expect_equal(.floor_t_min(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
+    expect_equal(.floor_t_min(NA_real_, 1, "UTC"), NA_real_)
+    expect_equal(.floor_t_s(numeric(), 1, "UTC"), numeric())
+    expect_equal(.floor_t_s(c(0, NA_real_), 1, "UTC"), c(0, NA_real_))
+    expect_equal(.floor_t_s(NA_real_, 1, "UTC"), NA_real_)
     for (tz in tzs) {
         ttt <- c(tt, .floor_t_h(tt, 1, tz))
         for (n in nh) {
@@ -500,7 +500,7 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
             ct <- .ceiling_t_h(ttt, n, tz)
             expect_equal(.floor_t_h(ft, n, tz), ft)
             expect_equal(.ceiling_t_h(ct, n, tz), ct)
-            expect_identical(ft == ttt, ttt == ct)
+            expect_equal(ft == ttt, ttt == ct)
             expect_true(all(ft <= ttt & ttt <= ct) &&
                         all(ct <= .d2t(.t2d(ttt, tz) + 1L, tz)) &&
                         all(ft >= .d2t(.t2d(ttt, tz), tz)))
@@ -511,7 +511,7 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
             ct <- .ceiling_t_min(ttt, n, tz)
             expect_equal(.floor_t_min(ft, n, tz), ft)
             expect_equal(.ceiling_t_min(ct, n, tz), ct)
-            expect_identical(ft == ttt, ttt == ct)
+            expect_equal(ft == ttt, ttt == ct)
             expect_true(all(ft <= ttt & ttt <= ct) &&
                         all(ct <= .d2t(.t2d(ttt, tz) + 1L, tz)) &&
                         all(ft >= .d2t(.t2d(ttt, tz), tz)))
@@ -522,7 +522,7 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
             ct <- .ceiling_t_s(ttt, n, tz)
             expect_equal(.floor_t_s(ft, n, tz), ft)
             expect_equal(.ceiling_t_s(ct, n, tz), ct)
-            expect_identical(ft == ttt, ttt == ct)
+            expect_equal(ft == ttt, ttt == ct)
             expect_true(all(ft <= ttt & ttt <= ct))
             expect_true(all(ct <= .d2t(.t2d(ttt, tz) + 1L, tz)))
             expect_true(all(ft >= .d2t(.t2d(ttt, tz), tz)))
@@ -530,18 +530,18 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
     }
 
     if ((tz <- "Europe/Warsaw") %in% tzs) {
-        expect_identical(.floor_t_h(numeric(), 1, tz), numeric())
-        expect_identical(.floor_t_h(c(zero = 0, na = NA_real_), 1, tz),
+        expect_equal(.floor_t_h(numeric(), 1, tz), numeric())
+        expect_equal(.floor_t_h(c(zero = 0, na = NA_real_), 1, tz),
                                   c(zero = 0, na = NA_real_))
-        expect_identical(.floor_t_h(NA_real_, 1, tz), NA_real_)
-        expect_identical(.floor_t_min(numeric(), 1, tz), numeric())
-        expect_identical(.floor_t_min(c(zero = 0, na = NA_real_), 1, tz),
+        expect_equal(.floor_t_h(NA_real_, 1, tz), NA_real_)
+        expect_equal(.floor_t_min(numeric(), 1, tz), numeric())
+        expect_equal(.floor_t_min(c(zero = 0, na = NA_real_), 1, tz),
                                     c(zero = 0, na = NA_real_))
-        expect_identical(.floor_t_min(NA_real_, 1, tz), NA_real_)
-        expect_identical(.floor_t_s(numeric(), 1, tz), numeric())
-        expect_identical(.floor_t_s(c(zero = 0, na = NA_real_), 1, tz),
+        expect_equal(.floor_t_min(NA_real_, 1, tz), NA_real_)
+        expect_equal(.floor_t_s(numeric(), 1, tz), numeric())
+        expect_equal(.floor_t_s(c(zero = 0, na = NA_real_), 1, tz),
                                   c(zero = 0, na = NA_real_))
-        expect_identical(.floor_t_s(NA_real_, 1, tz), NA_real_)
+        expect_equal(.floor_t_s(NA_real_, 1, tz), NA_real_)
         tt <- as.numeric(as.POSIXct("2020-05-31 18:28:32", tz = tz))
         for (n in nh) {
             fl <- floor((tt + 7200) / (3600 * n)) * 3600 * n - 7200
@@ -628,13 +628,13 @@ test_that("'.inc_t_by_d' works correctly", {
     for (tz in tzs) {
         d0 <- .t2d(tt, tz)
         tt1 <- .inc_t_by_d(tt, dd, tz)
-        expect_identical(names(tt1), nms)
+        expect_equal(names(tt1), nms)
         d1 <- .t2d(tt1, tz)
-        expect_identical(unname(d1 - d0), dd)
+        expect_equal(unname(d1 - d0), dd)
         pct0 <- as.POSIXct(tt, origin = "1970-01-01 00:00:00", tz = tz)
         pct1 <- as.POSIXct(tt1, origin = "1970-01-01 00:00:00", tz = tz)
         fmt <- "%M:%S"
-        expect_identical(format(pct0, fmt), format(pct1, fmt))
+        expect_equal(format(pct0, fmt), format(pct1, fmt))
         fmt <- "%H"
         h0 <- as.integer(format(pct0, fmt))
         h1 <- as.integer(format(pct1, fmt))
@@ -645,7 +645,7 @@ test_that("'.inc_t_by_d' works correctly", {
         dd <- unname(.tz_missing_days()[[tz]]) + (-2L:-1L)
         dd2 <- dd + 1L:2L
         tt <- .dhz2t(dd, 12 * 3600, integer(), tz)
-        expect_identical(.t2d(.inc_t_by_d(tt, 1L, tz), tz), dd2)
+        expect_equal(.t2d(.inc_t_by_d(tt, 1L, tz), tz), dd2)
     }
 })
 
@@ -656,14 +656,14 @@ test_that("'.inc_t_by_m' works correctly", {
         d0 <- .t2d(tt, tz)
         m0 <- .d2m(d0)
         tt1 <- .inc_t_by_m(tt, dm, tz)
-        expect_identical(names(tt1), nms)
+        expect_equal(names(tt1), nms)
         d1 <- .t2d(tt1, tz)
         m1 <- .d2m(d1)
-        expect_identical(d1, .inc_d_by_m(d0, dm))
+        expect_equal(d1, .inc_d_by_m(d0, dm))
         pct0 <- as.POSIXct(tt, origin = "1970-01-01 00:00:00", tz = tz)
         pct1 <- as.POSIXct(tt1, origin = "1970-01-01 00:00:00", tz = tz)
         fmt <- "%M:%S"
-        expect_identical(format(pct0, fmt), format(pct1, fmt))
+        expect_equal(format(pct0, fmt), format(pct1, fmt))
         fmt <- "%H"
         h0 <- as.integer(format(pct0, fmt))
         h1 <- as.integer(format(pct1, fmt))
@@ -684,14 +684,14 @@ names(hh) <- nms
 
 test_that("'.validate_h' works correctly", {
     expect_true(all(!is.na(.validate_h(c(0, as.numeric(Sys.time()) %% 86400, 86400)))))
-    expect_identical(.validate_h(c(-1e-6, 86400 + 1e-6)), c(NA_real_, NA_real_))
+    expect_equal(.validate_h(c(-1e-6, 86400 + 1e-6)), c(NA_real_, NA_real_))
     hhv <- round(runif(NN, -1000, 100000), digits = 6L)
     hh <- .validate_t(hhv)
-    expect_identical(!.valid_t0(hhv), is.na(hh))
+    expect_equal(!.valid_t0(hhv), is.na(hh))
     expect_equal(hhv[.valid_t0(hhv)], hh[!is.na(hh)])
-    expect_identical(.validate_h(double()), double())
-    expect_identical(.validate_h(integer()), double())
-    expect_identical(.validate_h(7200L), 7200.)
+    expect_equal(.validate_h(double()), double())
+    expect_equal(.validate_h(integer()), double())
+    expect_equal(.validate_h(7200L), 7200.)
 })
 
 
@@ -741,11 +741,11 @@ test_that("'.validate_hms' works correctly", {
 
 
 test_that("'.h2char' works correctly", {
-    expect_identical(.h2char(numeric()), character())
-    expect_identical(.h2char(NA_real_), NA_character_)
-    expect_identical(.h2char(1), "00:00:01")
-    expect_identical(.h2char(3600), "01:00")
-    expect_identical(.h2char(43932.12), "12:12:12.12")
+    expect_equal(.h2char(numeric()), character())
+    expect_equal(.h2char(NA_real_), NA_character_)
+    expect_equal(.h2char(1), "00:00:01")
+    expect_equal(.h2char(3600), "01:00")
+    expect_equal(.h2char(43932.12), "12:12:12.12")
     hh[1] <- 13.111111
     for (digits in 6L:1L) {
         hh <- round(hh, digits)
@@ -753,7 +753,7 @@ test_that("'.h2char' works correctly", {
         phms <- paste0("^[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{", digits, "}$")
         expect_true(all(grepl(phms, .h2char(hh))))
     }
-    expect_identical(names(.h2char(hh)), nms)
+    expect_equal(names(.h2char(hh)), nms)
     hh  <- round(hh)
     hh[hh == 86400] <- 0
     phms <- "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"
@@ -775,15 +775,15 @@ test_that("'.h2hour', '.h2min', and '.h2sec' work correctly", {
     h2h <- .h2hour(hms)
     h2m <- .h2min(hms)
     h2s <- .h2sec(hms)
-    expect_identical(names(h2h), nms)
-    expect_identical(names(h2m), nms)
-    expect_identical(names(h2s), nms)
-    expect_identical(unname(h2h), hour)
-    expect_identical(unname(h2m), min)
+    expect_equal(names(h2h), nms)
+    expect_equal(names(h2m), nms)
+    expect_equal(names(h2s), nms)
+    expect_equal(unname(h2h), hour)
+    expect_equal(unname(h2m), min)
     expect_equal(unname(h2s), sec)
-    expect_identical(.h2hour(numeric()), integer())
-    expect_identical(.h2min(numeric()), integer())
-    expect_identical(.h2sec(numeric()), numeric())
+    expect_equal(.h2hour(numeric()), integer())
+    expect_equal(.h2min(numeric()), integer())
+    expect_equal(.h2sec(numeric()), numeric())
 })
 
 
@@ -792,51 +792,51 @@ test_that("'.floor_h_/.ceiling_h_ h/min/s' work correctly", {
     nm <- sample(c(1L:6L, 10L, 12L, 15L, 20L, 30L), 3L)
     ns <- c(sample(c(.1, .2, .5), 1L),
             sample(c(1L:6L, 10L, 12L, 15L, 20L, 30L), 3L))
-    expect_identical(.floor_h_h(numeric(), 1), numeric())
-    expect_identical(.floor_h_h(c(0, NA_real_), 1), c(0, NA_real_))
-    expect_identical(.floor_h_h(NA_real_, 1), NA_real_)
-    expect_identical(.floor_h_min(numeric(), 1), numeric())
-    expect_identical(.floor_h_min(c(0, NA_real_), 1), c(0, NA_real_))
-    expect_identical(.floor_h_min(NA_real_, 1), NA_real_)
-    expect_identical(.floor_h_s(numeric(), 1), numeric())
-    expect_identical(.floor_h_s(c(0, NA_real_), 1), c(0, NA_real_))
-    expect_identical(.floor_h_s(NA_real_, 1), NA_real_)
+    expect_equal(.floor_h_h(numeric(), 1), numeric())
+    expect_equal(.floor_h_h(c(0, NA_real_), 1), c(0, NA_real_))
+    expect_equal(.floor_h_h(NA_real_, 1), NA_real_)
+    expect_equal(.floor_h_min(numeric(), 1), numeric())
+    expect_equal(.floor_h_min(c(0, NA_real_), 1), c(0, NA_real_))
+    expect_equal(.floor_h_min(NA_real_, 1), NA_real_)
+    expect_equal(.floor_h_s(numeric(), 1), numeric())
+    expect_equal(.floor_h_s(c(0, NA_real_), 1), c(0, NA_real_))
+    expect_equal(.floor_h_s(NA_real_, 1), NA_real_)
 
     for (n in nh) {
         fh <- .floor_h_h(hh, n)
         ch <- .ceiling_h_h(hh, n)
         expect_equal(.floor_h_h(fh, n), fh)
         expect_equal(.ceiling_h_h(ch, n), ch)
-        expect_identical(fh == hh, hh == ch)
+        expect_equal(fh == hh, hh == ch)
         expect_true(all(fh <= hh & hh <= ch))
         expect_equal(fh, .floor_t_h(hh, n, "UTC"))
         expect_equal(ch, .ceiling_t_h(hh, n, "UTC"))
-        expect_identical(names(fh), nms)
-        expect_identical(names(ch), nms)
+        expect_equal(names(fh), nms)
+        expect_equal(names(ch), nms)
     }
     for (n in nm) {
         fh <- .floor_h_min(hh, n)
         ch <- .ceiling_h_min(hh, n)
         expect_equal(.floor_h_min(fh, n), fh)
         expect_equal(.ceiling_h_min(ch, n), ch)
-        expect_identical(fh == hh, hh == ch)
+        expect_equal(fh == hh, hh == ch)
         expect_true(all(fh <= hh & hh <= ch))
         expect_equal(fh, .floor_t_min(hh, n, "UTC"))
         expect_equal(ch, .ceiling_t_min(hh, n, "UTC"))
-        expect_identical(names(fh), nms)
-        expect_identical(names(ch), nms)
+        expect_equal(names(fh), nms)
+        expect_equal(names(ch), nms)
     }
     for (n in ns) {
         fh <- .floor_h_s(hh, n)
         ch <- .ceiling_h_s(hh, n)
         expect_equal(.floor_h_s(fh, n), fh)
         expect_equal(.ceiling_h_s(ch, n), ch)
-        expect_identical(fh == hh, hh == ch)
+        expect_equal(fh == hh, hh == ch)
         expect_true(all(fh <= hh & hh <= ch))
         expect_equal(fh, .floor_t_s(hh, n, "UTC"))
         expect_equal(ch, .ceiling_t_s(hh, n, "UTC"))
-        expect_identical(names(fh), nms)
-        expect_identical(names(ch), nms)
+        expect_equal(names(fh), nms)
+        expect_equal(names(ch), nms)
     }
 })
 

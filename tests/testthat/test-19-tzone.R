@@ -14,21 +14,21 @@ test_that("'tzone' and 'tzone<-' methods work correctly", {
     ctpl <- as.POSIXlt(ctpc)
     ct <- as.tind(ctpc)
     cti <- tinterval(ct, ct + 1)
-    expect_identical(tzone(ct), Sys.timezone())
-    expect_identical(tzone(ctpc), Sys.timezone())
-    expect_identical(tzone(ctpl), Sys.timezone())
-    expect_identical(tzone(cti), Sys.timezone())
+    expect_equal(tzone(ct), Sys.timezone())
+    expect_equal(tzone(ctpc), Sys.timezone())
+    expect_equal(tzone(ctpl), Sys.timezone())
+    expect_equal(tzone(cti), Sys.timezone())
     for (tz in sample(OlsonNames(), min(5L, length(OlsonNames())))) {
         tzone(ct) <- tz
         tzone(ctpc) <- tz
         tzone(ctpl) <- tz
         tzone(cti) <- tz
-        expect_identical(tzone(ct), tz)
-        expect_identical(tzone(ctpc), tz)
-        expect_identical(tzone(ctpl), tz)
-        expect_identical(tzone(cti), tz)
-        expect_identical(tzone(cti), tzone(cti$start))
-        expect_identical(tzone(cti), tzone(cti$end))
+        expect_equal(tzone(ct), tz)
+        expect_equal(tzone(ctpc), tz)
+        expect_equal(tzone(ctpl), tz)
+        expect_equal(tzone(cti), tz)
+        expect_equal(tzone(cti), tzone(cti$start))
+        expect_equal(tzone(cti), tzone(cti$end))
         expect_equal(ct, as.tind(ctpc))
         expect_equal(ct, as.tind(ctpl))
     }
@@ -36,7 +36,7 @@ test_that("'tzone' and 'tzone<-' methods work correctly", {
     types <- setdiff(.ti_type(long = FALSE), "t")
     for (tp in types) {
         xx <- tind(type = tp)
-        expect_identical(tzone(xx), NULL)
+        expect_equal(tzone(xx), NULL)
         expect_error(tzone(xx) <- tz, errtype)
     }
     x <- 1

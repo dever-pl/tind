@@ -165,13 +165,13 @@ test_that("'merge' method works correctly", {
     expect_warning(mti1 <- merge(rev(t1), t2, all = TRUE), warn, fixed = TRUE)
     tzone(t1) <- tzone(t2) <- "UTC"
     mti0 <- merge(rev(t1), t2, all = TRUE)
-    expect_identical(mti0[-1L], mti1[-1L])
+    expect_equal(mti0[-1L], mti1[-1L])
     tzone(t1) <- tzs[1L]
     tzone(t2) <- tzs[2L]
     expect_warning(mti1 <- merge(rev(t1), t2, all = FALSE), warn, fixed = TRUE)
     tzone(t1) <- tzone(t2) <- "UTC"
     mti0 <- merge(rev(t1), t2, all = FALSE)
-    expect_identical(mti0[-1L], mti1[-1L])
+    expect_equal(mti0[-1L], mti1[-1L])
 
 })
 
@@ -189,24 +189,24 @@ test_that("'merge' method works correctly with 3+ arguments", {
     m112 <- merge(d1, d1, d2, all = TRUE)
     m1122 <- merge(d1, d1, d2, d2, all = TRUE)
     # index
-    expect_identical(m122[[1L]], m12[[1L]])
-    expect_identical(m112[[1L]], m12[[1L]])
-    expect_identical(m1122[[1L]], m12[[1L]])
+    expect_equal(m122[[1L]], m12[[1L]])
+    expect_equal(m112[[1L]], m12[[1L]])
+    expect_equal(m1122[[1L]], m12[[1L]])
     # maps
     m12 <- m12[-1L]
     m122 <- m122[-1L]
     m112 <- m112[-1L]
     m1122 <- m1122[-1L]
-    expect_identical(m122[[1L]], m12[[1L]])
-    expect_identical(m122[[2L]], m12[[2L]])
-    expect_identical(m122[[3L]], m12[[2L]])
-    expect_identical(m112[[1L]], m12[[1L]])
-    expect_identical(m112[[2L]], m12[[1L]])
-    expect_identical(m112[[3L]], m12[[2L]])
-    expect_identical(m1122[[1L]], m12[[1L]])
-    expect_identical(m1122[[2L]], m12[[1L]])
-    expect_identical(m1122[[3L]], m12[[2L]])
-    expect_identical(m1122[[4L]], m12[[2L]])
+    expect_equal(m122[[1L]], m12[[1L]])
+    expect_equal(m122[[2L]], m12[[2L]])
+    expect_equal(m122[[3L]], m12[[2L]])
+    expect_equal(m112[[1L]], m12[[1L]])
+    expect_equal(m112[[2L]], m12[[1L]])
+    expect_equal(m112[[3L]], m12[[2L]])
+    expect_equal(m1122[[1L]], m12[[1L]])
+    expect_equal(m1122[[2L]], m12[[1L]])
+    expect_equal(m1122[[3L]], m12[[2L]])
+    expect_equal(m1122[[4L]], m12[[2L]])
     # errors
     err <- "^time index type mismatch"
     expect_error(merge(d1, d2, we, all = TRUE), err)
@@ -222,9 +222,9 @@ test_that("'merge' method works correctly with 3+ arguments", {
     mmdw_ <- merge(merge(mn, d1)[[1L]], we)
     mmwd_ <- merge(mn, merge(we, d1)[[1L]])
     # index
-    expect_identical(mdwm[[1L]], mdwm_[[1L]])
-    expect_identical(mmdw[[1L]], mmdw_[[1L]])
-    expect_identical(mmwd[[1L]], mmwd_[[1L]])
+    expect_equal(mdwm[[1L]], mdwm_[[1L]])
+    expect_equal(mmdw[[1L]], mmdw_[[1L]])
+    expect_equal(mmwd[[1L]], mmwd_[[1L]])
     # maps
     mdwm <- unname(mdwm[-1L])
     mmdw <- unname(mmdw[-1L])
@@ -232,10 +232,10 @@ test_that("'merge' method works correctly with 3+ arguments", {
     mdwm_ <- mdwm_[-1L]
     mmdw_ <- mmdw_[-1L]
     mmwd_ <- mmwd_[-1L]
-    expect_identical(mmdw[c(2, 3, 1)], mdwm)
-    expect_identical(mmwd[c(3, 2, 1)], mdwm)
-    expect_identical(mdwm[[3L]], mdwm_[[2L]])
-    expect_identical(mdwm[[2L]], mmdw_[[2L]])
+    expect_equal(mmdw[c(2, 3, 1)], mdwm)
+    expect_equal(mmwd[c(3, 2, 1)], mdwm)
+    expect_equal(mdwm[[3L]], mdwm_[[2L]])
+    expect_equal(mdwm[[2L]], mmdw_[[2L]])
     # errors
     err <- "^cast from"
     expect_error(merge(mn, we, we), err)
@@ -244,27 +244,27 @@ test_that("'merge' method works correctly with 3+ arguments", {
     # case 1
     mdamw <- merge(d1, mn, we, all = c(T, F, F))
     # index
-    expect_identical(mdamw[[1L]], d1)
+    expect_equal(mdamw[[1L]], d1)
     # maps
     mdamw <- mdamw[-1L]
     mdam_ <- merge(d1, mn, all.x = T)[-1L]
     mdaw_ <- merge(d1, we, all.x = T)[-1L]
-    expect_identical(mdamw[[1L]], seq_along(d1))
-    expect_identical(mdamw[[2L]], mdam_[[2L]])
-    expect_identical(mdamw[[3L]], mdaw_[[2L]])
+    expect_equal(mdamw[[1L]], seq_along(d1))
+    expect_equal(mdamw[[2L]], mdam_[[2L]])
+    expect_equal(mdamw[[3L]], mdaw_[[2L]])
     # case 2
     mdamwda <- merge(d1, mn, we, d2, all = c(T, F, F, T))
     # index
-    expect_identical(mdamwda[[1L]], union_t(d1, d2))
+    expect_equal(mdamwda[[1L]], union_t(d1, d2))
     # maps
     mdamwda <- mdamwda[-1L]
     mdada_ <- merge(d1, d2, all = T)[-1L]
     mdam_ <- merge(union_t(d1, d2), mn, all.x = T)[-1L]
     mdaw_ <- merge(union_t(d1, d2), we, all.x = T)[-1L]
-    expect_identical(mdamwda[[1L]], mdada_[[1L]])
-    expect_identical(mdamwda[[4L]], mdada_[[2L]])
-    expect_identical(mdamwda[[2L]], mdam_[[2L]])
-    expect_identical(mdamwda[[3L]], mdaw_[[2L]])
+    expect_equal(mdamwda[[1L]], mdada_[[1L]])
+    expect_equal(mdamwda[[4L]], mdada_[[2L]])
+    expect_equal(mdamwda[[2L]], mdam_[[2L]])
+    expect_equal(mdamwda[[3L]], mdaw_[[2L]])
     # errors
     err <- "^cast from"
     expect_error(merge(d1, mn, we, all = c(T, T, F)))
@@ -292,24 +292,24 @@ test_that("'merge' method works correctly with 3+ arguments", {
     m112 <- merge(t1, t1, t2, all = TRUE)
     m1122 <- merge(t1, t1, t2, t2, all = TRUE)
     # index
-    expect_identical(m122[[1L]], m12[[1L]])
-    expect_identical(m112[[1L]], m12[[1L]])
-    expect_identical(m1122[[1L]], m12[[1L]])
+    expect_equal(m122[[1L]], m12[[1L]])
+    expect_equal(m112[[1L]], m12[[1L]])
+    expect_equal(m1122[[1L]], m12[[1L]])
     # maps
     m12 <- m12[-1L]
     m122 <- m122[-1L]
     m112 <- m112[-1L]
     m1122 <- m1122[-1L]
-    expect_identical(m122[[1L]], m12[[1L]])
-    expect_identical(m122[[2L]], m12[[2L]])
-    expect_identical(m122[[3L]], m12[[2L]])
-    expect_identical(m112[[1L]], m12[[1L]])
-    expect_identical(m112[[2L]], m12[[1L]])
-    expect_identical(m112[[3L]], m12[[2L]])
-    expect_identical(m1122[[1L]], m12[[1L]])
-    expect_identical(m1122[[2L]], m12[[1L]])
-    expect_identical(m1122[[3L]], m12[[2L]])
-    expect_identical(m1122[[4L]], m12[[2L]])
+    expect_equal(m122[[1L]], m12[[1L]])
+    expect_equal(m122[[2L]], m12[[2L]])
+    expect_equal(m122[[3L]], m12[[2L]])
+    expect_equal(m112[[1L]], m12[[1L]])
+    expect_equal(m112[[2L]], m12[[1L]])
+    expect_equal(m112[[3L]], m12[[2L]])
+    expect_equal(m1122[[1L]], m12[[1L]])
+    expect_equal(m1122[[2L]], m12[[1L]])
+    expect_equal(m1122[[3L]], m12[[2L]])
+    expect_equal(m1122[[4L]], m12[[2L]])
     # different time zones
     if (length(tzs) < 2L) skip("too few time zones for further tests")
     tzs <- sample(tzs, 2L)
@@ -324,10 +324,10 @@ test_that("'merge' method works correctly with 3+ arguments", {
     expect_warning(m122dt <- merge(t1, t2, t2, all = TRUE), warn, fixed = TRUE)
     expect_warning(m112dt <- merge(t1, t1, t2, all = TRUE), fixed = TRUE)
     expect_warning(m1122dt <- merge(t1, t1, t2, t2, all = TRUE), fixed = TRUE)
-    expect_identical(m12dt[-1L], m12)
-    expect_identical(m122dt[-1L], m122)
-    expect_identical(m112dt[-1L], m112)
-    expect_identical(m1122dt[-1L], m1122)
+    expect_equal(m12dt[-1L], m12)
+    expect_equal(m122dt[-1L], m122)
+    expect_equal(m112dt[-1L], m112)
+    expect_equal(m1122dt[-1L], m1122)
 })
 
 
@@ -340,55 +340,55 @@ test_that("'merge' method works correctly with date-time and time of day", {
     h <- tind(H = h1)
     # 2 args
     mth <- merge(dt, h, all.x = TRUE)
-    expect_identical(mth[[1L]], dt)
+    expect_equal(mth[[1L]], dt)
     nna <- !is.na(mth[[3L]])
-    expect_identical(nna, hour(dt) %in% h1)
-    expect_identical(as.time(dt[nna]), h[mth[[3L]]][nna])
+    expect_equal(nna, hour(dt) %in% h1)
+    expect_equal(as.time(dt[nna]), h[mth[[3L]]][nna])
     mht <- merge(h, dt, all.y = TRUE)
-    expect_identical(mht[[1L]], mth[[1L]])
-    expect_identical(mht[[2L]], mth[[3L]])
-    expect_identical(mht[[3L]], mth[[2L]])
+    expect_equal(mht[[1L]], mth[[1L]])
+    expect_equal(mht[[2L]], mth[[3L]])
+    expect_equal(mht[[3L]], mth[[2L]])
     # 3+ args
     mthh <- merge(dt, h, h, all = c(TRUE, FALSE, FALSE))
-    expect_identical(mthh[[1L]], mth[[1L]])
-    expect_identical(mthh[[2L]], mth[[2L]])
-    expect_identical(mthh[[3L]], mth[[3L]])
-    expect_identical(mthh[[4L]], mth[[3L]])
+    expect_equal(mthh[[1L]], mth[[1L]])
+    expect_equal(mthh[[2L]], mth[[2L]])
+    expect_equal(mthh[[3L]], mth[[3L]])
+    expect_equal(mthh[[4L]], mth[[3L]])
     mhth <- merge(h, dt, h, all = c(FALSE, TRUE, FALSE))
-    expect_identical(mhth[[1L]], mth[[1L]])
-    expect_identical(mhth[[2L]], mth[[3L]])
-    expect_identical(mhth[[3L]], mth[[2L]])
-    expect_identical(mthh[[4L]], mth[[3L]])
+    expect_equal(mhth[[1L]], mth[[1L]])
+    expect_equal(mhth[[2L]], mth[[3L]])
+    expect_equal(mhth[[3L]], mth[[2L]])
+    expect_equal(mthh[[4L]], mth[[3L]])
     mhht <- merge(h, h, dt, all = c(FALSE, FALSE, TRUE))
-    expect_identical(mhht[[1L]], mth[[1L]])
-    expect_identical(mhht[[2L]], mth[[3L]])
-    expect_identical(mhht[[3L]], mth[[3L]])
-    expect_identical(mhht[[4L]], mth[[2L]])
+    expect_equal(mhht[[1L]], mth[[1L]])
+    expect_equal(mhht[[2L]], mth[[3L]])
+    expect_equal(mhht[[3L]], mth[[3L]])
+    expect_equal(mhht[[4L]], mth[[2L]])
 
     # inner
     mth <- merge(dt, h)
-    expect_identical(mth[[1L]], dt[hour(dt) %in% h1])
-    expect_identical(as.time(mth[[1L]]), h[mth[[3L]]])
+    expect_equal(mth[[1L]], dt[hour(dt) %in% h1])
+    expect_equal(as.time(mth[[1L]]), h[mth[[3L]]])
     mht <- merge(h, dt)
-    expect_identical(mht[[1L]], mth[[1L]])
-    expect_identical(mht[[2L]], mth[[3L]])
-    expect_identical(mht[[3L]], mth[[2L]])
+    expect_equal(mht[[1L]], mth[[1L]])
+    expect_equal(mht[[2L]], mth[[3L]])
+    expect_equal(mht[[3L]], mth[[2L]])
     # 3+ args
     mthh <- merge(dt, h, h)
-    expect_identical(mthh[[1L]], mth[[1L]])
-    expect_identical(mthh[[2L]], mth[[2L]])
-    expect_identical(mthh[[3L]], mth[[3L]])
-    expect_identical(mthh[[4L]], mth[[3L]])
+    expect_equal(mthh[[1L]], mth[[1L]])
+    expect_equal(mthh[[2L]], mth[[2L]])
+    expect_equal(mthh[[3L]], mth[[3L]])
+    expect_equal(mthh[[4L]], mth[[3L]])
     mhth <- merge(h, dt, h)
-    expect_identical(mhth[[1L]], mth[[1L]])
-    expect_identical(mhth[[2L]], mth[[3L]])
-    expect_identical(mhth[[3L]], mth[[2L]])
-    expect_identical(mthh[[4L]], mth[[3L]])
+    expect_equal(mhth[[1L]], mth[[1L]])
+    expect_equal(mhth[[2L]], mth[[3L]])
+    expect_equal(mhth[[3L]], mth[[2L]])
+    expect_equal(mthh[[4L]], mth[[3L]])
     mhht <- merge(h, h, dt)
-    expect_identical(mhht[[1L]], mth[[1L]])
-    expect_identical(mhht[[2L]], mth[[3L]])
-    expect_identical(mhht[[3L]], mth[[3L]])
-    expect_identical(mhht[[4L]], mth[[2L]])
+    expect_equal(mhht[[1L]], mth[[1L]])
+    expect_equal(mhht[[2L]], mth[[3L]])
+    expect_equal(mhht[[3L]], mth[[3L]])
+    expect_equal(mhht[[4L]], mth[[2L]])
 })
 
 

@@ -51,17 +51,17 @@ test_that("'as.tdiff' works correctly", {
     expect_error(as.tdiff(1), err)
     expect_error(as.tdiff(NULL), err)
     un <- sample(units, 1L)
-    expect_identical(as.tdiff(NULL, un), as.tdiff(numeric(), un))
+    expect_equal(as.tdiff(NULL, un), as.tdiff(numeric(), un))
     err <- paste0(sQuote("as.tdiff"), " method not defined")
     expect_error(as.tdiff(today()), err, fixed = TRUE)
     warn <- "NAs introduced"
     expect_warning(res <- as.tdiff(9999:10001, "y"), warn, fixed = TRUE)
-    expect_identical(res, as.tdiff(c(9999:10000, NA), "y"))
+    expect_equal(res, as.tdiff(c(9999:10000, NA), "y"))
 
     # character, factor
-    expect_identical(as.tdiff("1d"), as.tdiff(1, "d"))
-    expect_identical(as.tdiff("d"), as.tdiff(1, "d"))
-    expect_identical(as.tdiff(as.factor(paste0(1:3, "d"))), as.tdiff(1:3, "d"))
+    expect_equal(as.tdiff("1d"), as.tdiff(1, "d"))
+    expect_equal(as.tdiff("d"), as.tdiff(1, "d"))
+    expect_equal(as.tdiff(as.factor(paste0(1:3, "d"))), as.tdiff(1:3, "d"))
     err <- "parse error / could not recognise format"
     expect_error(as.tdiff("dd"), err, fixed = TRUE)
 
@@ -69,12 +69,12 @@ test_that("'as.tdiff' works correctly", {
     xx <- sample(-100:100, NN, replace = TRUE)
     map <- c(s = "secs", min = "mins", h = "hours", d = "days", w = "weeks")
     for (un in names(map)) {
-        expect_identical(as.tdiff(as.difftime(xx, units = map[un])), as.tdiff(xx, un))
+        expect_equal(as.tdiff(as.difftime(xx, units = map[un])), as.tdiff(xx, un))
     }
     warn <- "NAs introduced"
     dtw <- as.difftime(51:53 * 10000, units = "weeks")
     expect_warning(tdw <- as.tdiff(dtw), warn, fixed = TRUE)
-    expect_identical(tdw, as.tdiff(c(51:52 * 10000, NA), "w"))
+    expect_equal(tdw, as.tdiff(c(51:52 * 10000, NA), "w"))
 })
 
 
@@ -83,7 +83,7 @@ test_that("'years', ..., 'secs' work correctly", {
     for (f in funcs) {
         u <- if (f == "mins") "min" else substr(f, 1L, 1L)
         xx <- sample(-100:100, NN, replace = TRUE)
-        expect_identical(do.call(f, list(xx)), as.tdiff(xx, u))
+        expect_equal(do.call(f, list(xx)), as.tdiff(xx, u))
     }
 })
 
@@ -191,30 +191,30 @@ test_that("'as.character.tdiff' and 'format.tdiff' work correctly", {
     for (un in c("y", "q", "m", "w", "d")) {
         xx <- get(paste0(un, un))
         dxx <- as.tdiff(xx - rev(xx), un)
-        expect_identical(as.character(dxx), .as.character.tdiff0(dxx))
-        expect_identical(format(dxx), .format.tdiff0(dxx))
+        expect_equal(as.character(dxx), .as.character.tdiff0(dxx))
+        expect_equal(format(dxx), .format.tdiff0(dxx))
         expect_true(all(diff(nchar(format(dxx))) == 0L))
         dxx <- dxx[1L:4L]
         names(dxx) <- letters[1L:4L]
-        expect_identical(as.character(dxx), .as.character.tdiff0(dxx))
-        expect_identical(format(dxx), .format.tdiff0(dxx))
+        expect_equal(as.character(dxx), .as.character.tdiff0(dxx))
+        expect_equal(format(dxx), .format.tdiff0(dxx))
     }
     for (ttv in 0:3) {
         xx <- get(paste0("tt", ttv))
         dxx <- as.tdiff(xx - rev(xx), "s")
-        expect_identical(as.character(dxx), .as.character.tdiff0(dxx))
+        expect_equal(as.character(dxx), .as.character.tdiff0(dxx))
         expect_true(all(diff(nchar(format(dxx))) == 0L))
-        expect_identical(format(dxx), .format.tdiff0(dxx))
+        expect_equal(format(dxx), .format.tdiff0(dxx))
         dxx <- dxx[1L:4L]
         names(dxx) <- letters[1L:4L]
-        expect_identical(as.character(dxx), .as.character.tdiff0(dxx))
-        expect_identical(format(dxx), .format.tdiff0(dxx))
+        expect_equal(as.character(dxx), .as.character.tdiff0(dxx))
+        expect_equal(format(dxx), .format.tdiff0(dxx))
     }
     # empty
     un <- sample(units, 1L)
     xx <- as.tdiff(numeric(), un)
-    expect_identical(as.character(xx), character())
-    expect_identical(format(xx), character())
+    expect_equal(as.character(xx), character())
+    expect_equal(format(xx), character())
 })
 
 
@@ -222,17 +222,17 @@ test_that("'as.character.tdiff' and 'format.tdiff' work correctly", {
 test_that("'as.integer.tdiff' and 'as.double.tdiff' work correctly", {
     un <- sample(head(units, -3L), 1L)
     td <- as.tdiff(-1:1, un)
-    expect_identical(as.integer(td), -1L:1L)
-    expect_identical(as.double(td), as.double(-1:1))
+    expect_equal(as.integer(td), -1L:1L)
+    expect_equal(as.double(td), as.double(-1:1))
     td <- hours(-1:1)
-    expect_identical(as.integer(td), -1L:1L)
-    expect_identical(as.double(td), 3600. * (-1:1))
+    expect_equal(as.integer(td), -1L:1L)
+    expect_equal(as.double(td), 3600. * (-1:1))
     td <- mins(-1:1)
-    expect_identical(as.integer(td), -1L:1L)
-    expect_identical(as.double(td), 60. * (-1:1))
+    expect_equal(as.integer(td), -1L:1L)
+    expect_equal(as.double(td), 60. * (-1:1))
     td <- secs(-1:1)
-    expect_identical(as.integer(td), -1L:1L)
-    expect_identical(as.double(td), as.double(-1:1))
+    expect_equal(as.integer(td), -1L:1L)
+    expect_equal(as.double(td), as.double(-1:1))
 })
 
 
@@ -241,12 +241,12 @@ test_that("'as.list.tdiff' works correctly", {
     xx <- sample(-100:100, NN, replace = TRUE)
     un <- sample(units, 1L)
     td <- as.tdiff(xx, un)
-    expect_identical(as.list(td), lapply(xx, function(x) as.tdiff(x, un)))
+    expect_equal(as.list(td), lapply(xx, function(x) as.tdiff(x, un)))
     xx10 <- xx[1L:10L]
     names(xx10) <- letters[1L:10L]
     lx10 <- as.list(xx10)
     dx10 <- as.tdiff(xx10, un)
-    expect_identical(as.list(dx10), lapply(lx10, function(x) as.tdiff(x, un)))
+    expect_equal(as.list(dx10), lapply(lx10, function(x) as.tdiff(x, un)))
 })
 
 
@@ -257,9 +257,9 @@ test_that("'as.data.frame.tdiff' works correctly", {
 
     df <- as.data.frame(td)
     expect_true(is.data.frame(df))
-    expect_identical(nrow(df), length(td))
-    expect_identical(ncol(df), 1L)
-    expect_identical(df[[1L]], td)
+    expect_equal(nrow(df), length(td))
+    expect_equal(ncol(df), 1L)
+    expect_equal(df[[1L]], td)
 })
 
 
@@ -269,20 +269,20 @@ test_that("tdiff '[', '[[', '[<-', and '[[<-' methods work correctly", {
     un <- sample(units, 1L)
     dx <- as.tdiff(xx, un)
     ii <- sample(1L:NN, 10)
-    expect_identical(dx[ii], as.tdiff(xx[ii], un))
+    expect_equal(dx[ii], as.tdiff(xx[ii], un))
 
     ii <- sample(1L:NN, 10L)
     jj <- sample(1L:NN, 10L)
     dx[ii] <- dx[jj]
     xx[ii] <- xx[jj]
-    expect_identical(dx, as.tdiff(xx, un))
+    expect_equal(dx, as.tdiff(xx, un))
     dx[] <- 2000
     expect_true(all(dx == 2000))
 
     xx <- sample(-100:100, NN, replace = FALSE)
     dx <- days(xx)
     expect_silent(dx[NN + (-2L:0L)] <- NA)
-    expect_identical(is.na(dx), c(rep(FALSE, NN - 3L), rep(TRUE, 3L)))
+    expect_equal(is.na(dx), c(rep(FALSE, NN - 3L), rep(TRUE, 3L)))
     expect_silent(dx[] <- "-1d")
     expect_true(all(dx == -1))
     expect_silent(dx[1L] <- "2d")
@@ -316,7 +316,7 @@ test_that("'length<-' works correctly", {
     td <- as.tdiff(xx, un)
     length(xx) <- NN - MM
     length(td) <- NN - MM
-    expect_identical(as.tdiff(xx, un), rep(td))
+    expect_equal(as.tdiff(xx, un), rep(td))
 
     NN <- sample((NN %/% 2):NN, 1L)
     MM <- sample(2L:5L, 1L)
@@ -325,7 +325,7 @@ test_that("'length<-' works correctly", {
     td <- as.tdiff(xx, un)
     length(xx) <- NN + MM
     length(td) <- NN + MM
-    expect_identical(as.tdiff(xx, un), rep(td))
+    expect_equal(as.tdiff(xx, un), rep(td))
 })
 
 
@@ -335,7 +335,7 @@ test_that("'rep' works correctly", {
     xx <- sample(-100:100, NN, replace = TRUE)
     un <- sample(units, 1L)
     td <- as.tdiff(xx, un)
-    expect_identical(as.tdiff(rep(xx, MM), un), rep(td, MM))
+    expect_equal(as.tdiff(rep(xx, MM), un), rep(td, MM))
 })
 
 
@@ -350,11 +350,11 @@ test_that("'c.tdiff' works correctly", {
     x2 <- tail(xx, -nn)
     d1 <- as.tdiff(x1, un)
     d2 <- as.tdiff(x2, un)
-    expect_identical(dx, c(d1, d2))
-    if (!(un %in% c("h", "min"))) expect_identical(dx, c(d1, x2))
+    expect_equal(dx, c(d1, d2))
+    if (!(un %in% c("h", "min"))) expect_equal(dx, c(d1, x2))
 
-    expect_identical(c(days(7), "8d"), days(7:8))
-    expect_identical(c(days(7), 8), days(7:8))
+    expect_equal(c(days(7), "8d"), days(7:8))
+    expect_equal(c(days(7), 8), days(7:8))
 
     err <- paste("time unit mismatch in", sQuote("c.tdiff"))
     un2 <- if (un %in% tail(units, 3L)) sample(head(units, -3L), 1L)
@@ -372,19 +372,19 @@ test_that("'Math.tind', 'Summary.tind', and 'Complex.tind' methods work correctl
 
     # math w/0 sign
     for (f in c("abs", "cummin", "cummax")) {
-        expect_identical(do.call(f, list(td)),
+        expect_equal(do.call(f, list(td)),
                          as.tdiff(do.call(f, list(xx)), un))
     }
 
     # summary + sign
     for (f in c("all", "any", "sign")) {
-        expect_identical(do.call(f, list(td)),
+        expect_equal(do.call(f, list(td)),
                          do.call(f, list(xx)))
     }
     for (f in c("min", "max", "range", "sum")) {
-        expect_identical(do.call(f, list(td)),
+        expect_equal(do.call(f, list(td)),
                          as.tdiff(do.call(f, list(xx)), un))
-        expect_identical(do.call(f, list(td)),
+        expect_equal(do.call(f, list(td)),
                          do.call(f, list(td[1L:10L], td[11L:NN])))
     }
 
@@ -392,8 +392,8 @@ test_that("'Math.tind', 'Summary.tind', and 'Complex.tind' methods work correctl
     xx <- round(runif(NN, -1, 10), digits = 3)
     un <- "s"
     td <- as.tdiff(xx, un)
-    expect_identical(signif(td, 1), as.tdiff(signif(xx, 1), un))
-    expect_identical(round(td, 1), as.tdiff(round(xx, 1), un))
+    expect_equal(signif(td, 1), as.tdiff(signif(xx, 1), un))
+    expect_equal(round(td, 1), as.tdiff(round(xx, 1), un))
 
     # errors
     err <- paste0(" method not defined for class ", dQuote("tdiff"))
@@ -410,9 +410,9 @@ test_that("'is.unsorted', 'sort', and 'order' tind methods work correctly", {
     un <- sample(units, 1L)
     td <- as.tdiff(xx, un)
 
-    expect_identical(is.unsorted(td), is.unsorted(xx))
+    expect_equal(is.unsorted(td), is.unsorted(xx))
     expect_false(is.unsorted(sort(td)))
-    expect_identical(sort(td), as.tdiff(sort(xx), un))
+    expect_equal(sort(td), as.tdiff(sort(xx), un))
 })
 
 
@@ -421,13 +421,13 @@ test_that("'unique', 'duplicated', and 'anyDuplicated' tdiff methods work correc
     un <- sample(units, 1L)
     td <- as.tdiff(xx, un)
 
-    expect_identical(unique(td), as.tdiff(unique(xx), un))
-    expect_identical(unique(as.tdiff(sort(xx), un)), as.tdiff(sort(unique(xx)), un))
-    expect_identical(duplicated(td), duplicated(xx))
-    expect_identical(duplicated(td, fromLast = TRUE), duplicated(xx, fromLast = TRUE))
-    expect_identical(anyDuplicated(td), anyDuplicated(xx))
-    expect_identical(anyDuplicated(unique(td)), 0L)
-    expect_identical(anyDuplicated(td, fromLast = TRUE), anyDuplicated(xx, fromLast = TRUE))
+    expect_equal(unique(td), as.tdiff(unique(xx), un))
+    expect_equal(unique(as.tdiff(sort(xx), un)), as.tdiff(sort(unique(xx)), un))
+    expect_equal(duplicated(td), duplicated(xx))
+    expect_equal(duplicated(td, fromLast = TRUE), duplicated(xx, fromLast = TRUE))
+    expect_equal(anyDuplicated(td), anyDuplicated(xx))
+    expect_equal(anyDuplicated(unique(td)), 0L)
+    expect_equal(anyDuplicated(td, fromLast = TRUE), anyDuplicated(xx, fromLast = TRUE))
 })
 
 

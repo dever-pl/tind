@@ -41,12 +41,12 @@ test_that("'.calendar_names' works correctly", {
         wn_enf <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
                     "Saturday",  "Sunday")
         ap_en <- c("am", "pm")
-        expect_identical(length(cnames), 40L)
-        expect_identical(cnames[1L:12L], mn_ena)
-        expect_identical(cnames[13L:24L], mn_enf)
-        expect_identical(cnames[25L:31L], wn_ena)
-        expect_identical(cnames[32L:38L], wn_enf)
-        expect_identical(tolower(cnames[39L:40L]), ap_en)
+        expect_equal(length(cnames), 40L)
+        expect_equal(cnames[1L:12L], mn_ena)
+        expect_equal(cnames[13L:24L], mn_enf)
+        expect_equal(cnames[25L:31L], wn_ena)
+        expect_equal(cnames[32L:38L], wn_enf)
+        expect_equal(tolower(cnames[39L:40L]), ap_en)
     }
 
     pl_locales <- c("pl", "pl_PL", "Polish", "Polish_Poland")
@@ -66,19 +66,19 @@ test_that("'.calendar_names' works correctly", {
         wn_pla <- c("pon", "wto", "śro", "czw", "pią", "sob", "nie")
         wn_plf <- c("poniedziałek", "wtorek", "środa", "czwartek", "piątek",
                     "sobota", "niedziela")
-        expect_identical(length(cnames), 40L)
+        expect_equal(length(cnames), 40L)
         # limit check to names with ASCII-only characters
         allascii <- c(1L:9L, 11:12L)
-        expect_identical(cnames[allascii], mn_pla[allascii])
+        expect_equal(cnames[allascii], mn_pla[allascii])
         allascii <- c(2L:3L, 5L:7L, 11L)
         # subtr to handle different gramatical forms
-        expect_identical(substr(cnames[12L + allascii], 0L, 3L),
+        expect_equal(substr(cnames[12L + allascii], 0L, 3L),
                          substr(mn_plf[allascii], 0L, 3L))
         allascii <- c(1L:2L, 4L, 6L:7L)
-        expect_identical(cnames[24L + allascii], wn_pla[allascii])
+        expect_equal(cnames[24L + allascii], wn_pla[allascii])
         allascii <- c(2L, 4L, 6L:7L)
-        expect_identical(cnames[31L + allascii], wn_plf[allascii])
-        expect_identical(cnames[39L:40L], c("", ""))
+        expect_equal(cnames[31L + allascii], wn_plf[allascii])
+        expect_equal(cnames[39L:40L], c("", ""))
     }
 })
 

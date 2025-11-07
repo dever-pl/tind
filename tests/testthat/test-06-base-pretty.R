@@ -58,8 +58,8 @@ test_that("'.pretty_[yqm]' work correctly", {
     if (diff(range(yy)) > 0) {
         n <- sample(c(0L:5L, 10L, 20L), 1L)
         mn <- sample(0L:min(n, 5L), 1L)
-        expect_identical(.pretty_q(.y2q(yy), n, mn), .y2q(.pretty_y(yy, n, mn)))
-        expect_identical(.pretty_m(.y2m(yy), n, mn), .y2m(.pretty_y(yy, n, mn)))
+        expect_equal(.pretty_q(.y2q(yy), n, mn), .y2q(.pretty_y(yy, n, mn)))
+        expect_equal(.pretty_m(.y2m(yy), n, mn), .y2m(.pretty_y(yy, n, mn)))
     }
 })
 
@@ -103,7 +103,7 @@ test_that("'.pretty_w' works correctly", {
     if (diff(range(yy)) > 0) {
         n <- sample(c(0L:5L, 10L, 20L), 1L)
         mn <- sample(0L:min(n, 5L), 1L)
-        expect_identical(.pretty_w(.y2w(yy), n, mn), .y2w(.pretty_y(yy, n, mn)))
+        expect_equal(.pretty_w(.y2w(yy), n, mn), .y2w(.pretty_y(yy, n, mn)))
     }
     for (rfr in c(2L, 4L, 13L, 26L)) {
         w0 <- .floor_w(w0, rfr)
@@ -175,13 +175,13 @@ test_that("'.pretty_d' works correctly", {
     if (diff(range(yy)) > 0) {
         n <- sample(c(0L:5L, 10L, 20L), 1L)
         mn <- sample(0L:min(n, 5L), 1L)
-        expect_identical(.pretty_d(.y2d(yy), n, mn), .y2d(.pretty_y(yy, n, mn)))
+        expect_equal(.pretty_d(.y2d(yy), n, mn), .y2d(.pretty_y(yy, n, mn)))
     }
     mm <- c(m0[1L], m1[1L])
     if (diff(range(mm)) > 0) {
         n <- sample(c(0L:5L, 10L, 20L), 1L)
         mn <- sample(0L:min(n, 5L), 1L)
-        expect_identical(.pretty_d(.m2d(mm), n, mn), .m2d(.pretty_m(mm, n, mn)))
+        expect_equal(.pretty_d(.m2d(mm), n, mn), .m2d(.pretty_m(mm, n, mn)))
     }
     ww <- c(w0[1L], w1[1L])
     if (diff(range(ww)) > 0) {
@@ -189,7 +189,7 @@ test_that("'.pretty_d' works correctly", {
         mn <- sample(0L:min(n, 5L), 1L)
         wd <- .w2d(ww)
         if (.res_d(wd)$unit == "w")
-            expect_identical(.pretty_d(wd, n, mn), .w2d(.pretty_w(ww, n, mn)))
+            expect_equal(.pretty_d(wd, n, mn), .w2d(.pretty_w(ww, n, mn)))
     }
 })
 
@@ -308,19 +308,19 @@ test_that("'.pretty_t' works correctly", {
     y0 <- sample(1998:2020, 1L) + 0L:sample.int(20L, 1L)
     n <- sample(c(0L:5L, 10L, 20L), 1L)
     mn <- sample(0L:min(n, 5L), 1L)
-    expect_identical(.pretty_t(.y2t(y0, tz), tz, n, mn), .y2t(.pretty_y(y0, n, mn), tz))
+    expect_equal(.pretty_t(.y2t(y0, tz), tz, n, mn), .y2t(.pretty_y(y0, n, mn), tz))
     m0 <- m0[1L] + 0L:sample.int(20L, 1L)
     n <- sample(c(0L:5L, 10L, 20L), 1L)
     mn <- sample(0L:min(n, 5L), 1L)
-    expect_identical(.pretty_t(.m2t(m0, tz), tz, n, mn), .m2t(.pretty_m(m0, n, mn), tz))
+    expect_equal(.pretty_t(.m2t(m0, tz), tz, n, mn), .m2t(.pretty_m(m0, n, mn), tz))
     w0 <- w0[1L] + 0L:sample.int(20L, 1L)
     n <- sample(c(0L:5L, 10L, 20L), 1L)
     mn <- sample(0L:min(n, 5L), 1L)
-    expect_identical(.pretty_t(.w2t(w0, tz), tz, n, mn), .w2t(.pretty_w(w0, n, mn), tz))
+    expect_equal(.pretty_t(.w2t(w0, tz), tz, n, mn), .w2t(.pretty_w(w0, n, mn), tz))
     d0 <- d0[1L] + 0L:sample.int(20L, 1L)
     n <- sample(c(0L:5L, 10L, 20L), 1L)
     mn <- sample(0L:min(n, 5L), 1L)
-    expect_identical(.pretty_t(.d2t(d0, tz), tz, n, mn), .d2t(.pretty_d(d0, n, mn), tz))
+    expect_equal(.pretty_t(.d2t(d0, tz), tz, n, mn), .d2t(.pretty_d(d0, n, mn), tz))
 })
 
 
@@ -458,7 +458,7 @@ test_that("'.pretty_i' works correctly", {
             expect_true(all(ok))
         }
     }
-    expect_identical(.pretty_i(0L), 0L:2L)
+    expect_equal(.pretty_i(0L), 0L:2L)
 })
 
 

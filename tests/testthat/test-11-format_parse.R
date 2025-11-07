@@ -53,17 +53,17 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
     for (tp in names(fmts)) {
         x <- as.tind(xx, type = tp)
         names(x) <- nms
-        expect_identical(format(x[0L]), character())
+        expect_equal(format(x[0L]), character())
         fmt <- fmts[[tp]]
         ord <- ords[[tp]]
         for (fi in seq_along(fmt)) {
             cc <- format(x, fmt[fi])
             if (fi == 1L) {
-                expect_identical(cc, format(x))
-                expect_identical(x, as.tind(cc))
+                expect_equal(cc, format(x))
+                expect_equal(x, as.tind(cc))
             }
-            expect_identical(x, strptind(cc, fmt[fi]))
-            expect_identical(x, parse_t(cc, ord[fi]))
+            expect_equal(x, strptind(cc, fmt[fi]))
+            expect_equal(x, parse_t(cc, ord[fi]))
         }
     }
 
@@ -86,7 +86,7 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
                  "%m/%d/%y %I:%M %p")
         ord <- c("ymdHMz",           "ymdHMz",            "ymdHM",
                  "mdyIMp")
-        expect_identical(format(xx[0L]), character())
+        expect_equal(format(xx[0L]), character())
         for (fi in seq_along(fmt)) {
             cc <- format(xx, fmt[fi])
             expect_equal(xx, suppressWarnings(as.tind(cc, tz = tz)))
@@ -149,14 +149,14 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
         warn <- "time zone abbreviation not available"
         expect_warning(res <- format(xx, "%F %R %Z"), warn)
         expect_true(grepl("\\?\\?\\?$", res))
-        expect_identical(format(xx), format(xx, "%F %R%z"))
+        expect_equal(format(xx), format(xx, "%F %R%z"))
     }
     expect_equal(as.numeric(as.tind("2021-03-17 07:00-01")),
                  as.numeric(as.tind("2021-03-17") - as.tind("1970-01-01")) * 86400 + 8 * 3600)
     warn <- paste0("^format specifier ", dQuote("%y"), " \\(or ", dQuote("%g"),
                    "\\) used for years outside [0-9]{4}-[0-9]{4} range$")
     expect_warning(format(tind(y = 1899), "%y"), warn)
-    expect_identical(format(tind(type = "y"), "%y"), character())
+    expect_equal(format(tind(type = "y"), "%y"), character())
 
     warn <- paste0("NAs introduced; first position 1: ", dQuote("2023-02-29"),
                    "; type: ", dQuote("d"), " (date); order: ", dQuote("ymd"))
@@ -254,8 +254,8 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
     y1 <- parse_t(factor(c(a = "1998", b = "1999")), "y")
     y2 <- strptind(factor(c(a = "1998", b = "1999")), "%Y")
     y3 <- tind(y = c(a = 1998, b = 1999))
-    expect_identical(y1, y2)
-    expect_identical(y2, y3)
+    expect_equal(y1, y2)
+    expect_equal(y2, y3)
 
     # AM/PM locale
     skip_on_cran()

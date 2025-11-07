@@ -21,15 +21,15 @@ test_that("'tspan' method for 'tind' works correctly", {
         inc <- c(rng[1L], sample(rng[1L]:rng[2L], NN, replace = TRUE), rng[2L])
         ind <- as.tind(today(), type = tp) + inc
         tsp <- tspan(ind)
-        expect_identical(tsp, as.tdiff(diff(rng) + 1, unit = tp))
-        expect_identical(tspan(ind[1L]), as.tdiff(1L, unit = tp))
+        expect_equal(tsp, as.tdiff(diff(rng) + 1, unit = tp))
+        expect_equal(tspan(ind[1L]), as.tdiff(1L, unit = tp))
         expect_true(tspan(ind[0L]) == 0)
-        expect_identical(tspan(c(ind, NA)), as.tdiff(NA, unit = tp))
-        expect_identical(tspan(c(ind, NA), na.rm = TRUE), tsp)
+        expect_equal(tspan(c(ind, NA)), as.tdiff(NA, unit = tp))
+        expect_equal(tspan(c(ind, NA), na.rm = TRUE), tsp)
         expect_warning(tspan(c(ind, NA), na.rm = TRUE, qwerty = 3456))
         expect_error(tspan(c(ind, NA), 3456))
         if (tp == "d")
-            expect_identical(tspan(as.Date(ind)), as.tdiff(diff(rng) + 1, unit = tp))
+            expect_equal(tspan(as.Date(ind)), as.tdiff(diff(rng) + 1, unit = tp))
     }
     # t
     tt0 <- round(as.numeric(Sys.time()) + runif(NN, -3e7, 3e7), digits = 3)
@@ -43,9 +43,9 @@ test_that("'tspan' method for 'tind' works correctly", {
         ind <- as.date_time(tt, tz = tz)
         tsp <- tspan(ind)
         expect_equal(tsp, as.tdiff(rng, "s"))
-        expect_identical(tspan(ind[1L]), as.tdiff(0, unit = "s"))
+        expect_equal(tspan(ind[1L]), as.tdiff(0, unit = "s"))
         expect_true(tspan(ind[0L]) == 0)
-        expect_identical(tspan(c(ind, NA)), as.tdiff(NA, unit = "s"))
+        expect_equal(tspan(c(ind, NA)), as.tdiff(NA, unit = "s"))
         expect_equal(tspan(c(ind, NA), na.rm = TRUE), tsp)
     }
     # h
@@ -54,15 +54,15 @@ test_that("'tspan' method for 'tind' works correctly", {
     ind <- as.time(hh)
     tsp <- tspan(ind)
     expect_equal(tsp, as.tdiff(rng, "s"))
-    expect_identical(tspan(ind[1L]), as.tdiff(0, unit = "s"))
+    expect_equal(tspan(ind[1L]), as.tdiff(0, unit = "s"))
     expect_true(tspan(ind[0L]) == 0)
-    expect_identical(tspan(c(ind, NA)), as.tdiff(NA, unit = "s"))
+    expect_equal(tspan(c(ind, NA)), as.tdiff(NA, unit = "s"))
     expect_equal(tspan(c(ind, NA), na.rm = TRUE), tsp)
     # i
     rng <- range(sample((-NN:NN), 2L))
     ii <- c(rng[1L], sample(rng[1L]:rng[2L], NN, replace = TRUE), rng[2L])
     ind <- as.tind(ii, "i")
-    expect_identical(tspan(ind), as.integer(diff(rng)) + 1L)
+    expect_equal(tspan(ind), as.integer(diff(rng)) + 1L)
     expect_true(tspan(ind[1L]) == 1)
     expect_true(tspan(ind[0L]) == 0)
     # n

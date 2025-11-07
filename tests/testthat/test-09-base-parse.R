@@ -14,18 +14,18 @@ test_that("'.parse_num' works correctly", {
     warn0 <- paste0("^NAs introduced; first position [0-9]+: (([-0-9]+)|(-?Inf)|NA|NaN)")
     warn <- paste0(warn0, "; representation: [A-Z]+$")
     warn0 <- paste0(warn0, "; type: ", dQuote("[in]"), " \\([- a-z]+\\)$")
-    expect_identical(.parse_num(numeric(), NULL), NULL)
-    expect_identical(.parse_num(integer(), NULL), NULL)
+    expect_equal(.parse_num(numeric(), NULL), NULL)
+    expect_equal(.parse_num(integer(), NULL), NULL)
 
     # i, n
     expect_warning(res <- .parse_num(2^32, "i"), warn0)
-    expect_identical(res, NA_integer_)
+    expect_equal(res, NA_integer_)
     expect_warning(res <- .parse_num(Inf, "n"), warn0)
-    expect_identical(res, NA_real_)
+    expect_equal(res, NA_real_)
 
     # y
-    expect_identical(.parse_num(numeric(), "y"), integer())
-    expect_identical(.parse_num(integer(), "y"), integer())
+    expect_equal(.parse_num(numeric(), "y"), integer())
+    expect_equal(.parse_num(integer(), "y"), integer())
     yy0 <- c(1800, 2000:2009, NA, 2010:2019, 2199);
     names(yy0) <- rep_len(nms, length(yy0))
     yy0r <- as.integer(yy0); names(yy0r) <- names(yy0)
@@ -35,83 +35,83 @@ test_that("'.parse_num' works correctly", {
     yy2ar <- as.integer(yy2a)
     yy2b <- unname(c(1799, yy0))
     yy2br <- as.integer(yy2b)
-    expect_identical(.parse_num(yy0, NULL), list(yy0r, "y"))
-    expect_identical(.parse_num(yy0, "y"), yy0r)
-    expect_identical(.parse_num(yy2a, NULL), NULL)
-    expect_identical(.parse_num(yy2a, "y"), yy2ar)
-    expect_identical(.parse_num(yy2b, NULL), NULL)
-    expect_identical(.parse_num(yy2b, "y"), yy2br)
-    expect_identical(.parse_num(1995.5, NULL), NULL)
-    expect_identical(.parse_num(1995.5, "y"), 1995L)
+    expect_equal(.parse_num(yy0, NULL), list(yy0r, "y"))
+    expect_equal(.parse_num(yy0, "y"), yy0r)
+    expect_equal(.parse_num(yy2a, NULL), NULL)
+    expect_equal(.parse_num(yy2a, "y"), yy2ar)
+    expect_equal(.parse_num(yy2b, NULL), NULL)
+    expect_equal(.parse_num(yy2b, "y"), yy2br)
+    expect_equal(.parse_num(1995.5, NULL), NULL)
+    expect_equal(.parse_num(1995.5, "y"), 1995L)
     expect_warning(res <- .parse_num(yy1, "y"), warn)
-    expect_identical(res, yy1r)
+    expect_equal(res, yy1r)
     names(yy0) <- NULL
 
     # q
-    expect_identical(.parse_num(numeric(), "q"), integer())
-    expect_identical(.parse_num(integer(), "q"), integer())
+    expect_equal(.parse_num(numeric(), "q"), integer())
+    expect_equal(.parse_num(integer(), "q"), integer())
     qs <- sample.int(4L, size = length(yy0), replace = TRUE)
     qq0 <- yy0 * 10 + qs
     qq0r <- .validate_yq(yy0, qs)
-    expect_identical(.parse_num(qq0, NULL), list(qq0r, "q"))
-    expect_identical(.parse_num(qq0, "q"), qq0r)
+    expect_equal(.parse_num(qq0, NULL), list(qq0r, "q"))
+    expect_equal(.parse_num(qq0, "q"), qq0r)
     expect_warning(res <- .parse_num(20225, "q"), warn)
-    expect_identical(res, NA_integer_)
+    expect_equal(res, NA_integer_)
 
     # m
-    expect_identical(.parse_num(numeric(), "m"), integer())
-    expect_identical(.parse_num(integer(), "m"), integer())
+    expect_equal(.parse_num(numeric(), "m"), integer())
+    expect_equal(.parse_num(integer(), "m"), integer())
     ms <- sample.int(12L, size = length(yy0), replace = TRUE)
     mm0 <- yy0 * 100 + ms
     mm0r <- .validate_ym(yy0, ms)
-    expect_identical(.parse_num(mm0, NULL), list(mm0r, "m"))
-    expect_identical(.parse_num(mm0, "m"), mm0r)
+    expect_equal(.parse_num(mm0, NULL), list(mm0r, "m"))
+    expect_equal(.parse_num(mm0, "m"), mm0r)
     expect_warning(res <- .parse_num(202213, "m"), warn)
-    expect_identical(res, NA_integer_)
+    expect_equal(res, NA_integer_)
 
     # w
-    expect_identical(.parse_num(numeric(), "w"), integer())
-    expect_identical(.parse_num(integer(), "w"), integer())
+    expect_equal(.parse_num(numeric(), "w"), integer())
+    expect_equal(.parse_num(integer(), "w"), integer())
     ws <- sample.int(52L, size = length(yy0), replace = TRUE)
     ww0 <- yy0 * 100 + ws
     ww0r <- .validate_yw(yy0, ws)
-    expect_identical(.parse_num(ww0, "w"), ww0r)
+    expect_equal(.parse_num(ww0, "w"), ww0r)
     expect_warning(res <- .parse_num(202253, "w"), warn)
-    expect_identical(res, NA_integer_)
+    expect_equal(res, NA_integer_)
 
     # d
-    expect_identical(.parse_num(numeric(), "d"), integer())
-    expect_identical(.parse_num(integer(), "d"), integer())
+    expect_equal(.parse_num(numeric(), "d"), integer())
+    expect_equal(.parse_num(integer(), "d"), integer())
     ds <- sample.int(28L, size = length(mm0), replace = TRUE)
     dd0 <- mm0 * 100 + ds
     dd0r <- .validate_ymd(yy0, ms, ds)
-    expect_identical(.parse_num(dd0, NULL), list(dd0r, "d"))
-    expect_identical(.parse_num(dd0, "d"), dd0r)
+    expect_equal(.parse_num(dd0, NULL), list(dd0r, "d"))
+    expect_equal(.parse_num(dd0, "d"), dd0r)
     expect_warning(res <- .parse_num(202213, "d"), warn)
-    expect_identical(res, NA_integer_)
+    expect_equal(res, NA_integer_)
 
     # t
     warn <- paste0("^NAs introduced; first position [0-9]+: [-+eE0-9]+",
                    "; representation: seconds since the Epoch$")
-    expect_identical(.parse_num(numeric(), "t"), double())
-    expect_identical(.parse_num(integer(), "t"), double())
-    expect_identical(.parse_num(1e9, "t"), 1e9)
+    expect_equal(.parse_num(numeric(), "t"), double())
+    expect_equal(.parse_num(integer(), "t"), double())
+    expect_equal(.parse_num(1e9, "t"), 1e9)
     expect_warning(res <- .parse_num(-1e11, "t"), warn)
-    expect_identical(res, NA_real_)
+    expect_equal(res, NA_real_)
 
     # h
     warn <- paste0("^NAs introduced; first position [0-9]+: [-+eE0-9]+",
                    "; representation: seconds since midnight$")
-    expect_identical(.parse_num(numeric(), "h"), double())
-    expect_identical(.parse_num(integer(), "h"), double())
-    expect_identical(.parse_num(7200., "h"), 7200.)
+    expect_equal(.parse_num(numeric(), "h"), double())
+    expect_equal(.parse_num(integer(), "h"), double())
+    expect_equal(.parse_num(7200., "h"), 7200.)
     expect_warning(res <- .parse_num(-1, "h"), warn)
-    expect_identical(res, NA_real_)
+    expect_equal(res, NA_real_)
 })
 
 
 test_that("'.parse' works correctly", {
-    expect_identical(.parse(character(), NULL, NULL, NULL), NULL)
+    expect_equal(.parse(character(), NULL, NULL, NULL), NULL)
 
     warn0 <- paste0("^NAs introduced; first position [0-9]+: ",
                    dQuote("[-+ :0-9A-Z]+"),
@@ -137,102 +137,102 @@ test_that("'.parse' works correctly", {
     names(yy) <- nms
 
     # y
-    expect_identical(.parse(character(), "y", NULL, NULL),
+    expect_equal(.parse(character(), "y", NULL, NULL),
                      list(integer(), "y", NULL))
     xx <- .y2char(yy)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(yy, "y", NULL))
     xx <- paste0(" ", xx, " ")
-    expect_identical(.parse(xx, NULL, NULL, NULL), NULL)
-    expect_identical(.parse(xx, "y", NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL), NULL)
+    expect_equal(.parse(xx, "y", NULL, NULL),
                      list(unname(yy), "y", NULL))
     names(yy) <- NULL
 
     # q
-    expect_identical(.parse(character(), "q", NULL, NULL),
+    expect_equal(.parse(character(), "q", NULL, NULL),
                      list(integer(), "q", NULL))
     xx <- .q2char(qq)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(qq, "q", NULL))
     xx <- sub("Q", "q", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(qq, "q", NULL))
     xx <- sub("q", ".", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL), NULL)
-    expect_identical(.parse(xx, "q", NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL), NULL)
+    expect_equal(.parse(xx, "q", NULL, NULL),
                      list(qq, "q", NULL))
 
     # m
-    expect_identical(.parse(character(), "m", NULL, NULL),
+    expect_equal(.parse(character(), "m", NULL, NULL),
                      list(integer(), "m", NULL))
     xx <- .m2char(mm)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(mm, "m", NULL))
     xx <- sub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL), NULL)
+    expect_equal(.parse(xx, NULL, NULL, NULL), NULL)
     xx <- sub(" ", "", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(mm, "m", NULL))
     xx <- .m2char(mm)
-    expect_identical(.parse(xx, "m", NULL, NULL),
+    expect_equal(.parse(xx, "m", NULL, NULL),
                      list(mm, "m", NULL))
     xx <- sub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, "m", NULL, NULL),
+    expect_equal(.parse(xx, "m", NULL, NULL),
                      list(mm, "m", NULL))
 
     # w
-    expect_identical(.parse(character(), "w", NULL, NULL),
+    expect_equal(.parse(character(), "w", NULL, NULL),
                      list(integer(), "w", NULL))
     xx <- .w2char(ww)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(ww, "w", NULL))
     xx <- sub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL), NULL)
+    expect_equal(.parse(xx, NULL, NULL, NULL), NULL)
     xx <- .w2char(ww)
-    expect_identical(.parse(xx, "w", NULL, NULL),
+    expect_equal(.parse(xx, "w", NULL, NULL),
                      list(ww, "w", NULL))
     xx <- sub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, "w", NULL, NULL),
+    expect_equal(.parse(xx, "w", NULL, NULL),
                      list(ww, "w", NULL))
 
     # d
-    expect_identical(.parse(character(), "d", NULL, NULL),
+    expect_equal(.parse(character(), "d", NULL, NULL),
                      list(integer(), "d", NULL))
     xx <- .d2char(dd)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(dd, "d", NULL))
     xx <- gsub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL), NULL)
+    expect_equal(.parse(xx, NULL, NULL, NULL), NULL)
     xx <- gsub(" ", "", xx, fixed = TRUE)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(dd, "d", NULL))
     xx <- .d2char(dd)
-    expect_identical(.parse(xx, "d", NULL, NULL),
+    expect_equal(.parse(xx, "d", NULL, NULL),
                      list(dd, "d", NULL))
     xx <- gsub("-", " ", xx, fixed = TRUE)
-    expect_identical(.parse(xx, "d", NULL, NULL),
+    expect_equal(.parse(xx, "d", NULL, NULL),
                      list(dd, "d", NULL))
     # US format
     xx <- .d2char(dd)
     xx <- sub("([0-9]{2})([0-9]{2})-([0-9]{2})-([0-9]{2})", "\\3/\\4/\\2", xx)
-    expect_identical(.parse(xx, NULL, NULL, NULL),
+    expect_equal(.parse(xx, NULL, NULL, NULL),
                      list(dd, "d", NULL))
     # NAs
     xx <- paste0("2024-02-", 28:31)
     expect_warning(res <- .parse(xx, "d", NULL, NULL), warn0)
-    expect_identical(res, list(.validate_ymd(2024, 2, 28:31), "d", NULL))
+    expect_equal(res, list(.validate_ymd(2024, 2, 28:31), "d", NULL))
 
     # t
-    expect_identical(.parse(character(), "t", NULL, NULL),
+    expect_equal(.parse(character(), "t", NULL, NULL),
                      list(double(), "t", .check_tz(NULL)))
     xx <- c(foo = "2021-03-28 02:30")
     for (tz in tzs) {
         if (tz == "Europe/Warsaw") { # invalid hour due to DST change
             expect_warning(res <- .parse(xx, "t", NULL, tz))
-            expect_identical(res, list(c(foo = NA_real_), "t", tz))
+            expect_equal(res, list(c(foo = NA_real_), "t", tz))
         } else {
             expect_silent(res <- .parse(xx, "t", NULL, tz))
-            expect_identical(names(res[[1L]]), "foo")
+            expect_equal(names(res[[1L]]), "foo")
             expect_true(grepl(paste0("^", xx), .t2char(res[[1L]], tz)))
         }
     }
@@ -272,18 +272,18 @@ test_that("'.parse' works correctly", {
                    dQuote("(([-0-9]+)|(-?Inf)|NA|NaN)"),
                    "; type: ", dQuote("[in]"), " \\([- a-z]+\\)$")
     expect_warning(res <- .parse("4294967296", "i", NULL, NULL), warn)
-    expect_identical(res, list(NA_integer_, "i", NULL))
+    expect_equal(res, list(NA_integer_, "i", NULL))
     expect_warning(res <- .parse("Inf", "n", NULL, NULL), warn)
-    expect_identical(res, list(NA_real_, "n", NULL))
-    expect_identical(.parse("26", "i", NULL, NULL),
+    expect_equal(res, list(NA_real_, "n", NULL))
+    expect_equal(.parse("26", "i", NULL, NULL),
                      list(26L, "i", NULL))
-    expect_identical(.parse("1.234e3", "n", NULL, NULL),
+    expect_equal(.parse("1.234e3", "n", NULL, NULL),
                      list(1234., "n", NULL))
 })
 
 
 test_that("'.parse_tdiff' works correctly", {
-    expect_identical(.parse_tdiff(character()), NULL)
+    expect_equal(.parse_tdiff(character()), NULL)
 
     ws <- sample(c("", " ", "  ", "   "), NN, replace = TRUE)
     smth <- sample(c("", "(smth)"), NN, replace = TRUE)
@@ -295,11 +295,11 @@ test_that("'.parse_tdiff' works correctly", {
     names(yych) <- nms
     yych1 <- paste0(formatC(c(-ym - 1, yy[-1L]), format = "d"), ys, ws)
     yych2 <- paste0(formatC(c(yy[-1L], ym + 2), format = "d"), ys, ws)
-    expect_identical(names(.parse_tdiff(yych)[[1L]]), nms)
-    expect_identical(lapply(.parse_tdiff(yych), unname), list(as.integer(yy), "y"))
-    expect_identical(.parse_tdiff(yych1), list(c(NA_integer_, as.integer(yy[-1L])), "y"))
-    expect_identical(.parse_tdiff(yych2), list(c(as.integer(yy[-1L]), NA_integer_), "y"))
-    expect_identical(.parse_tdiff(paste(yych, smth)), NULL)
+    expect_equal(names(.parse_tdiff(yych)[[1L]]), nms)
+    expect_equal(lapply(.parse_tdiff(yych), unname), list(as.integer(yy), "y"))
+    expect_equal(.parse_tdiff(yych1), list(c(NA_integer_, as.integer(yy[-1L])), "y"))
+    expect_equal(.parse_tdiff(yych2), list(c(as.integer(yy[-1L]), NA_integer_), "y"))
+    expect_equal(.parse_tdiff(paste(yych, smth)), NULL)
 
     qm <- 39999
     qq <- round(runif(NN, -qm, qm))
@@ -307,9 +307,9 @@ test_that("'.parse_tdiff' works correctly", {
     qqch <- paste0(formatC(qq, format = "d"), qs, ws, smth, ws)
     qqch1 <- paste0(formatC(c(-qm - 1, qq[-1L]), format = "d"), qs, ws)
     qqch2 <- paste0(formatC(c(qq[-1L], qm + 2), format = "d"), qs, ws)
-    expect_identical(.parse_tdiff(qqch), list(as.integer(qq), "q"))
-    expect_identical(.parse_tdiff(qqch1), list(c(NA_integer_, as.integer(qq[-1L])), "q"))
-    expect_identical(.parse_tdiff(qqch2), list(c(as.integer(qq[-1L]), NA_integer_), "q"))
+    expect_equal(.parse_tdiff(qqch), list(as.integer(qq), "q"))
+    expect_equal(.parse_tdiff(qqch1), list(c(NA_integer_, as.integer(qq[-1L])), "q"))
+    expect_equal(.parse_tdiff(qqch2), list(c(as.integer(qq[-1L]), NA_integer_), "q"))
 
     mmx <- 119999
     mm <- round(runif(NN, -mmx, mmx))
@@ -317,9 +317,9 @@ test_that("'.parse_tdiff' works correctly", {
     mmch <- paste0(formatC(mm, format = "d"), ms, ws, smth, ws)
     mmch1 <- paste0(formatC(c(-mmx - 1, mm[-1L]), format = "d"), ms, ws, smth)
     mmch2 <- paste0(formatC(c(mm[-1L], mmx + 2), format = "d"), ms, ws, smth)
-    expect_identical(.parse_tdiff(mmch), list(as.integer(mm), "m"))
-    expect_identical(.parse_tdiff(mmch1), list(c(NA_integer_, as.integer(mm[-1L])), "m"))
-    expect_identical(.parse_tdiff(mmch2), list(c(as.integer(mm[-1L]), NA_integer_), "m"))
+    expect_equal(.parse_tdiff(mmch), list(as.integer(mm), "m"))
+    expect_equal(.parse_tdiff(mmch1), list(c(NA_integer_, as.integer(mm[-1L])), "m"))
+    expect_equal(.parse_tdiff(mmch2), list(c(as.integer(mm[-1L]), NA_integer_), "m"))
 
     wm <- 521774
     ww <- round(runif(NN, -wm, wm))
@@ -327,9 +327,9 @@ test_that("'.parse_tdiff' works correctly", {
     wwch <- paste0(formatC(ww, format = "d"), wws, ws, smth, ws)
     wwch1 <- paste0(formatC(c(-wm - 1, ww[-1L]), format = "d"), wws, ws, smth)
     wwch2 <- paste0(formatC(c(ww[-1L], wm + 2), format = "d"), wws, ws, smth)
-    expect_identical(.parse_tdiff(wwch), list(as.integer(ww), "w"))
-    expect_identical(.parse_tdiff(wwch1), list(c(NA_integer_, as.integer(ww[-1L])), "w"))
-    expect_identical(.parse_tdiff(wwch2), list(c(as.integer(ww[-1L]), NA_integer_), "w"))
+    expect_equal(.parse_tdiff(wwch), list(as.integer(ww), "w"))
+    expect_equal(.parse_tdiff(wwch1), list(c(NA_integer_, as.integer(ww[-1L])), "w"))
+    expect_equal(.parse_tdiff(wwch2), list(c(as.integer(ww[-1L]), NA_integer_), "w"))
 
     dm <- 3652424
     dd <- round(runif(NN, -dm, dm))
@@ -337,9 +337,9 @@ test_that("'.parse_tdiff' works correctly", {
     ddch <- paste0(formatC(dd, format = "d"), ds, ws, smth, ws)
     ddch1 <- paste0(formatC(c(-dm - 1, dd[-1L]), format = "d"), ds, ws, smth)
     ddch2 <- paste0(formatC(c(dd[-1L], dm + 2), format = "d"), ds, ws, smth)
-    expect_identical(.parse_tdiff(ddch), list(as.integer(dd), "d"))
-    expect_identical(.parse_tdiff(ddch1), list(c(NA_integer_, as.integer(dd[-1L])), "d"))
-    expect_identical(.parse_tdiff(ddch2), list(c(as.integer(dd[-1L]), NA_integer_), "d"))
+    expect_equal(.parse_tdiff(ddch), list(as.integer(dd), "d"))
+    expect_equal(.parse_tdiff(ddch1), list(c(NA_integer_, as.integer(dd[-1L])), "d"))
+    expect_equal(.parse_tdiff(ddch2), list(c(as.integer(dd[-1L]), NA_integer_), "d"))
 
     sgn <- sample(c("", "-"), NN, replace = TRUE)
     ss <- round(runif(NN, 0, 59.9999), 3L)
@@ -376,12 +376,12 @@ test_that("'.parse_tinterval' works correctly", {
     names(en) <- letters[1:3]
     pti <- .parse_tinterval(ti, "/")
     pti <- lapply(pti, function(x) gsub("(^ +| +$)", "", x))
-    expect_identical(pti, list(start = st, end = en))
+    expect_equal(pti, list(start = st, end = en))
     expect_null(.parse_tinterval(ti, "--"))
     ti <- sub("/", "--", ti, fixed = TRUE)
     expect_null(.parse_tinterval(ti, "/"))
     pti <- .parse_tinterval(ti, "--")
     pti <- lapply(pti, function(x) gsub("(^ +| +$)", "", x))
-    expect_identical(pti, list(start = st, end = en))
+    expect_equal(pti, list(start = st, end = en))
 })
 

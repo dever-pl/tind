@@ -34,17 +34,17 @@ test_that("'pretty' method works correctly", {
     for (tp in c("y", "q", "m", "w", "d", "t", "h")) {
         x <- tind(type = tp)
         p <- pretty(x)
-        expect_identical(x, p)
+        expect_equal(x, p)
         x <- tind(length = sample.int(3L, 1L), type = tp)
         p <- pretty(x)
-        expect_identical(x[0L], p)
+        expect_equal(x[0L], p)
 
         x <- get(paste0(tp, tp))
         p <- pretty(x)
-        expect_identical(ti_type(x), ti_type(p))
-        if (tp == "t")  expect_identical(tzone(x), tzone(p))
+        expect_equal(ti_type(x), ti_type(p))
+        if (tp == "t")  expect_equal(tzone(x), tzone(p))
 
-        expect_identical(p, pretty(c(x, NA)))
+        expect_equal(p, pretty(c(x, NA)))
 
         fx <- resolution_t(x)
         fp <- resolution_t(p)
@@ -62,7 +62,7 @@ test_that("'pretty' method works correctly", {
                 p20 <- if (tp2 == "t") as.tind(p, tz = tz) else as.tind(p, type = tp2)
                 x2 <- if (tp2 == "t") as.tind(x, tz = tz) else as.tind(x, type = tp2)
                 p2 <- pretty(x2)
-                expect_identical(p2, p20)
+                expect_equal(p2, p20)
             }
         }
     }

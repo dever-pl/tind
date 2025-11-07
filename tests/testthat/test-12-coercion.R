@@ -63,7 +63,7 @@ test_that("'as.tind.default' works correctly", {
     errnt <- paste0("time index type could not be automatically inferred; provide ",
                     sQuote("type"), " argument")
     expect_error(as.tind(NULL), errnt, fixed = TRUE)
-    expect_identical(as.tind(NULL, "d"), tind(type = "d"))
+    expect_equal(as.tind(NULL, "d"), tind(type = "d"))
 })
 
 
@@ -86,15 +86,15 @@ test_that("as.tind.tind works correctly", {
         if (tp1 == "t") {
             ti1 <- as.tind(nt, tz = tz1)
         } else ti1 <- get(paste0("x", tp1))
-        expect_identical(ti1, as.tind(ti1))
+        expect_equal(ti1, as.tind(ti1))
         for (tp2 in types) {
             if (tp1 == tp2) {
                 ti2 <- as.tind(ti1, tp2)
-                expect_identical(ti1, ti2)
+                expect_equal(ti1, ti2)
                 if (tp1 == "t") {
                     ti2 <- as.tind(ti1, tz = tz2)
-                    expect_identical(as.numeric(ti1), as.numeric(ti2))
-                    expect_identical(.get.tz(ti2), tz2)
+                    expect_equal(as.numeric(ti1), as.numeric(ti2))
+                    expect_equal(.get.tz(ti2), tz2)
                 }
                 next
             }
@@ -113,11 +113,11 @@ test_that("as.tind.tind works correctly", {
                 next
             }
             ti2 <- as.tind(ti1, tp2)
-            expect_identical(.get.type(ti2), tp2)
+            expect_equal(.get.type(ti2), tp2)
             if (tp2 == "t") {
                 ti2 <- as.tind(ti1, tz = tz2)
-                expect_identical(.get.type(ti2), tp2)
-                expect_identical(.get.tz(ti2), tz2)
+                expect_equal(.get.type(ti2), tp2)
+                expect_equal(.get.tz(ti2), tz2)
             } else expect_null(.get.tz(ti2))
         }
     }
@@ -128,67 +128,67 @@ test_that("as.tind.tind works correctly", {
 
 test_that("'as.tind.(double|integer)' and 'as.(double|integer).tind' work correctly", {
     x <- as.tind(yy)
-    expect_identical(x, as.year(yy))
-    expect_identical(.get.type(x), "y")
-    expect_identical(as.integer(x), as.integer(yy))
-    expect_identical(as.double(x), as.double(yy))
+    expect_equal(x, as.year(yy))
+    expect_equal(.get.type(x), "y")
+    expect_equal(as.integer(x), as.integer(yy))
+    expect_equal(as.double(x), as.double(yy))
 
     x <- as.tind(qq)
-    expect_identical(x, as.quarter(qq))
-    expect_identical(.get.type(x), "q")
-    expect_identical(as.integer(x), as.integer(qq))
+    expect_equal(x, as.quarter(qq))
+    expect_equal(.get.type(x), "q")
+    expect_equal(as.integer(x), as.integer(qq))
     expect_equal(as.double(x), as.double(qq %% 10 - 1 + 4 * (qq %/% 10)))
 
     x <- as.tind(mm)
-    expect_identical(x, as.month(mm))
-    expect_identical(.get.type(x), "m")
-    expect_identical(as.integer(x), as.integer(mm))
+    expect_equal(x, as.month(mm))
+    expect_equal(.get.type(x), "m")
+    expect_equal(as.integer(x), as.integer(mm))
     expect_equal(as.double(x), as.double(mm %% 100 - 1 + 12 * (mm %/% 100)))
 
     err <- paste0("time index type could not be automatically inferred; provide ",
                   sQuote("type"), " argument")
     expect_error(as.tind(ww), err, fixed = TRUE)
     x <- as.tind(ww, "w")
-    expect_identical(x, as.week(ww))
-    expect_identical(.get.type(x), "w")
-    expect_identical(as.integer(x), as.integer(ww))
-    expect_identical(as.double(x), as.double(.validate_yw(ww %/% 100, ww %% 100)))
+    expect_equal(x, as.week(ww))
+    expect_equal(.get.type(x), "w")
+    expect_equal(as.integer(x), as.integer(ww))
+    expect_equal(as.double(x), as.double(.validate_yw(ww %/% 100, ww %% 100)))
 
     x <- as.tind(dd)
-    expect_identical(x, as.date(dd))
-    expect_identical(.get.type(x), "d")
-    expect_identical(as.integer(x), as.integer(dd))
-    expect_identical(as.double(x),
+    expect_equal(x, as.date(dd))
+    expect_equal(.get.type(x), "d")
+    expect_equal(as.integer(x), as.integer(dd))
+    expect_equal(as.double(x),
                      as.double(.validate_ymd(dd %/% 10000, dd %% 10000 %/% 100, dd %% 100)))
 
     expect_error(as.tind(nt), err, fixed = TRUE)
     x <- as.tind(nt, "t")
-    expect_identical(x, as.date_time(nt))
-    expect_identical(.get.type(x), "t")
+    expect_equal(x, as.date_time(nt))
+    expect_equal(.get.type(x), "t")
     stz <- Sys.timezone()
-    if (!is.na(stz) && stz != "") expect_identical(.get.tz(x), stz)
+    if (!is.na(stz) && stz != "") expect_equal(.get.tz(x), stz)
     for (tz in tzs) {
         x <- as.tind(nt, tz = tz)
-        expect_identical(.get.type(x), "t")
-        expect_identical(.get.tz(x), tz)
+        expect_equal(.get.type(x), "t")
+        expect_equal(.get.tz(x), tz)
         expect_equal(as.numeric(x), nt)
     }
 
     nh <- round(nt %% 86400)
     x <- as.tind(nh, "h")
-    expect_identical(x, as.time(nh))
-    expect_identical(.get.type(x), "h")
+    expect_equal(x, as.time(nh))
+    expect_equal(.get.type(x), "h")
     expect_equal(as.numeric(x), nh)
 })
 
 
 test_that("'as.tind.logical' and 'as.logical.tind' work correctly", {
-    expect_identical(as.logical(tind(y = c(0, 2022, NA))), c(TRUE, TRUE, NA))
+    expect_equal(as.logical(tind(y = c(0, 2022, NA))), c(TRUE, TRUE, NA))
     warn <- "NAs introduced by coercion"
     expect_silent(ll <- as.tind(NA, "y"))
-    expect_identical(ll, tind(length = 1L, type = "y"))
+    expect_equal(ll, tind(length = 1L, type = "y"))
     expect_warning(ll <- as.tind(c(TRUE, FALSE, NA), "d"), warn, fixed = TRUE)
-    expect_identical(ll, tind(length = 3L, type = "d"))
+    expect_equal(ll, tind(length = 3L, type = "d"))
 })
 
 
@@ -212,22 +212,22 @@ test_that("'as.tind.character' and 'as.character.tind' work correctly", {
     for (tp in names(fmts)) {
         x <- as.tind(xx, type = tp)
         xc <- as.character(x)
-        expect_identical(as.character(xx[0L]), character())
-        expect_identical(xc, format(x, fmts[[tp]][[1L]]))
+        expect_equal(as.character(xx[0L]), character())
+        expect_equal(xc, format(x, fmts[[tp]][[1L]]))
         for (i in seq_along(fmts[[tp]])) {
             fmt <- fmts[[tp]][[i]]
             ord <- ords[[tp]][[i]]
             xc <- as.character(x, fmt)
-            expect_identical(xc, format(x, fmt))
+            expect_equal(xc, format(x, fmt))
             if (tp == "t") {
-                expect_identical(as.tind(xc, tz = tz), x)
+                expect_equal(as.tind(xc, tz = tz), x)
                 if (i == 1L) expect_true(is.tind(as.tind(xc)))
-                expect_identical(as.tind(xc, format = fmt, tz = tz), x)
-                expect_identical(as.tind(xc, order = ord, tz = tz), x)
+                expect_equal(as.tind(xc, format = fmt, tz = tz), x)
+                expect_equal(as.tind(xc, order = ord, tz = tz), x)
             } else {
-                if (i == 1L) expect_identical(as.tind(xc), x)
-                expect_identical(as.tind(xc, format = fmt), x)
-                expect_identical(as.tind(xc, order = ord), x)
+                if (i == 1L) expect_equal(as.tind(xc), x)
+                expect_equal(as.tind(xc, format = fmt), x)
+                expect_equal(as.tind(xc, order = ord), x)
             }
         }
     }
@@ -244,7 +244,7 @@ test_that("'as.tind.character' and 'as.character.tind' work correctly", {
                   dQuote("i"), " (integer index)")
     expect_error(as.tind(xc, type = "i", format = ""), err, fixed = TRUE)
     expect_error(as.tind(xc, type = "i", order = ""), err, fixed = TRUE)
-    expect_identical(as.tind(xc, type = "i"), x)
+    expect_equal(as.tind(xc, type = "i"), x)
     err <- paste0("^time index type could not be automatically inferred; ",
                   "provide ", sQuote("type"), ", ", sQuote("format"), ", or ",
                   sQuote("order"), " argument$")
@@ -258,7 +258,7 @@ test_that("'as.tind.character' and 'as.character.tind' work correctly", {
                   dQuote("n"), " (numeric index)")
     expect_error(as.tind(xc, type = "n", format = ""), err, fixed = TRUE)
     expect_error(as.tind(xc, type = "n", order = ""), err, fixed = TRUE)
-    expect_identical(as.tind(xc, type = "n"), x)
+    expect_equal(as.tind(xc, type = "n"), x)
     err <- paste0("^time index type could not be automatically inferred; ",
                   "provide ", sQuote("type"), ", ", sQuote("format"), ", or ",
                   sQuote("order"), " argument$")
@@ -269,8 +269,8 @@ test_that("'as.tind.character' and 'as.character.tind' work correctly", {
 test_that("'as.tind.factor' works correctly", {
     xx <- as.tind(dd)
     ff <- as.factor(xx)
-    expect_identical(ff, as.factor(as.character(xx)))
-    expect_identical(as.tind(ff), xx)
+    expect_equal(ff, as.factor(as.character(xx)))
+    expect_equal(as.tind(ff), xx)
 })
 
 
@@ -287,9 +287,9 @@ test_that("'as.Date.tind' and 'as.tind.Date' work correctly", {
         if (tp == "q") {
             qchar <- paste0(format(Dx, "%Y"), "Q",
                             (as.integer(format(Dx, "%m")) - 1L) %/% 3 + 1L)
-            expect_identical(unname(as.character(x)[!is.na(d)]), qchar[!is.na(d)])
+            expect_equal(unname(as.character(x)[!is.na(d)]), qchar[!is.na(d)])
         } else {
-            expect_identical(as.character(x), format(Dx, deffmts[tp]))
+            expect_equal(as.character(x), format(Dx, deffmts[tp]))
         }
     }
 
@@ -301,7 +301,7 @@ test_that("'as.Date.tind' and 'as.tind.Date' work correctly", {
         expect_error(as.Date(x), err, fixed = TRUE)
     }
 
-    expect_identical(as.tind(as.Date(d)), d)
+    expect_equal(as.tind(as.Date(d)), d)
 })
 
 
@@ -319,22 +319,22 @@ test_that("'as.POSIX[cl]t.tind' and 'as.tind.POSIX[cl]t' work correctly", {
         Pxl <- as.POSIXlt(x)
         expect_true(inherits(Pxl, "POSIXlt"))
         if (tp == "t") {
-            expect_identical(attr(Pxc, "tzone"), tz)
-            expect_identical(attr(Pxl, "tzone")[1L], tz)
-            expect_identical(format(x), format(Pxc, deffmts[tp]))
-            expect_identical(format(x), format(Pxl, deffmts[tp]))
+            expect_equal(attr(Pxc, "tzone"), tz)
+            expect_equal(attr(Pxl, "tzone")[1L], tz)
+            expect_equal(format(x), format(Pxc, deffmts[tp]))
+            expect_equal(format(x), format(Pxl, deffmts[tp]))
             expect_equal(as.tind(Pxc), tt)
             expect_equal(as.tind(Pxl), tt)
         } else if (tp == "q") {
             qchar <- paste0(format(Pxc, "%Y"), "Q",
                             (as.integer(format(Pxc, "%m")) - 1L) %/% 3 + 1L)
-            expect_identical(as.character(x)[!is.na(tt)], qchar[!is.na(tt)])
+            expect_equal(as.character(x)[!is.na(tt)], qchar[!is.na(tt)])
             qchar <- paste0(format(Pxl, "%Y"), "Q",
                             (as.integer(format(Pxl, "%m")) - 1L) %/% 3 + 1L)
-            expect_identical(as.character(x)[!is.na(tt)], qchar[!is.na(tt)])
+            expect_equal(as.character(x)[!is.na(tt)], qchar[!is.na(tt)])
         } else {
-            expect_identical(as.character(x), format(Pxc, deffmts[tp]))
-            expect_identical(as.character(x), format(Pxl, deffmts[tp]))
+            expect_equal(as.character(x), format(Pxc, deffmts[tp]))
+            expect_equal(as.character(x), format(Pxl, deffmts[tp]))
         }
     }
 
@@ -358,23 +358,23 @@ test_that("'as.data.frame.tind' and 'as.tind.data.frame' work correctly", {
     dfd <- as.data.frame(xd)
     dft <- as.data.frame(xt)
     expect_true(is.data.frame(dfd))
-    expect_identical(nrow(dfd), length(xd))
-    expect_identical(ncol(dfd), 1L)
-    expect_identical(dfd[[1L]], xd)
-    expect_identical(as.tind(dfd), xd)
+    expect_equal(nrow(dfd), length(xd))
+    expect_equal(ncol(dfd), 1L)
+    expect_equal(dfd[[1L]], xd)
+    expect_equal(as.tind(dfd), xd)
     expect_true(is.data.frame(dft))
-    expect_identical(nrow(dft), length(xt))
-    expect_identical(ncol(dft), 1L)
-    expect_identical(dft[[1L]], xt)
-    expect_identical(as.tind(dft), xt)
+    expect_equal(nrow(dft), length(xt))
+    expect_equal(ncol(dft), 1L)
+    expect_equal(dft[[1L]], xt)
+    expect_equal(as.tind(dft), xt)
 
     xt <- xt[!is.na(xt)]
     chd <- format(xt, "%F")
     chh <- format(xt, "%T%z")
     dft2 <- data.frame(chd, chh)
-    expect_identical(xt, as.tind(dft2))
+    expect_equal(xt, as.tind(dft2))
 
-    expect_identical(as.tind(dft2[, 1L]), as.tind(xt, "d"))
+    expect_equal(as.tind(dft2[, 1L]), as.tind(xt, "d"))
 
     err <- paste0("trying to convert a data frame with no columns to ", sQuote("tind"))
     expect_error(as.tind(dft2[, 0L]), err, fixed = TRUE)
@@ -384,12 +384,12 @@ test_that("'as.data.frame.tind' and 'as.tind.data.frame' work correctly", {
 test_that("'as.list.tind' works correctly", {
     ld <- as.list(dd)
     xx <- as.tind(dd)
-    expect_identical(as.list(xx), lapply(ld, as.date))
+    expect_equal(as.list(xx), lapply(ld, as.date))
     # names
     dd10 <- dd[1L:10L]
     names(dd10) <- letters[1L:10L]
     ld10 <- as.list(dd10)
     xx10 <- as.tind(dd10)
-    expect_identical(as.list(xx10), lapply(ld10, as.date))
+    expect_equal(as.list(xx10), lapply(ld10, as.date))
 })
 

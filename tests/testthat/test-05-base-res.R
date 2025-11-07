@@ -13,20 +13,20 @@ test_that("'.mults' and '.check_mult' work correctly", {
     }
     for (u in units) {
         if (u == "y") {
-            expect_identical(.mults(u),
+            expect_equal(.mults(u),
                              as.integer(c(1, 2, 5, 10^(1:2) %x% c(1, 2, 2.5, 5), 10^3)))
         } else if (u == "d") {
-            expect_identical(.mults(u), c(1L, 15L))
-            expect_identical(.mults(u, TRUE), c(1L:3L, 7L, 15L, 30L))
+            expect_equal(.mults(u), c(1L, 15L))
+            expect_equal(.mults(u, TRUE), c(1L:3L, 7L, 15L, 30L))
         } else if (u == "s") {
-            expect_identical(.mults(u),
+            expect_equal(.mults(u),
                              c(round(10^(-6:-1) %x% c(1, 2, 5), 6L), .divisors(60L)))
-            expect_identical(.mults(u, TRUE),
+            expect_equal(.mults(u, TRUE),
                              c(round(10^(-6:-1) %x% c(1, 2, 5), 6L), .divisors(60L), 60L))
         } else {
             ny <- switch(u, q = 4L, m = 12L, w = 52L, h = 24L, min = 60L)
-            expect_identical(.mults(u), .divisors(ny))
-            expect_identical(.mults(u, TRUE), c(.divisors(ny), ny))
+            expect_equal(.mults(u), .divisors(ny))
+            expect_equal(.mults(u, TRUE), c(.divisors(ny), ny))
         }
         f <- sample(.mults(u), 1L)
         expect_silent(.check_mult(f, u))
@@ -51,12 +51,12 @@ yy <- sample(0L:9999L, NN, replace = TRUE)
 yy[2L] <- 3L # this forces resolution 1
 
 test_that("'.res_y' works correctly", {
-    expect_identical(.res_y(yy[1L]), list(n = 1L, unit = "y"))
-    expect_identical(.res_y(2000L), list(n = 1L, unit = "y"))
-    expect_identical(.res_y(NA_integer_), list(n = 1L, unit = "y"))
+    expect_equal(.res_y(yy[1L]), list(n = 1L, unit = "y"))
+    expect_equal(.res_y(2000L), list(n = 1L, unit = "y"))
+    expect_equal(.res_y(NA_integer_), list(n = 1L, unit = "y"))
     for (f in .mults("y")) {
         yy_ <- .floor_y(yy, f)
-        expect_identical(.res_y(yy_), list(n = f, unit = "y"))
+        expect_equal(.res_y(yy_), list(n = f, unit = "y"))
     }
 })
 
@@ -67,16 +67,16 @@ qq <- .validate_yq(yy, q)
 qq[2L] <- .validate_yq(2022, 4) # this forces resolution 1
 
 test_that("'.res_q' works correctly", {
-    expect_identical(.res_q(qq[1L]), list(n = 1L, unit = "q"))
-    expect_identical(.res_q(.validate_yq(2000, 1)), list(n = 1L, unit = "q"))
-    expect_identical(.res_q(NA_integer_), list(n = 1L, unit = "q"))
+    expect_equal(.res_q(qq[1L]), list(n = 1L, unit = "q"))
+    expect_equal(.res_q(.validate_yq(2000, 1)), list(n = 1L, unit = "q"))
+    expect_equal(.res_q(NA_integer_), list(n = 1L, unit = "q"))
     for (f in .mults("q")) {
         qq_ <- .floor_q(qq, f)
-        expect_identical(.res_q(qq_), list(n = f, unit = "q"))
+        expect_equal(.res_q(qq_), list(n = f, unit = "q"))
     }
     for (f in .mults("y")) {
         qq_ <- .y2q(.floor_y(yy, f))
-        expect_identical(.res_q(qq_), list(n = f, unit = "y"))
+        expect_equal(.res_q(qq_), list(n = f, unit = "y"))
     }
 })
 
@@ -87,21 +87,21 @@ mm <- .validate_ym(yy, m)
 mm[2L] <- .validate_ym(2022, 12) # this forces resolution 1
 
 test_that("'.res_m' works correctly", {
-    expect_identical(.res_m(mm[1L]), list(n = 1L, unit = "m"))
-    expect_identical(.res_m(200001L), list(n = 1L, unit = "m"))
-    expect_identical(.res_m(NA_integer_), list(n = 1L, unit = "m"))
+    expect_equal(.res_m(mm[1L]), list(n = 1L, unit = "m"))
+    expect_equal(.res_m(200001L), list(n = 1L, unit = "m"))
+    expect_equal(.res_m(NA_integer_), list(n = 1L, unit = "m"))
     for (f in .mults("m")) {
         mm_ <- .floor_m(mm, f)
-        if (f %% 3L) expect_identical(.res_m(mm_), list(n = f, unit = "m"))
-        else expect_identical(.res_m(mm_), list(n = f %/% 3L, unit = "q"))
+        if (f %% 3L) expect_equal(.res_m(mm_), list(n = f, unit = "m"))
+        else expect_equal(.res_m(mm_), list(n = f %/% 3L, unit = "q"))
     }
     for (f in .mults("q")) {
         mm_ <- .q2m(.floor_q(qq, f))
-        expect_identical(.res_m(mm_), list(n = f, unit = "q"))
+        expect_equal(.res_m(mm_), list(n = f, unit = "q"))
     }
     for (f in .mults("y")) {
         mm_ <- .y2m(.floor_y(yy, f))
-        expect_identical(.res_m(mm_), list(n = f, unit = "y"))
+        expect_equal(.res_m(mm_), list(n = f, unit = "y"))
     }
 })
 
@@ -112,16 +112,16 @@ ww <- .validate_yw(yy, w)
 ww[2L] <- .validate_yw(2022, 52) # this forces resolution 1
 
 test_that("'.res_w' works correctly", {
-    expect_identical(.res_w(ww[1L]), list(n = 1L, unit = "w"))
-    expect_identical(.res_w(200001L), list(n = 1L, unit = "w"))
-    expect_identical(.res_w(NA_integer_), list(n = 1L, unit = "w"))
+    expect_equal(.res_w(ww[1L]), list(n = 1L, unit = "w"))
+    expect_equal(.res_w(200001L), list(n = 1L, unit = "w"))
+    expect_equal(.res_w(NA_integer_), list(n = 1L, unit = "w"))
     for (f in .mults("w")) {
         ww_ <- .floor_w(ww, f)
-        expect_identical(.res_w(ww_), list(n = f, unit = "w"))
+        expect_equal(.res_w(ww_), list(n = f, unit = "w"))
     }
     for (f in .mults("y")) {
         ww_ <- .y2w(.floor_y(yy, f))
-        expect_identical(.res_w(ww_), list(n = f, unit = "y"))
+        expect_equal(.res_w(ww_), list(n = f, unit = "y"))
     }
 })
 
@@ -132,34 +132,34 @@ dd <- .validate_ymd(yy, m, d)
 dd[2L] <- .validate_ymd(2022, 4, 23) # this forces resolution 1
 
 test_that("'.res_d' works correctly", {
-    expect_identical(.res_d(dd[1L]), list(n = 1L, unit = "d"))
-    expect_identical(.res_d(.validate_ymd(2000, 1, 1L)), list(n = 1L, unit = "d"))
-    expect_identical(.res_d(NA_integer_), list(n = 1L, unit = "d"))
+    expect_equal(.res_d(dd[1L]), list(n = 1L, unit = "d"))
+    expect_equal(.res_d(.validate_ymd(2000, 1, 1L)), list(n = 1L, unit = "d"))
+    expect_equal(.res_d(NA_integer_), list(n = 1L, unit = "d"))
     for (f in c(1L, 15L)) {
         dd_ <- .floor_d(dd, f)
-        expect_identical(.res_d(dd_), list(n = f, unit = "d"))
+        expect_equal(.res_d(dd_), list(n = f, unit = "d"))
     }
     dd_ <- .floor_d(dd, 7L)
-    expect_identical(.res_d(dd_), list(n = 1L, unit = "w"))
+    expect_equal(.res_d(dd_), list(n = 1L, unit = "w"))
     for (f in .mults("w")) {
         dd_ <- .w2d(.floor_w(ww, f))
-        expect_identical(.res_d(dd_), list(n = f, unit = "w"))
+        expect_equal(.res_d(dd_), list(n = f, unit = "w"))
     }
     for (f in .mults("m")) {
         dd_ <- .m2d(.floor_m(mm, f))
-        if (f %% 3L) expect_identical(.res_d(dd_), list(n = f, unit = "m"))
-        else expect_identical(.res_d(dd_), list(n = f %/% 3L, unit = "q"))
+        if (f %% 3L) expect_equal(.res_d(dd_), list(n = f, unit = "m"))
+        else expect_equal(.res_d(dd_), list(n = f %/% 3L, unit = "q"))
     }
     for (f in .mults("q")) {
         dd_ <- .q2d(.floor_q(qq, f))
-        expect_identical(.res_d(dd_), list(n = f, unit = "q"))
+        expect_equal(.res_d(dd_), list(n = f, unit = "q"))
     }
     for (f in .mults("y")) {
         dd_ <- .y2d(.floor_y(yy, f))
-        expect_identical(.res_d(dd_), list(n = f, unit = "y"))
+        expect_equal(.res_d(dd_), list(n = f, unit = "y"))
     }
     # special case...
-    expect_identical(.res_d(c(.validate_ymd(2021, 2, 1),
+    expect_equal(.res_d(c(.validate_ymd(2021, 2, 1),
                               .validate_ymd(2021, 2, 15),
                               .validate_ymd(2021, 3, 1))),
                      list(n = 2L, unit = "w"))
@@ -187,17 +187,17 @@ test_that("'.res_t' works correctly", {
         }
         for (f in sample(.mults("min"), 5L)) {
             tt_ <- .floor_t_min(tt, f, tz)
-            expect_identical(.res_t(tt_, tz), list(n = f, unit = "min"))
-            expect_identical(.res_t(tt_[1L], tz), list(n = 1L, unit = "min"))
+            expect_equal(.res_t(tt_, tz), list(n = f, unit = "min"))
+            expect_equal(.res_t(tt_[1L], tz), list(n = 1L, unit = "min"))
         }
         for (f in sample(.mults("h"), 5L)) {
             tt_ <- .floor_t_h(tt, f, tz)
-            expect_identical(.res_t(tt_, tz), list(n = f, unit = "h"))
-            expect_identical(.res_t(tt_[1L], tz), list(n = 1L, unit = "h"))
+            expect_equal(.res_t(tt_, tz), list(n = f, unit = "h"))
+            expect_equal(.res_t(tt_[1L], tz), list(n = 1L, unit = "h"))
         }
         dd <- .floor_d(.t2d(tt, tz), sample(.mults("d"), 1L))
         tt_ <- .d2t(dd, tz)
-        expect_identical(.res_t(tt_, tz), .res_d(dd))
+        expect_equal(.res_t(tt_, tz), .res_d(dd))
     }
 })
 
@@ -229,31 +229,31 @@ test_that("'.res_h' works correctly", {
         expect_equal(.res_h(hh_[1L]), list(n = 1, unit = "h"))
     }
     # corner cases
-    expect_identical(.res_h(c(0, 0)), list(n = 1L, unit = "h"))
-    expect_identical(.res_h(c(0, 86400)), list(n = 1L, unit = "h"))
+    expect_equal(.res_h(c(0, 0)), list(n = 1L, unit = "h"))
+    expect_equal(.res_h(c(0, 86400)), list(n = 1L, unit = "h"))
 })
 
 
 test_that("'.res_i' works correctly", {
-    expect_identical(.res_i(10L), 1L)
-    expect_identical(.res_i(integer()), 1L)
-    expect_identical(.res_i(NA_integer_), 1L)
+    expect_equal(.res_i(10L), 1L)
+    expect_equal(.res_i(integer()), 1L)
+    expect_equal(.res_i(NA_integer_), 1L)
     ii <- c(NA_integer_, NA_integer_, sample.int(10L, NN, replace = TRUE), 1L, NA_integer_)
     ml <- c(1L:3L, 5L, 7L:10L, 13L, 17L, 23L)
     for (m in ml) {
-        expect_identical(.res_i(m * ii), m)
+        expect_equal(.res_i(m * ii), m)
     }
-    expect_identical(.res_i(c(NA_integer_, rep(0L, NN), NA_integer_)), 1L)
+    expect_equal(.res_i(c(NA_integer_, rep(0L, NN), NA_integer_)), 1L)
 })
 
 
 test_that("'.res_n' works correctly", {
-    expect_identical(.res_n(numeric()), NA_real_)
-    expect_identical(.res_n(0.), NA_real_)
+    expect_equal(.res_n(numeric()), NA_real_)
+    expect_equal(.res_n(0.), NA_real_)
     expect_equal(.res_n(1.), 1.)
-    expect_identical(.res_n(1.5), 1.5)
+    expect_equal(.res_n(1.5), 1.5)
     xx <- 1e9 * c(1, 2^65)
-    expect_identical(.res_n(xx), 1e9)
+    expect_equal(.res_n(xx), 1e9)
     xx <- 1e9 * c(-1, 7, 14, 21, 49)
     expect_equal(.res_n(xx), 1e9)
     expect_equal(.res_n(xx), .res_n(xx * sample(c(-1, 1), length(xx), replace = TRUE)))

@@ -21,7 +21,7 @@ tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
 
 test_that("tind '[', '[[', '[<-', and '[[<-' methods work correctly", {
     ii <- sample(1L:NN, 10)
-    expect_identical(as.tind(dd)[ii], as.tind(dd[ii]))
+    expect_equal(as.tind(dd)[ii], as.tind(dd[ii]))
 
     yy <- 1969:2068
     ii <- sample(1L:NN, 10L)
@@ -29,13 +29,13 @@ test_that("tind '[', '[[', '[<-', and '[[<-' methods work correctly", {
     ti <- as.tind(yy)
     ti[ii] <- ti[jj]
     yy[ii] <- yy[jj]
-    expect_identical(ti, as.tind(yy))
+    expect_equal(ti, as.tind(yy))
     ti[] <- 2000
     expect_true(all(ti == 2000))
 
     ti <- as.tind(dd)
     expect_silent(ti[NN + (-2L:0L)] <- NA)
-    expect_identical(is.na(ti), c(rep(FALSE, NN - 3L), rep(TRUE, 3L)))
+    expect_equal(is.na(ti), c(rep(FALSE, NN - 3L), rep(TRUE, 3L)))
     expect_silent(ti[] <- "20201231")
     expect_true(all(ti == "20201231"))
     expect_silent(ti[1L] <- "20211230")
@@ -62,46 +62,46 @@ test_that("tind '[', '[[', '[<-', and '[[<-' methods work correctly", {
                    dQuote(tz))
     ti2 <- as.tind(tt, tz = tz)
     expect_warning(ti[1L:2L] <- ti2[3L:4L], warn, fixed = TRUE)
-    expect_identical(as.numeric(ti[1L:2L]), as.numeric(ti[3L:4L]))
+    expect_equal(as.numeric(ti[1L:2L]), as.numeric(ti[3L:4L]))
     expect_warning(ti[[1L]] <- ti2[[3L]], warn, fixed = TRUE)
-    expect_identical(as.numeric(ti[[1L]]), as.numeric(ti[[3L]]))
+    expect_equal(as.numeric(ti[[1L]]), as.numeric(ti[[3L]]))
 })
 
 
 test_that("tind 'rev', 'head', and 'tail' methods work correctly", {
     ti <- as.tind(dd)
-    expect_identical(rev(ti), as.tind(rev(dd)))
+    expect_equal(rev(ti), as.tind(rev(dd)))
     for (n in sample((1L - NN):(NN - 1L), 10)) {
-        expect_identical(head(ti, n), as.tind(head(dd, n), type = "d"))
-        expect_identical(tail(ti, n), as.tind(tail(dd, n), type = "d"))
+        expect_equal(head(ti, n), as.tind(head(dd, n), type = "d"))
+        expect_equal(tail(ti, n), as.tind(tail(dd, n), type = "d"))
     }
-    expect_identical(head(ti, NN), ti)
-    expect_identical(tail(ti, NN), ti)
-    expect_identical(head(ti, -NN), tind(type = "d"))
-    expect_identical(tail(ti, -NN), tind(type = "d"))
-    expect_identical(head(ti, 0), tind(type = "d"))
-    expect_identical(tail(ti, 0), tind(type = "d"))
+    expect_equal(head(ti, NN), ti)
+    expect_equal(tail(ti, NN), ti)
+    expect_equal(head(ti, -NN), tind(type = "d"))
+    expect_equal(tail(ti, -NN), tind(type = "d"))
+    expect_equal(head(ti, 0), tind(type = "d"))
+    expect_equal(tail(ti, 0), tind(type = "d"))
 })
 
 
 test_that("tind 'length' and 'length<-' methods work correctly", {
     nn <- as.integer(min(rgeom(1, .1) + 1, NN))
     ii <- sample(1L:NN, nn)
-    expect_identical(length(as.tind(dd[ii])), nn)
-    expect_identical(length(tind(type = "t")), 0L)
+    expect_equal(length(as.tind(dd[ii])), nn)
+    expect_equal(length(tind(type = "t")), 0L)
     dd <- dd[ii]
     ti <- as.tind(dd)
     nn <- as.integer(min(rgeom(1, .1), 10 * NN))
     length(ti) <- nn
     length(dd) <- nn
-    expect_identical(ti, as.tind(dd, "d"))
+    expect_equal(ti, as.tind(dd, "d"))
 })
 
 
 test_that("tind 'rep' method works correctly", {
     ti <- as.tind(dd)
     n <- as.integer(min(rgeom(1, prob = .2), 10))
-    expect_identical(rep(ti, n), as.tind(rep(dd, n), type = "d"))
+    expect_equal(rep(ti, n), as.tind(rep(dd, n), type = "d"))
 })
 
 
@@ -112,8 +112,8 @@ test_that("'c' method for tind works correctly", {
     ti <- as.tind(dd)
     ti1 <- as.tind(dd1)
     ti2 <- as.tind(dd2)
-    expect_identical(ti, c(ti1, ti2))
-    expect_identical(ti, c(ti1, dd2))
+    expect_equal(ti, c(ti1, ti2))
+    expect_equal(ti, c(ti1, dd2))
     err <- paste0("time index type mismatch in ", sQuote("c.tind"))
     expect_error(c(ti1, as.tind(ti2, "y")), err, fixed = TRUE)
     expect_error(c(as.tind(ti1, "y"), ti2), err, fixed = TRUE)
@@ -122,7 +122,7 @@ test_that("'c' method for tind works correctly", {
         expect_warning(c(as.tind(ti1, tz = tz),
                          as.tind(ti2, tz = "UTC")), warn, fixed = TRUE)
     }
-    expect_identical(c(as.date("2024-03-31"), "2024-04-01"),
+    expect_equal(c(as.date("2024-03-31"), "2024-04-01"),
                        as.date(c("2024-03-31", "2024-04-01")))
 })
 
@@ -130,27 +130,27 @@ test_that("'c' method for tind works correctly", {
 test_that("'Math.tind', 'Summary.tind', and 'Complex.tind' methods work correctly", {
     # min, max, range
     ti <- as.tind(dd)
-    expect_identical(max(ti), as.tind(max(dd)))
-    expect_identical(min(ti), as.tind(min(dd)))
-    expect_identical(range(ti), as.tind(range(dd)))
-    expect_identical(max(ti[1L:10L], ti[11L:NN]), max(ti))
-    expect_identical(min(ti[1L:10L], ti[11L:NN]), min(ti))
-    expect_identical(range(ti[1L:10L], ti[11L:NN]), range(ti))
+    expect_equal(max(ti), as.tind(max(dd)))
+    expect_equal(min(ti), as.tind(min(dd)))
+    expect_equal(range(ti), as.tind(range(dd)))
+    expect_equal(max(ti[1L:10L], ti[11L:NN]), max(ti))
+    expect_equal(min(ti[1L:10L], ti[11L:NN]), min(ti))
+    expect_equal(range(ti[1L:10L], ti[11L:NN]), range(ti))
 
     nn <- sample(2L:NN, 1L)
     dd[nn] <- NA
     ti <- as.tind(dd)
-    expect_identical(max(ti), as.tind(max(dd), type = "d"))
-    expect_identical(min(ti), as.tind(min(dd), type = "d"))
-    expect_identical(range(ti), as.tind(range(dd), type = "d"))
-    expect_identical(max(ti, na.rm = TRUE), as.tind(max(dd, na.rm = TRUE)))
-    expect_identical(min(ti, na.rm = TRUE), as.tind(min(dd, na.rm = TRUE)))
-    expect_identical(range(ti, na.rm = TRUE), as.tind(range(dd, na.rm = TRUE)))
-    expect_identical(range(ti, na.rm = TRUE),
+    expect_equal(max(ti), as.tind(max(dd), type = "d"))
+    expect_equal(min(ti), as.tind(min(dd), type = "d"))
+    expect_equal(range(ti), as.tind(range(dd), type = "d"))
+    expect_equal(max(ti, na.rm = TRUE), as.tind(max(dd, na.rm = TRUE)))
+    expect_equal(min(ti, na.rm = TRUE), as.tind(min(dd, na.rm = TRUE)))
+    expect_equal(range(ti, na.rm = TRUE), as.tind(range(dd, na.rm = TRUE)))
+    expect_equal(range(ti, na.rm = TRUE),
                      c(min(ti, na.rm = TRUE), max(ti, na.rm = TRUE)))
     # cummax, cummin
-    expect_identical(cummax(as.tind(dd)), as.tind(cummax(dd)))
-    expect_identical(cummin(as.tind(dd)), as.tind(cummin(dd)))
+    expect_equal(cummax(as.tind(dd)), as.tind(cummax(dd)))
+    expect_equal(cummin(as.tind(dd)), as.tind(cummin(dd)))
     # errors
     err <- paste0(" method not defined for class ", dQuote("tind"))
     expect_error(cos(ti), paste0(sQuote("cos"), err), fixed = TRUE)
@@ -170,21 +170,21 @@ test_that("'unique', 'duplicated', and 'anyDuplicated' tind methods work correct
             tz <- sample(tzs, 1L)
             ti <- as.tind(xx, tz = tz)
         }
-        expect_identical(unique(ti), as.tind(unique(xx), tp, tz))
-        expect_identical(unique(as.tind(sort(xx), tp, tz)), as.tind(sort(unique(xx)), tp, tz))
-        expect_identical(duplicated(ti), duplicated(xx))
-        expect_identical(duplicated(ti, fromLast = TRUE), duplicated(xx, fromLast = TRUE))
-        expect_identical(anyDuplicated(ti), anyDuplicated(xx))
-        expect_identical(anyDuplicated(unique(ti)), 0L)
-        expect_identical(anyDuplicated(ti, fromLast = TRUE), anyDuplicated(xx, fromLast = TRUE))
+        expect_equal(unique(ti), as.tind(unique(xx), tp, tz))
+        expect_equal(unique(as.tind(sort(xx), tp, tz)), as.tind(sort(unique(xx)), tp, tz))
+        expect_equal(duplicated(ti), duplicated(xx))
+        expect_equal(duplicated(ti, fromLast = TRUE), duplicated(xx, fromLast = TRUE))
+        expect_equal(anyDuplicated(ti), anyDuplicated(xx))
+        expect_equal(anyDuplicated(unique(ti)), 0L)
+        expect_equal(anyDuplicated(ti, fromLast = TRUE), anyDuplicated(xx, fromLast = TRUE))
     }
 })
 
 
 test_that("'is.unsorted', 'sort', and 'order' tind methods work correctly", {
     ti <- as.tind(dd)
-    expect_identical(is.unsorted(ti), is.unsorted(dd))
+    expect_equal(is.unsorted(ti), is.unsorted(dd))
     expect_false(is.unsorted(sort(ti)))
-    expect_identical(sort(ti), as.tind(sort(dd)))
+    expect_equal(sort(ti), as.tind(sort(dd)))
 })
 

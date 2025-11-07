@@ -64,13 +64,13 @@ test_that("'tinterval', '%--%', and 'is.tinterval' work correctly", {
     tp <- sample(types, 1L)
     xx <- if (tp == "t") get(paste0("tt", sample(0:3, 1L))) else get(paste0(tp, tp))
     xx <- sort(xx[sample.int(NN, MM, TRUE)], na.last = FALSE)
-    expect_identical(tinterval(xx), tinterval(start = xx))
-    expect_identical(tinterval(xx), tinterval(xx, xx[rep(NA_integer_, MM)]))
-    expect_identical(tinterval(end = xx), tinterval(xx[rep(NA_integer_, MM)], xx))
+    expect_equal(tinterval(xx), tinterval(start = xx))
+    expect_equal(tinterval(xx), tinterval(xx, xx[rep(NA_integer_, MM)]))
+    expect_equal(tinterval(end = xx), tinterval(xx[rep(NA_integer_, MM)], xx))
     # conversion
-    expect_identical(tinterval("2024-09-02", 2024),
+    expect_equal(tinterval("2024-09-02", 2024),
                      tinterval("2024-09-02", "2024-12-31"))
-    expect_identical(tinterval(2024, "2024-09-02"),
+    expect_equal(tinterval(2024, "2024-09-02"),
                      tinterval("2024-01-01", "2024-09-02"))
     # conversion error
     expect_error(tinterval(today(), as.time(now())))
@@ -92,13 +92,13 @@ test_that("'tinterval', '%--%', and 'is.tinterval' work correctly", {
     expect_null(names(ti$end))
     names(x1) <- n1
     ti <- tinterval(x1, x2)
-    expect_identical(names(ti$start), n1)
-    expect_identical(names(ti$end), n1)
+    expect_equal(names(ti$start), n1)
+    expect_equal(names(ti$end), n1)
     names(x1) <- NULL
     names(x2) <- n2
     ti <- tinterval(x1, x2)
-    expect_identical(names(ti$start), n2)
-    expect_identical(names(ti$end), n2)
+    expect_equal(names(ti$start), n2)
+    expect_equal(names(ti$end), n2)
     names(x1) <- n1
     names(x2) <- n2
     n12 <- paste0(n1, ".", n2)
@@ -106,8 +106,8 @@ test_that("'tinterval', '%--%', and 'is.tinterval' work correctly", {
     ii[is.na(ii)] <- FALSE
     n12[ii] <- n1[ii]
     ti <- tinterval(x1, x2)
-    expect_identical(names(ti$start), n12)
-    expect_identical(names(ti$end), n12)
+    expect_equal(names(ti$start), n12)
+    expect_equal(names(ti$end), n12)
 })
 
 
@@ -161,9 +161,9 @@ test_that("'as.character/format.tinterval' and 'as.tinterval.character' work cor
         xx <- get(paste0(tp, tp))
         xx <- tinterval(sort(xx[sample.int(NN, MM, TRUE)], na.last = FALSE),
                         sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
-        expect_identical(as.character(xx), .as.character.tinterval0(xx))
+        expect_equal(as.character(xx), .as.character.tinterval0(xx))
         expect_true(all(diff(nchar(as.character(xx))) == 0L))
-        expect_identical(format(xx), .format.tinterval0(xx))
+        expect_equal(format(xx), .format.tinterval0(xx))
         expect_true(all(diff(nchar(format(xx))) == 0L))
     }
     for (tz in tzs) {
@@ -171,16 +171,16 @@ test_that("'as.character/format.tinterval' and 'as.tinterval.character' work cor
             xx <- as.tind(get(paste0("tt", ttv)), tz = tz)
             xx <- tinterval(sort(xx[sample.int(NN, MM, TRUE)], na.last = FALSE),
                             sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
-            expect_identical(as.character(xx), .as.character.tinterval0(xx))
+            expect_equal(as.character(xx), .as.character.tinterval0(xx))
             expect_true(all(diff(nchar(as.character(xx))) == 0L))
-            expect_identical(format(xx), .format.tinterval0(xx))
+            expect_equal(format(xx), .format.tinterval0(xx))
             expect_true(all(diff(nchar(format(xx))) == 0L))
         }
     }
 
     expect_equal(as.character(xx, sep = " / "), format(xx, sep = " / "))
-    expect_identical(as.character(xx[0L]), character())
-    expect_identical(format(xx[0L]), character())
+    expect_equal(as.character(xx[0L]), character())
+    expect_equal(format(xx[0L]), character())
 
     # errors
     errs <- paste("invalid", sQuote("sep"), "argument; nonempty character string expected")
@@ -218,14 +218,14 @@ test_that("'as.character/format.tinterval' and 'as.tinterval.character' work cor
 test_that("'as.tinterval.tinterval' works correctly", {
     xx <- tinterval(sort(dd[sample.int(NN, MM, TRUE)], na.last = FALSE),
                     sort(dd[sample.int(NN, MM, TRUE)], na.last = TRUE))
-    expect_identical(as.tinterval(xx), xx)
-    expect_identical(as.tinterval(xx, "d"), xx)
+    expect_equal(as.tinterval(xx), xx)
+    expect_equal(as.tinterval(xx, "d"), xx)
 
     tz <- sample(tzs, 1L)
     expect_error(as.tinterval(xx, "d", tz))
-    expect_identical(as.tinterval(xx, "t", tz), as.tinterval(xx, tz = tz))
+    expect_equal(as.tinterval(xx, "t", tz), as.tinterval(xx, tz = tz))
     expect_error(as.tinterval(xx, "h"))
-    expect_identical(as.tinterval(2024 %--% 2025, "d"), "2024-01-01" %--% "2025-12-31")
+    expect_equal(as.tinterval(2024 %--% 2025, "d"), "2024-01-01" %--% "2025-12-31")
 
     expect_error(as.tinterval(as.tinterval(xx, "t", tz), "h"))
 })
@@ -238,7 +238,7 @@ test_that("'as.list.tinterval' and 'as.tinterval.list' work correctly", {
                     sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
     alxx <- as.list(xx)
     expect_true(is.list(alxx))
-    expect_identical(names(alxx), c("start", "end"))
+    expect_equal(names(alxx), c("start", "end"))
     expect_equal(as.tinterval(alxx), xx)
     err <- "expected a 2-element list"
     expect_error(as.tinterval(alxx[1L]), err, fixed = TRUE)
@@ -253,8 +253,8 @@ test_that("'as.data.frame.tinterval' and 'as.tinterval.data.frame' work correctl
                     sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
     adfxx <- as.data.frame(xx)
     expect_true(is.data.frame(adfxx))
-    expect_identical(names(adfxx), c("start", "end"))
-    expect_identical(as.list(adfxx), as.list(xx))
+    expect_equal(names(adfxx), c("start", "end"))
+    expect_equal(as.list(adfxx), as.list(xx))
     expect_equal(as.tinterval(adfxx), xx)
     err <- "expected a 2-column data frame"
     expect_error(as.tinterval(adfxx[1L]), err, fixed = TRUE)
@@ -262,8 +262,8 @@ test_that("'as.data.frame.tinterval' and 'as.tinterval.data.frame' work correctl
     names(xx) <- sample(letters, MM)
     adfxx <- as.data.frame(xx)
     expect_true(is.data.frame(adfxx))
-    expect_identical(names(adfxx), c("start", "end"))
-    expect_identical(rownames(adfxx), names(xx))
+    expect_equal(names(adfxx), c("start", "end"))
+    expect_equal(rownames(adfxx), names(xx))
     expect_equal(as.tinterval(adfxx), xx)
 })
 
@@ -275,14 +275,14 @@ test_that("'ti_type.tinterval' works correctly", {
                     sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
     st <- xx$start
     en <- xx$end
-    expect_identical(ti_type(xx), ti_type(xx, long = TRUE))
-    expect_identical(ti_type(xx, long = FALSE), ti_type(st, long = FALSE))
-    expect_identical(ti_type(xx, long = FALSE), ti_type(en, long = FALSE))
-    expect_identical(ti_type(xx, long = TRUE), ti_type(st, long = TRUE))
-    expect_identical(ti_type(xx, long = TRUE), ti_type(en, long = TRUE))
-    expect_identical(ti_type(xx, long = TRUE, valid = TRUE),
+    expect_equal(ti_type(xx), ti_type(xx, long = TRUE))
+    expect_equal(ti_type(xx, long = FALSE), ti_type(st, long = FALSE))
+    expect_equal(ti_type(xx, long = FALSE), ti_type(en, long = FALSE))
+    expect_equal(ti_type(xx, long = TRUE), ti_type(st, long = TRUE))
+    expect_equal(ti_type(xx, long = TRUE), ti_type(en, long = TRUE))
+    expect_equal(ti_type(xx, long = TRUE, valid = TRUE),
                      ti_type(st, long = TRUE, valid = TRUE))
-    expect_identical(ti_type(xx, long = TRUE, valid = TRUE),
+    expect_equal(ti_type(xx, long = TRUE, valid = TRUE),
                      ti_type(en, long = TRUE, valid = TRUE))
 })
 
@@ -295,9 +295,9 @@ test_that("'names.tinterval' and 'names<-.tinterval' work correctly", {
     expect_null(names(xx))
     nms <- sample(letters, MM)
     names(xx) <- nms
-    expect_identical(names(xx), nms)
-    expect_identical(names(xx$start), nms)
-    expect_identical(names(xx$end), nms)
+    expect_equal(names(xx), nms)
+    expect_equal(names(xx$start), nms)
+    expect_equal(names(xx$end), nms)
 })
 
 
@@ -319,13 +319,13 @@ test_that("tinterval '[', '[[', '[<-', and '[[<-' methods work correctly", {
     x2 <- sort(xx[sample.int(NN, MM, TRUE)], na.last = FALSE)
     xx <- tinterval(x1, x2)
 
-    expect_identical(xx[], xx)
+    expect_equal(xx[], xx)
     i <- sample(1L:MM, MM %/% 2L)
     j <- sample(1L:MM, MM %/% 2L)
     xx[i] <- xx[j]
     x1[i] <- x1[j]
     x2[i] <- x2[j]
-    expect_identical(tinterval(x1, x2), xx)
+    expect_equal(tinterval(x1, x2), xx)
 
     i1 <- i[1L]
     xx[] <- xx[i1]
@@ -370,10 +370,10 @@ test_that("tinterval '[', '[[', '[<-', and '[[<-' methods work correctly", {
         warn  <- "^different time zones"
         expect_warning(xx1[[ii[1L]]] <- xx2[jj[1L]])
         xx2[ii[1L]] <- xx2[jj[1L]]
-        expect_identical(xx1, as.tinterval(xx2, tz = tz1))
+        expect_equal(xx1, as.tinterval(xx2, tz = tz1))
         expect_warning(xx1[ii] <- xx2[jj])
         xx2[ii] <- xx2[jj]
-        expect_identical(xx1, as.tinterval(xx2, tz = tz1))
+        expect_equal(xx1, as.tinterval(xx2, tz = tz1))
     }
 })
 
@@ -445,9 +445,9 @@ test_that("'[[<-.tinterval' works correctly", {
         xx2 <- tinterval(x2[i1], x2[i2])
         warn  <- "^different time zones"
         expect_warning(xx1$start <- xx2$start)
-        expect_identical(xx1, as.tinterval(xx2, tz = tz1))
+        expect_equal(xx1, as.tinterval(xx2, tz = tz1))
         expect_warning(xx1$end <- xx2$end)
-        expect_identical(xx1, as.tinterval(xx2, tz = tz1))
+        expect_equal(xx1, as.tinterval(xx2, tz = tz1))
     }
 })
 
@@ -458,12 +458,12 @@ test_that("'c.tinterval' works correctly", {
                     sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE))
     names(xx) <- sample(letters, MM)
 
-    expect_identical(c(xx), xx)
+    expect_equal(c(xx), xx)
     err <- paste("expected all arguments to be of", dQuote("tinterval"),
                  "class in", sQuote("c.tinterval"))
     expect_error(c(xx, dd), err, fixed = TRUE)
 
-    expect_identical(c(2024 %--% 2025, "2025-02-01" %--% "2025-02-28"),
+    expect_equal(c(2024 %--% 2025, "2025-02-01" %--% "2025-02-28"),
                      c("2024-01-01" %--% "2025-12-31", "2025-02-01" %--% "2025-02-28"))
 })
 

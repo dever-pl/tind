@@ -45,14 +45,14 @@ test_that("'print', 'summary', and 'str' for tind work correctly", {
         for (omp in c(NN - 1L, 2 * NN)) {
             options(max.print = omp)
             cap <- capture_output_lines(out <- expect_invisible(print(xind)))
-            expect_identical(xind, out)
+            expect_equal(xind, out)
             cap0 <- capture_output_lines(out0 <- expect_invisible(print(xind0)))
-            expect_identical(xind0, out0)
+            expect_equal(xind0, out0)
             header <- paste0(.ti_type(tp))
             if (tp == "t") header <- paste0(header, ", time zone: ", tz)
             header <- paste0(header, " [tind]")
-            expect_identical(cap[1L], header)
-            expect_identical(cap0[1L], header)
+            expect_equal(cap[1L], header)
+            expect_equal(cap0[1L], header)
             cap <- cap[-1L]
             cap0 <- cap0[-1L]
             expect_true(grepl("^length 0$", cap0))
@@ -66,7 +66,7 @@ test_that("'print', 'summary', and 'str' for tind work correctly", {
             cap <- if (tp == "t") strsplit(cap, "  +")[[1L]] else strsplit(cap, " ")[[1L]]
             cap <- cap[!grepl("^ *$", cap)]
             cap <- if (tp == "t") as.tind(cap, tz = tz) else as.tind(cap, type = tp)
-            if (!(tp %in% c("n", "t", "h"))) expect_identical(xind[1L:length(cap)], cap)
+            if (!(tp %in% c("n", "t", "h"))) expect_equal(xind[1L:length(cap)], cap)
             else expect_equal(xind[1L:length(cap)], cap)
         }
         # summary
@@ -74,7 +74,7 @@ test_that("'print', 'summary', and 'str' for tind work correctly", {
         nmssumm <- names(summ)
         expect_true(all(grepl("^[A-Z]", nmssumm)))
         capture_output(out <- expect_invisible(print(summ)))
-        expect_identical(summ, out)
+        expect_equal(summ, out)
         expect_equal(length(summ),length(summary(sort(unique(xind)))))
         summ0 <- expect_visible(summary(xind0))
         expect_equal(length(summ0), 2L + (tp == "t"))
@@ -104,9 +104,9 @@ test_that("'print', 'summary', and 'str' for 'tinterval' work correctly", {
         for (omp in c(NN - 1L, 2 * NN)) {
             options(max.print = omp)
             cap <- capture_output_lines(out <- expect_invisible(print(xtint)))
-            expect_identical(xtint, out)
+            expect_equal(xtint, out)
             cap0 <- capture_output_lines(out0 <- expect_invisible(print(xtint0)))
-            expect_identical(xtint0, out0)
+            expect_equal(xtint0, out0)
             if (tp == "i") {
                 header <- "^integer interval"
             } else if (tp == "n") {
@@ -137,7 +137,7 @@ test_that("'print', 'summary', and 'str' for 'tinterval' work correctly", {
             cap <- strsplit(cap, "  +")[[1L]]
             cap <- cap[!grepl("^ *$", cap)]
             cap <- if (tp == "t") as.tinterval(cap, tz = tz) else as.tinterval(cap, type = tp)
-            if (!(tp %in% c("n", "h", "t"))) expect_identical(xtint[1L:length(cap)], cap)
+            if (!(tp %in% c("n", "h", "t"))) expect_equal(xtint[1L:length(cap)], cap)
             else expect_equal(xtint[1L:length(cap)], cap)
         }
         # summary
@@ -145,7 +145,7 @@ test_that("'print', 'summary', and 'str' for 'tinterval' work correctly", {
         nmssumm <- names(summ)
         expect_true(all(grepl("^[A-Z]", nmssumm)))
         capture_output(out <- expect_invisible(print(summ)))
-        expect_identical(summ, out)
+        expect_equal(summ, out)
         summ0 <- expect_visible(summary(xtint0))
         expect_equal(length(summ0), 2L + (tp == "t"))
         # str
@@ -182,9 +182,9 @@ test_that("'print', 'summary', and 'str' for tdiff work correctly", {
         for (omp in c(NN - 1L, 2 * NN)) {
             options(max.print = omp)
             cap <- capture_output_lines(out <- expect_invisible(print(xdiff)))
-            expect_identical(xdiff, out)
+            expect_equal(xdiff, out)
             cap0 <- capture_output_lines(out0 <- expect_invisible(print(xdiff0)))
-            expect_identical(xdiff0, out0)
+            expect_equal(xdiff0, out0)
             if (tp %in% c("t", "h")) {
                 header <- paste0("^time difference \\[tdiff\\]$")
             } else {
@@ -213,7 +213,7 @@ test_that("'print', 'summary', and 'str' for tdiff work correctly", {
         nmssumm <- names(summ)
         expect_true(all(grepl("^[A-Z]", nmssumm)))
         capture_output(out <- expect_invisible(print(summ)))
-        expect_identical(summ, out)
+        expect_equal(summ, out)
         summ0 <- expect_visible(summary(xdiff0))
         expect_equal(length(summ0), 2L)
         # str

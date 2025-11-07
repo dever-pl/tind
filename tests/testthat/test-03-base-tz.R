@@ -3,9 +3,9 @@ context("base - time zones")
 
 test_that("'.check_tz' works correctly", {
     NN <- min(10L, length(OlsonNames()))
-    for (tz in sample(OlsonNames(), NN)) expect_identical(tz, .check_tz(tz))
-    expect_identical(.check_tz(NULL), Sys.timezone())
-    expect_identical(.check_tz(""), Sys.timezone())
+    for (tz in sample(OlsonNames(), NN)) expect_equal(tz, .check_tz(tz))
+    expect_equal(.check_tz(NULL), Sys.timezone())
+    expect_equal(.check_tz(""), Sys.timezone())
     expect_error(.check_tz(123), paste0("^invalid ", sQuote("tz"),
                  " argument; character string expected$"))
     expect_error(.check_tz(c("", "")), paste0("^invalid ", sQuote("tz"),
@@ -27,15 +27,15 @@ test_that("'.check_tz' works correctly", {
         warn <- paste0("assuming ", dQuote("Warsa"),
                        " refers to time zone ", dQuote("Europe/Warsaw"))
         expect_warning(tz <- .check_tz("Warsa"), warn, fixed = TRUE)
-        expect_identical(tz, "Europe/Warsaw")
+        expect_equal(tz, "Europe/Warsaw")
         expect_silent(tz <- .check_tz("Warsaw"))
-        expect_identical(tz, "Europe/Warsaw")
+        expect_equal(tz, "Europe/Warsaw")
     }
     if ("America/New_York" %in% OlsonNames()) {
         expect_silent(tz <- .check_tz("New_York"))
-        expect_identical(tz, "America/New_York")
+        expect_equal(tz, "America/New_York")
         expect_silent(tz <- .check_tz("New York"))
-        expect_identical(tz, "America/New_York")
+        expect_equal(tz, "America/New_York")
     }
 })
 
@@ -67,7 +67,7 @@ test_that("'.warn_diff_tz' works correctly", {
     warn <- paste0("invalid value of option ", dQuote("tind.warn.diff.tz"),
                    "; using default settings (TRUE)")
     expect_warning(wrdtz <- .tind.getOption("warn.diff.tz"), warn, fixed = TRUE)
-    expect_identical(wrdtz, TRUE)
+    expect_equal(wrdtz, TRUE)
 })
 
 

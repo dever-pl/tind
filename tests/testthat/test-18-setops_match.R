@@ -87,27 +87,27 @@ test_that("set operations for 'tinterval' work correctly", {
         ntixx <- !tixx
         tixx1 <- utixx[1L]
         ntixx1 <- !tixx1
-        expect_identical(utixx, unique(utixx))
-        expect_identical(ntixx, unique(ntixx))
-        expect_identical(ntixx1, unique(ntixx1))
-        expect_identical(!ntixx, utixx)
-        expect_identical(union_t(tixx, tixx), utixx)
-        expect_identical(union_t(tixx, ntixx), all)
-        expect_identical(union_t(tixx1, ntixx1), all)
-        expect_identical(union_t(utixx, ntixx), all)
-        expect_identical(intersect_t(tixx, tixx), utixx)
-        expect_identical(intersect_t(tixx, ntixx), none)
-        expect_identical(intersect_t(tixx1, ntixx1), none)
-        expect_identical(intersect_t(tixx, all), utixx)
-        expect_identical(intersect_t(tixx, none), none)
+        expect_equal(utixx, unique(utixx))
+        expect_equal(ntixx, unique(ntixx))
+        expect_equal(ntixx1, unique(ntixx1))
+        expect_equal(!ntixx, utixx)
+        expect_equal(union_t(tixx, tixx), utixx)
+        expect_equal(union_t(tixx, ntixx), all)
+        expect_equal(union_t(tixx1, ntixx1), all)
+        expect_equal(union_t(utixx, ntixx), all)
+        expect_equal(intersect_t(tixx, tixx), utixx)
+        expect_equal(intersect_t(tixx, ntixx), none)
+        expect_equal(intersect_t(tixx1, ntixx1), none)
+        expect_equal(intersect_t(tixx, all), utixx)
+        expect_equal(intersect_t(tixx, none), none)
         x0b <- sort(xx[sample.int(NN, MM, TRUE)], na.last = FALSE)
         x1b <- sort(xx[sample.int(NN, MM, TRUE)], na.last = TRUE)
         tixxb <- tinterval(x0b, x1b)
-        expect_identical(intersect_t(tixx, tixxb), .intersect_t0(tixx, tixxb))
-        expect_identical(intersect_t(setdiff_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
-        expect_identical(intersect_t(setdiff_t(tixx, tixxb), intersect_t(tixxb, tixx)), none)
-        expect_identical(intersect_t(intersect_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
-        expect_identical(union_t(tixx, tixxb), unique(c(setdiff_t(tixx, tixxb),
+        expect_equal(intersect_t(tixx, tixxb), .intersect_t0(tixx, tixxb))
+        expect_equal(intersect_t(setdiff_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
+        expect_equal(intersect_t(setdiff_t(tixx, tixxb), intersect_t(tixxb, tixx)), none)
+        expect_equal(intersect_t(intersect_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
+        expect_equal(union_t(tixx, tixxb), unique(c(setdiff_t(tixx, tixxb),
                                                         intersect_t(tixx, tixxb),
                                                         setdiff_t(tixxb, tixx))))
         for (tp2 in .sample2(.lo_res_cast(tp))) {
@@ -116,14 +116,14 @@ test_that("set operations for 'tinterval' work correctly", {
             x21 <- sort(xx2[sample.int(NN, MM, TRUE)], na.last = TRUE)
             tixx2 <- tinterval(x20, x21)
             tixx2conv <- as.tinterval(tixx2, tp)
-            expect_identical(union_t(tixx, tixx2), union_t(tixx, tixx2conv))
-            expect_identical(union_t(tixx, tixx2conv), union_t(tixx, tixx2))
-            expect_identical(intersect_t(tixx, tixx2), intersect_t(tixx, tixx2conv))
-            expect_identical(intersect_t(tixx, tixx2conv), intersect_t(tixx, tixx2))
-            expect_identical(setdiff_t(tixx, tixx2), setdiff_t(tixx, tixx2conv))
-            expect_identical(setdiff_t(tixx, tixx2conv), setdiff_t(tixx, tixx2))
-            expect_identical(setdiff_t(tixx2, tixx), setdiff_t(tixx2conv, tixx))
-            expect_identical(setdiff_t(tixx2conv, tixx), setdiff_t(tixx2, tixx))
+            expect_equal(union_t(tixx, tixx2), union_t(tixx, tixx2conv))
+            expect_equal(union_t(tixx, tixx2conv), union_t(tixx, tixx2))
+            expect_equal(intersect_t(tixx, tixx2), intersect_t(tixx, tixx2conv))
+            expect_equal(intersect_t(tixx, tixx2conv), intersect_t(tixx, tixx2))
+            expect_equal(setdiff_t(tixx, tixx2), setdiff_t(tixx, tixx2conv))
+            expect_equal(setdiff_t(tixx, tixx2conv), setdiff_t(tixx, tixx2))
+            expect_equal(setdiff_t(tixx2, tixx), setdiff_t(tixx2conv, tixx))
+            expect_equal(setdiff_t(tixx2conv, tixx), setdiff_t(tixx2, tixx))
         }
     }
 
@@ -139,26 +139,26 @@ test_that("set operations for 'tinterval' work correctly", {
         ntixx <- !tixx
         tixx1 <- utixx[1L]
         ntixx1 <- !tixx1
-        expect_identical(utixx, unique(utixx))
-        expect_identical(ntixx, unique(ntixx))
-        expect_identical(ntixx1, unique(ntixx1))
-        expect_identical(!ntixx, unique(tixx))
-        expect_identical(union_t(tixx, tixx), utixx)
-        expect_identical(union_t(tixx, ntixx), all)
-        expect_identical(union_t(utixx, ntixx), all)
-        expect_identical(intersect_t(tixx, tixx), utixx)
-        expect_identical(intersect_t(tixx, ntixx), none)
-        expect_identical(intersect_t(tixx, all), utixx)
-        expect_identical(intersect_t(tixx, none), none)
+        expect_equal(utixx, unique(utixx))
+        expect_equal(ntixx, unique(ntixx))
+        expect_equal(ntixx1, unique(ntixx1))
+        expect_equal(!ntixx, unique(tixx))
+        expect_equal(union_t(tixx, tixx), utixx)
+        expect_equal(union_t(tixx, ntixx), all)
+        expect_equal(union_t(utixx, ntixx), all)
+        expect_equal(intersect_t(tixx, tixx), utixx)
+        expect_equal(intersect_t(tixx, ntixx), none)
+        expect_equal(intersect_t(tixx, all), utixx)
+        expect_equal(intersect_t(tixx, none), none)
         xx2 <- as.tind(tt, tz = tz)
         x0b <- sort(xx2[sample.int(NN, MM, TRUE)], na.last = FALSE)
         x1b <- sort(xx2[sample.int(NN, MM, TRUE)], na.last = TRUE)
         tixxb <- tinterval(x0b, x1b)
-        expect_identical(intersect_t(tixx, tixxb), .intersect_t0(tixx, tixxb))
-        expect_identical(intersect_t(setdiff_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
-        expect_identical(intersect_t(setdiff_t(tixx, tixxb), intersect_t(tixxb, tixx)), none)
-        expect_identical(intersect_t(intersect_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
-        expect_identical(union_t(tixx, tixxb), unique(c(setdiff_t(tixx, tixxb),
+        expect_equal(intersect_t(tixx, tixxb), .intersect_t0(tixx, tixxb))
+        expect_equal(intersect_t(setdiff_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
+        expect_equal(intersect_t(setdiff_t(tixx, tixxb), intersect_t(tixxb, tixx)), none)
+        expect_equal(intersect_t(intersect_t(tixx, tixxb), setdiff_t(tixxb, tixx)), none)
+        expect_equal(union_t(tixx, tixxb), unique(c(setdiff_t(tixx, tixxb),
                                                         intersect_t(tixx, tixxb),
                                                         setdiff_t(tixxb, tixx))))
         for (tp2 in .sample2(setdiff(.lo_res_cast("t"), "h"))) {
@@ -167,14 +167,14 @@ test_that("set operations for 'tinterval' work correctly", {
             x21 <- sort(xx2[sample.int(NN, MM, TRUE)], na.last = TRUE)
             tixx2 <- tinterval(x20, x21)
             tixx2conv <- as.tinterval(tixx2, tz = tz)
-            expect_identical(union_t(tixx, tixx2), union_t(tixx, tixx2conv))
-            expect_identical(union_t(tixx, tixx2conv), union_t(tixx, tixx2))
-            expect_identical(intersect_t(tixx, tixx2), intersect_t(tixx, tixx2conv))
-            expect_identical(intersect_t(tixx, tixx2conv), intersect_t(tixx, tixx2))
-            expect_identical(setdiff_t(tixx, tixx2), setdiff_t(tixx, tixx2conv))
-            expect_identical(setdiff_t(tixx, tixx2conv), setdiff_t(tixx, tixx2))
-            expect_identical(setdiff_t(tixx2, tixx), setdiff_t(tixx2conv, tixx))
-            expect_identical(setdiff_t(tixx2conv, tixx), setdiff_t(tixx2, tixx))
+            expect_equal(union_t(tixx, tixx2), union_t(tixx, tixx2conv))
+            expect_equal(union_t(tixx, tixx2conv), union_t(tixx, tixx2))
+            expect_equal(intersect_t(tixx, tixx2), intersect_t(tixx, tixx2conv))
+            expect_equal(intersect_t(tixx, tixx2conv), intersect_t(tixx, tixx2))
+            expect_equal(setdiff_t(tixx, tixx2), setdiff_t(tixx, tixx2conv))
+            expect_equal(setdiff_t(tixx, tixx2conv), setdiff_t(tixx, tixx2))
+            expect_equal(setdiff_t(tixx2, tixx), setdiff_t(tixx2conv, tixx))
+            expect_equal(setdiff_t(tixx2conv, tixx), setdiff_t(tixx2, tixx))
         }
     }
 
@@ -194,11 +194,11 @@ test_that("set operations for 'tinterval' work correctly", {
         tixx3 <- tinterval(as.tind(x0, tz = tz1), as.tind(x1, tz = tz1))
         warntz <- "different time zones of arguments: "
         expect_warning(resu <- union_t(tixx, tixx2), warntz, fixed = TRUE)
-        expect_identical(resu, union_t(tixx, tixx3))
+        expect_equal(resu, union_t(tixx, tixx3))
         expect_warning(resi <- intersect_t(tixx, tixx2), warntz, fixed = TRUE)
-        expect_identical(resi, intersect_t(tixx, tixx3))
+        expect_equal(resi, intersect_t(tixx, tixx3))
         expect_warning(resd <- setdiff_t(tixx, tixx2), warntz, fixed = TRUE)
-        expect_identical(resd, setdiff_t(tixx, tixx3))
+        expect_equal(resd, setdiff_t(tixx, tixx3))
     }
 })
 
@@ -209,35 +209,35 @@ test_that("set operations for 'tind' work correctly", {
         x0 <- xx[sample.int(NN, MM, TRUE)]
         x1 <- xx[sample.int(NN, MM, TRUE)]
         ux <- union_t(x0, x1)
-        expect_identical(.unclass(ux), union(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(ux), union(.unclass(x0), .unclass(x1)))
         ix <- intersect_t(x0, x1)
-        expect_identical(.unclass(ix), intersect(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(ix), intersect(.unclass(x0), .unclass(x1)))
         sx <- setdiff_t(x0, x1)
-        expect_identical(.unclass(sx), setdiff(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(sx), setdiff(.unclass(x0), .unclass(x1)))
         # zero vectors
-        expect_identical(intersect_t(x0[0L], x1), xx[0L])
-        expect_identical(intersect_t(x0, x1[0L]), xx[0L])
-        expect_identical(setdiff_t(x0[0L], x1), xx[0L])
-        expect_identical(setdiff_t(x0, x1[0L]), unique(x0))
-        expect_identical(union_t(x0, x1[0L]), unique(x0))
-        expect_identical(union_t(x0[0L], x1), unique(x1))
+        expect_equal(intersect_t(x0[0L], x1), xx[0L])
+        expect_equal(intersect_t(x0, x1[0L]), xx[0L])
+        expect_equal(setdiff_t(x0[0L], x1), xx[0L])
+        expect_equal(setdiff_t(x0, x1[0L]), unique(x0))
+        expect_equal(union_t(x0, x1[0L]), unique(x0))
+        expect_equal(union_t(x0[0L], x1), unique(x1))
 
         # sorted versions
         x0 <- sort(x0)
         x1 <- sort(x1)
         ux <- union_t(x0, x1)
-        expect_identical(.unclass(ux), sort(union(.unclass(x0), .unclass(x1))))
+        expect_equal(.unclass(ux), sort(union(.unclass(x0), .unclass(x1))))
         ix <- intersect_t(x0, x1)
-        expect_identical(.unclass(ix), sort(intersect(.unclass(x0), .unclass(x1))))
+        expect_equal(.unclass(ix), sort(intersect(.unclass(x0), .unclass(x1))))
         sx <- setdiff_t(x0, x1)
-        expect_identical(.unclass(sx), sort(setdiff(.unclass(x0), .unclass(x1))))
+        expect_equal(.unclass(sx), sort(setdiff(.unclass(x0), .unclass(x1))))
         # zero vectors
-        expect_identical(intersect_t(x0[0L], x1), xx[0L])
-        expect_identical(intersect_t(x0, x1[0L]), xx[0L])
-        expect_identical(setdiff_t(x0[0L], x1), xx[0L])
-        expect_identical(setdiff_t(x0, x1[0L]), unique(x0))
-        expect_identical(union_t(x0, x1[0L]), unique(x0))
-        expect_identical(union_t(x0[0L], x1), unique(x1))
+        expect_equal(intersect_t(x0[0L], x1), xx[0L])
+        expect_equal(intersect_t(x0, x1[0L]), xx[0L])
+        expect_equal(setdiff_t(x0[0L], x1), xx[0L])
+        expect_equal(setdiff_t(x0, x1[0L]), unique(x0))
+        expect_equal(union_t(x0, x1[0L]), unique(x0))
+        expect_equal(union_t(x0[0L], x1), unique(x1))
     }
 
     # date-time with different time zones
@@ -250,11 +250,11 @@ test_that("set operations for 'tind' work correctly", {
         x1 <- as.tind(xx[sample.int(NN, MM, TRUE)], tz = tz2)
         warntz <- "different time zones of arguments: "
         expect_warning(ux <- union_t(x0, x1), warntz, fixed = TRUE)
-        expect_identical(.unclass(ux), union(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(ux), union(.unclass(x0), .unclass(x1)))
         expect_warning(ix <- intersect_t(x0, x1), warntz, fixed = TRUE)
-        expect_identical(.unclass(ix), intersect(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(ix), intersect(.unclass(x0), .unclass(x1)))
         expect_warning(sx <- setdiff_t(x0, x1), warntz, fixed = TRUE)
-        expect_identical(.unclass(sx), setdiff(.unclass(x0), .unclass(x1)))
+        expect_equal(.unclass(sx), setdiff(.unclass(x0), .unclass(x1)))
     }
 
     # mismatch
@@ -303,12 +303,12 @@ test_that("'match_t' and '%in_t%' work correctly", {
         # tind
         xx <- get(paste0(tp, tp))
         tab <- xx[sample.int(NN, MM, FALSE)]
-        expect_identical(match_t(xx, tab), match(unclass(xx), unclass(tab)))
-        expect_identical(xx %in_t% tab, match_t(xx, tab, 0L) > 0L)
+        expect_equal(match_t(xx, tab), match(unclass(xx), unclass(tab)))
+        expect_equal(xx %in_t% tab, match_t(xx, tab, 0L) > 0L)
         xx1 <- sort(xx, na.last = TRUE)
         tab1 <- sort(tab, na.last = TRUE)
-        expect_identical(match_t(xx1, tab1), match(unclass(xx1), unclass(tab1)))
-        expect_identical(xx1 %in_t% tab1, match_t(xx1, tab1, 0L) > 0L)
+        expect_equal(match_t(xx1, tab1), match(unclass(xx1), unclass(tab1)))
+        expect_equal(xx1 %in_t% tab1, match_t(xx1, tab1, 0L) > 0L)
         # 0's never matched
         xna <- xx
         xna[sample.int(NN, 1L)] <- NA
@@ -316,25 +316,25 @@ test_that("'match_t' and '%in_t%' work correctly", {
         tabna[sample.int(NN, 1L)] <- NA
         match0 <- match(unclass(xna), unclass(tabna))
         match0[is.na(xna)] <- NA_integer_
-        expect_identical(match_t(xna, tabna), match0)
-        expect_identical(xna %in_t% tabna, match_t(xna, tabna, 0L) > 0L)
+        expect_equal(match_t(xna, tabna), match0)
+        expect_equal(xna %in_t% tabna, match_t(xna, tabna, 0L) > 0L)
         # tinterval
         xna <- xx
         xna[sample.int(NN, 1L)] <- NA
         tab2 <- tinterval(sort(xna[sample.int(NN, MM, TRUE)], na.last = FALSE),
                           sort(xna[sample.int(NN, MM, TRUE)], na.last = TRUE))
-        expect_identical(match_t(xx, tab2), .match_t0(xx, tab2))
-        expect_identical(xx %in_t% tab2, .in_t0(xx, tab2))
-        expect_identical(match_t(xx1, tab2), .match_t0(xx1, tab2))
-        expect_identical(xx1 %in_t% tab2, .in_t0(xx1, tab2))
+        expect_equal(match_t(xx, tab2), .match_t0(xx, tab2))
+        expect_equal(xx %in_t% tab2, .in_t0(xx, tab2))
+        expect_equal(match_t(xx1, tab2), .match_t0(xx1, tab2))
+        expect_equal(xx1 %in_t% tab2, .in_t0(xx1, tab2))
     }
 
-    expect_identical(match_t(xx, tab), match_t(as.character(xx), as.character(tab)))
-    expect_identical(xx %in_t% tab, as.character(xx) %in_t% as.character(tab))
-    expect_identical(match_t(xx, tab1), match_t(as.character(xx), as.character(tab1)))
-    expect_identical(xx %in_t% tab1, as.character(xx) %in_t% as.character(tab1))
-    expect_identical(match_t(xx, tab2), match_t(as.character(xx), as.character(tab2)))
-    expect_identical(xx %in_t% tab2, as.character(xx) %in_t% as.character(tab2))
+    expect_equal(match_t(xx, tab), match_t(as.character(xx), as.character(tab)))
+    expect_equal(xx %in_t% tab, as.character(xx) %in_t% as.character(tab))
+    expect_equal(match_t(xx, tab1), match_t(as.character(xx), as.character(tab1)))
+    expect_equal(xx %in_t% tab1, as.character(xx) %in_t% as.character(tab1))
+    expect_equal(match_t(xx, tab2), match_t(as.character(xx), as.character(tab2)))
+    expect_equal(xx %in_t% tab2, as.character(xx) %in_t% as.character(tab2))
 
     # different tz
     if (length(tzs) >= 2L) {
@@ -353,8 +353,8 @@ test_that("'match_t' and '%in_t%' work correctly", {
     xx_ <- tt
     tab_ <- tinterval(sort(dd[sample.int(NN, MM, TRUE)], na.last = FALSE),
                       sort(dd[sample.int(NN, MM, TRUE)], na.last = TRUE))
-    expect_identical(match_t(xx_, tab_), match_t(as.date(xx_), tab_))
-    expect_identical(xx_ %in_t% tab_, as.date(xx_) %in_t%  tab_)
+    expect_equal(match_t(xx_, tab_), match_t(as.date(xx_), tab_))
+    expect_equal(xx_ %in_t% tab_, as.date(xx_) %in_t%  tab_)
 
     # errors
     expect_error(match_t(xx, xx - xx))

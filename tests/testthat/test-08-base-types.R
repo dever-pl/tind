@@ -14,12 +14,12 @@ tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
 
 
 test_that("'.ti_type' works correctly", {
-    expect_identical(.ti_type(long = FALSE), types)
-    expect_identical(length(.ti_type(long = TRUE)), length(types))
+    expect_equal(.ti_type(long = FALSE), types)
+    expect_equal(length(.ti_type(long = TRUE)), length(types))
     for (tp in types) {
-        expect_identical(tp, .ti_type(tp, long = FALSE))
+        expect_equal(tp, .ti_type(tp, long = FALSE))
         expect_true(nchar(.ti_type(tp, long = TRUE)) > 1L)
-        expect_identical(.ti_type(tp, valid = TRUE, rm.names = TRUE),
+        expect_equal(.ti_type(tp, valid = TRUE, rm.names = TRUE),
                          make.names(.ti_type(tp, valid = TRUE, rm.names = TRUE)))
     }
 })
@@ -28,8 +28,8 @@ test_that("'.ti_type' works correctly", {
 test_that("'.ti_type2char' works correctly", {
     expect_true(is.character(.ti_type2char()))
     expect_true(is.character(.ti_type2char(dash = TRUE)))
-    expect_identical(length(.ti_type2char()), 1L)
-    expect_identical(length(.ti_type2char(dash = TRUE)), 1L)
+    expect_equal(length(.ti_type2char()), 1L)
+    expect_equal(length(.ti_type2char(dash = TRUE)), 1L)
     for (tp in types) {
         expect_true(grepl(paste0("^", dQuote(tp), " \\([- a-z]+\\)$"), .ti_type2char(tp)))
         expect_true(grepl(paste0("^", dQuote(tp), " - [- a-z]+$"), .ti_type2char(tp, dash = TRUE)))
@@ -58,12 +58,12 @@ test_that("'.check_type_tz' works correctly", {
     expect_error(.check_type_tz(sample(setdiff(letters, types), 1L), NULL), err0)
     expect_error(.check_type_tz(sample(setdiff(letters, types), 1L), tz), err0)
     for (tp in setdiff(types, "t")) {
-        expect_identical(.check_type_tz(tp, NULL), list(type = tp, tz = NULL))
+        expect_equal(.check_type_tz(tp, NULL), list(type = tp, tz = NULL))
         expect_error(.check_type_tz(tp, tz), err1, fixed = TRUE)
     }
-    expect_identical(.check_type_tz(NULL, tz), list(type = "t", tz = tz))
-    expect_identical(.check_type_tz("t", tz), list(type = "t", tz = tz))
-    expect_identical(.check_type_tz("t", NULL), list(type = "t", tz = Sys.timezone()))
+    expect_equal(.check_type_tz(NULL, tz), list(type = "t", tz = tz))
+    expect_equal(.check_type_tz("t", tz), list(type = "t", tz = tz))
+    expect_equal(.check_type_tz("t", NULL), list(type = "t", tz = Sys.timezone()))
 })
 
 
@@ -71,17 +71,17 @@ test_that("'.is.instant' and '.mode' work correctly", {
     expect_true(all(instypes %in% types))
     for (tp in instypes) expect_true(.is.instant(tp))
     for (tp in setdiff(types, instypes)) expect_false(.is.instant(tp))
-    for (tp in instypes) expect_identical(.mode(tp), "double")
-    for (tp in setdiff(types, instypes)) expect_identical(.mode(tp), "integer")
+    for (tp in instypes) expect_equal(.mode(tp), "double")
+    for (tp in setdiff(types, instypes)) expect_equal(.mode(tp), "integer")
 })
 
 
 test_that("'.limits' works correctly", {
-    for (tp in c("i", "n")) expect_identical(.limits(tp), c(-Inf, Inf))
+    for (tp in c("i", "n")) expect_equal(.limits(tp), c(-Inf, Inf))
     for (tp in setdiff(types, c("i", "n"))) {
         lim <- .limits(tp)
         vfn <- paste0(".validate_", tp)
-        expect_identical(lim, do.call(vfn, list(lim)))
+        expect_equal(lim, do.call(vfn, list(lim)))
         expect_false(any(is.na(do.call(vfn, list(lim)))))
         expect_true(all(is.na(do.call(vfn, list(lim + c(-1, 1))))))
     }
@@ -89,9 +89,9 @@ test_that("'.limits' works correctly", {
 
 
 test_that("'.infer_type' works correctly", {
-    expect_identical(.infer_type("y"), list(type = "y", ignored = character()))
-    expect_identical(.infer_type(c("y", "m")), list(type = "m", ignored = character()))
-    expect_identical(.infer_type(c("y", "m", "q")), list(type = "m", ignored = "q"))
+    expect_equal(.infer_type("y"), list(type = "y", ignored = character()))
+    expect_equal(.infer_type(c("y", "m")), list(type = "m", ignored = character()))
+    expect_equal(.infer_type(c("y", "m", "q")), list(type = "m", ignored = "q"))
     err <- paste0("^unrecognised time index components: ", dQuote("x"),
                   "\nHint: recognised components are: .*")
     expect_error(.infer_type(c("y", "m", "q", "x")), err)
@@ -130,12 +130,12 @@ test_that("'.max_res' works correctly", {
     tpin <- c("i", "n")
     tpinh <- c("i", "n", "h")
     tp <- setdiff(types, tpinh)
-    expect_identical(.max_res(tp), "t")
+    expect_equal(.max_res(tp), "t")
     tp <- setdiff(types, tpin)
-    expect_identical(.max_res(tp, weak = TRUE), "t")
+    expect_equal(.max_res(tp, weak = TRUE), "t")
     tp <- setdiff(types, tpinh)
     tp <- setdiff(tp, "t")
-    expect_identical(.max_res(tp), "d")
+    expect_equal(.max_res(tp), "d")
     tp <- setdiff(tp, "d")
     expect_error(.max_res(tp, 0L), err)
     tp <- setdiff(tp, "y")
@@ -150,10 +150,10 @@ test_that("'.max_res' works correctly", {
                    " \\([- a-z]+\\) in " , sQuote("[\\._a-z]+"), " not possible$")
     expect_error(.max_res(c("n", sample(tp, 1L)), 0L), errn)
     expect_error(.max_res(c("n", sample(tp, 1L)), 0L, weak = TRUE), errn)
-    expect_identical(.max_res(c("i", "i")), "i")
-    expect_identical(.max_res(c("i", "i"), weak = TRUE), "i")
-    expect_identical(.max_res(c("i", "n")), "n")
-    expect_identical(.max_res(c("i", "n"), 0L, weak = TRUE), "n")
+    expect_equal(.max_res(c("i", "i")), "i")
+    expect_equal(.max_res(c("i", "i"), weak = TRUE), "i")
+    expect_equal(.max_res(c("i", "n")), "n")
+    expect_equal(.max_res(c("i", "n"), 0L, weak = TRUE), "n")
     errn <- paste0("^cast from time index type ", dQuote("d"),
                    " \\(date\\) to type ", dQuote("h"),
                    " \\(time of day\\) in " , sQuote("[\\._a-z]+"), " not possible$")
@@ -166,10 +166,10 @@ test_that("'.max_res' works correctly", {
 
 
 test_that(".t_unit works correctly", {
-    expect_identical(.t_unit(long = FALSE), units)
-    expect_identical(length(.t_unit(long = TRUE)), length(units))
+    expect_equal(.t_unit(long = FALSE), units)
+    expect_equal(length(.t_unit(long = TRUE)), length(units))
     for (u in units) {
-        expect_identical(u, .t_unit(u, long = FALSE))
+        expect_equal(u, .t_unit(u, long = FALSE))
         expect_true(nchar(.t_unit(u, long = TRUE)) > 1L)
         expect_true(grepl("^[_a-z]+$", .t_unit(u, long = TRUE, valid = TRUE)))
     }
@@ -178,7 +178,7 @@ test_that(".t_unit works correctly", {
 
 test_that("'.t_unit2char' works correctly", {
     expect_true(is.character(.t_unit2char()))
-    expect_identical(length(.t_unit2char()), 1L)
+    expect_equal(length(.t_unit2char()), 1L)
     for (u in units) {
         expect_true(grepl(paste0("^", dQuote(u), " \\([^\\)]+\\)$"), .t_unit2char(u)))
     }

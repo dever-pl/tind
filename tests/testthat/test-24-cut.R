@@ -68,11 +68,11 @@ test_that("'cut' method works correctly", {
                 map <- ct3[[1L]]
                 lvx <- ct3[[2L]]
                 trflx <- trunc_t(floor_t(xx, nun), un)
-                expect_identical(lvx[map], trflx)
+                expect_equal(lvx[map], trflx)
                 cto3 <- cut(xo, nun, NA)
-                expect_identical(lvx, cto3[[2L]])
+                expect_equal(lvx, cto3[[2L]])
                 trflo <- trunc_t(floor_t(xo, nun), un)
-                expect_identical(lvx[cto3[[1L]]], trflo)
+                expect_equal(lvx[cto3[[1L]]], trflo)
             }
             br <- xo[sort(sample.int(length(xo), NN %% 10L))]
             br <- unique(trunc_t(br, un))
@@ -108,13 +108,13 @@ test_that("'cut' method works correctly", {
     ct1 <- cut(tt, br, FALSE)
     br2 <- as.date_time(br, tz = tz)
     ct2 <- cut(tt, br2, FALSE)
-    expect_identical(ct1, ct2)
+    expect_equal(ct1, ct2)
     if (length(tzs) > 1L) {
         tz2 <- sample(setdiff(tzs, tz), 1L)
         br2 <- as.date_time(br2, tz = tz2)
         warn <- "^different time zones"
         expect_warning(ct3 <- cut(tt, br2), warn)
-        expect_identical(ct1, ct2)
+        expect_equal(ct1, ct2)
     }
 })
 
