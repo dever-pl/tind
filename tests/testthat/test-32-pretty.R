@@ -3,7 +3,7 @@ context("pretty method")
 
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 

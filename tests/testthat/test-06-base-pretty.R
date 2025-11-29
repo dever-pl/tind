@@ -198,7 +198,7 @@ test_that("'.pretty_d' works correctly", {
 
 test_that("'.pretty_t' works correctly", {
     skip_on_cran() # in case of corner cases, this is also slow...
-    tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+    tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                      "UTC", "Etc/GMT+1",
                                      "Europe/London", "America/New_York"))
     tz <- sample(tzs, 1L)

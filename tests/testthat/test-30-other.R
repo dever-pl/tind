@@ -42,7 +42,7 @@ test_that("timeDate::timeDate is handled correctly", {
     skip_on_cran()
     skip_if_not_installed("timeDate")
     tzs <- c("Asia/Tokyo", "Europe/Warsaw", "America/New_York", "UTC")
-    tzs <- intersect(intersect(tzs, timeDate::listFinCenter()), OlsonNames())
+    tzs <- intersect(intersect(tzs, timeDate::listFinCenter()), .OlsonNames())
 
     tt <- round(1e9 + sample(c(1, 10, 20, 40), 1L) * (-3:7))
     for (tz in tzs) {

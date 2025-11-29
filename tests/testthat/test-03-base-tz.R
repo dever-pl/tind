@@ -2,8 +2,8 @@ context("base - time zones")
 # ###################################################################
 
 test_that("'.check_tz' works correctly", {
-    NN <- min(10L, length(OlsonNames()))
-    for (tz in sample(OlsonNames(), NN)) expect_equal(tz, .check_tz(tz))
+    NN <- min(10L, length(.OlsonNames()))
+    for (tz in sample(.OlsonNames(), NN)) expect_equal(tz, .check_tz(tz))
     expect_equal(.check_tz(NULL), Sys.timezone())
     expect_equal(.check_tz(""), Sys.timezone())
     expect_error(.check_tz(123), paste0("^invalid ", sQuote("tz"),
@@ -16,14 +16,14 @@ test_that("'.check_tz' works correctly", {
                   "; you can find the list of time zones by running ",
                    sQuote("OlsonNames()"))
     expect_error(.check_tz("Hsdfasdfs/Qwerty"), err, fixed = TRUE)
-    if (sum(grepl("^Europe", OlsonNames())) > 1L) {
+    if (sum(grepl("^Europe", .OlsonNames())) > 1L) {
         err <- paste0("^ambiguous time zone name: ", dQuote("Europe"),
                       "; possible matches: ", dQuote("Europe/[a-zA-Z]+"),
                       "(, .+)*$")
         expect_error(.check_tz("Europe"), err)
     }
     skip_on_cran() # in case new time zones with some peculiarities appear
-    if ("Europe/Warsaw" %in% OlsonNames()) {
+    if ("Europe/Warsaw" %in% .OlsonNames()) {
         warn <- paste0("assuming ", dQuote("Warsa"),
                        " refers to time zone ", dQuote("Europe/Warsaw"))
         expect_warning(tz <- .check_tz("Warsa"), warn, fixed = TRUE)
@@ -31,18 +31,25 @@ test_that("'.check_tz' works correctly", {
         expect_silent(tz <- .check_tz("Warsaw"))
         expect_equal(tz, "Europe/Warsaw")
     }
-    if ("America/New_York" %in% OlsonNames()) {
+    if ("America/New_York" %in% .OlsonNames()) {
         expect_silent(tz <- .check_tz("New_York"))
         expect_equal(tz, "America/New_York")
         expect_silent(tz <- .check_tz("New York"))
         expect_equal(tz, "America/New_York")
     }
+    unspprtd <- setdiff(OlsonNames(), .tz_supported())
+    if (length(unspprtd)) {
+        utz <- sample(unspprtd, 1L)
+        err <- paste0("time zone ", dQuote(utz), " currently not supported by ",
+                      sQuote("tind"))
+        expect_error(.check_tz(utz), err, fixed = TRUE)
+    }
 })
 
 
 test_that("'.warn_diff_tz' works correctly", {
-    if (length(OlsonNames()) < 2L) skip("too few time zones for further tests")
-    tzs <- sample(OlsonNames(), 2L)
+    if (length(.OlsonNames()) < 2L) skip("too few time zones for further tests")
+    tzs <- sample(.OlsonNames(), 2L)
     tz1 <- tzs[1L]
     tz2 <- tzs[2L]
     options(tind.warn.diff.tz = TRUE)
@@ -82,10 +89,10 @@ test_that("'.tzshort' works correctly", {
 
     expect_true(is.character(.tzshort()))
 
-    if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
+    if ((tz <- "Europe/Warsaw") %in% .OlsonNames()) {
         expect_equal(.tzshort("CEST"), list(7200, tz))
     }
-    if ((tz <- "Europe/London") %in% OlsonNames()) {
+    if ((tz <- "Europe/London") %in% .OlsonNames()) {
         warn <- paste0("ambiguous abbreviations: ", dQuote("BST"), "; assuming: ",
                     dQuote("BST"), " - +0100 (", dQuote(tz), ")")
         expect_warning(off <- .tzshort("BST"), warn, fixed = TRUE)
@@ -103,7 +110,7 @@ test_that("'.tzshort' works correctly", {
                    "; provide ", sQuote("tz"), " argument")
     expect_warning(off <- .tzshort("MSK"), warn, fixed = TRUE)
     expect_equal(off, list(NA_real_, .check_tz(NULL)))
-    if ((tz <- "Europe/Moscow") %in% OlsonNames()) {
+    if ((tz <- "Europe/Moscow") %in% .OlsonNames()) {
         warn <- paste0("ambiguous abbreviation ", dQuote("MSK"), " for time zone ",
                        "Europe/Moscow; results for earlier dates may be incorrect")
         expect_warning(off <- .tzshort("MSK", tz = tz), warn, fixed = TRUE)

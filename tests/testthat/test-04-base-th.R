@@ -8,7 +8,7 @@ nms <- sample(letters, NN, replace = TRUE)
 # nms <- NULL
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 
@@ -208,6 +208,8 @@ test_that("'.d2t' works correctly", {
 test_that("'.d2t' and '.t2d' work correctly - random time zones", {
     skip_on_cran() # in case new time zones with some peculiarities appear
                    # this is also slow...
+                   # were are using OlsonNames() and not .OlsonNames() here
+                   # to test _all_ time zones
     tzs2 <- setdiff(OlsonNames(), tzs)
     if (length(tzs2) < 5L) skip("too few time zones for further tests")
     dd <- 0L:as.integer(Sys.Date() + 1000 - as.Date("1923-01-01"))
@@ -336,7 +338,7 @@ test_that("'.hours_in_day' and '.isdst_t' work correctly", {
                 "Europe/Lisbon", "Europe/London", "Europe/Paris",
                 "Europe/Prague", "Europe/Rome", "Europe/Vienna",
                 "Europe/Warsaw", "Europe/Zurich")
-    tzs_eu <- intersect(OlsonNames(), tzs_eu)
+    tzs_eu <- intersect(.OlsonNames(), tzs_eu)
     dd <- .validate_ymd(2000, 1, 1):.validate_ymd(2024, 12, 31)
     todst <- .last_dw_in_month(7L, .validate_ym(2000:2024, 3L))
     fromdst <- .last_dw_in_month(7L, .validate_ym(2000:2024, 10L))
@@ -367,7 +369,7 @@ test_that("'.hours_in_day' and '.isdst_t' work correctly", {
     tzs_uscan <- c("America/Chicago", "America/Denver", "America/Detroit",
                    "America/Los_Angeles", "America/New_York", "America/Toronto",
                    "America/Vancouver", "America/Winnipeg")
-    tzs_uscan <- intersect(OlsonNames(), tzs_uscan)
+    tzs_uscan <- intersect(.OlsonNames(), tzs_uscan)
     dd <- .validate_ymd(2007, 1, 1):.validate_ymd(2024, 12, 31)
     todst <- .nth_dw_in_month(2L, 7L, .validate_ym(2007:2024, 3))
     fromdst <- .nth_dw_in_month(1L, 7L, .validate_ym(2007:2024, 11))
@@ -377,17 +379,17 @@ test_that("'.hours_in_day' and '.isdst_t' work correctly", {
     for (tz in tzs_uscan) expect_equal(.hours_in_day(dd, tz = tz), hd)
 
     wrn <- "^NAs introduced; invalid date \\([-0-9]+\\) for time zone [_a-zA-Z/]+$"
-    for (tz in intersect(OlsonNames(), names(.tz_missing_days()))) {
+    for (tz in intersect(.OlsonNames(), names(.tz_missing_days()))) {
         dd <- .tz_missing_days()[[tz]] + (-1L:1L)
         ddt <- .tz_missing_days()[[tz]] + c(-1L, 1L)
         expect_warning(.hours_in_day(dd, tz), wrn)
         expect_silent(.hours_in_day(ddt, tz))
     }
-    if ((tz <- "Africa/Monrovia") %in% OlsonNames()) {
+    if ((tz <- "Africa/Monrovia") %in% .OlsonNames()) {
         hd <- .hours_in_day(.validate_ymd(1972, 1, 7), tz)
         expect_equal(hd, 24 - (44 * 60 + 30) / 3600)
     }
-    if ((tz <- "Etc/GMT-1") %in% OlsonNames()) {
+    if ((tz <- "Etc/GMT-1") %in% .OlsonNames()) {
         dd <- .validate_ymd(1970, 1, 1):.validate_ymd(2022, 12, 31)
         hd <- .hours_in_day(dd, tz)
         expect_true(all(hd == 24))
@@ -429,7 +431,7 @@ test_that("'.dhz2t' works correctly", {
         expect_equal(round(plt$sec, digits  = 6), s[ii])
     }
 
-    if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
+    if ((tz <- "Europe/Warsaw") %in% .OlsonNames()) {
         # DST change
         expect_equal(is.na(.dhz2t(.validate_ymd(2021, 3, 28),
                                       .validate_hms(c(1:3, 24), 30, 0),
@@ -604,7 +606,7 @@ test_that("'.floor_t_/.ceiling_t_ h/min/s' work correctly", {
         expect_equal(chb, c2)
     }
 
-    for (tz in intersect(OlsonNames(), names(.tz_missing_days()))) {
+    for (tz in intersect(.OlsonNames(), names(.tz_missing_days()))) {
         dd <- .tz_missing_days()[[tz]] + (-2L:-1L)
         tt <- .dhz2t(dd, 12 * 3600, integer(), tz)
         expect_equal(.floor_t_h(tt, 6L, tz), tt)
@@ -641,7 +643,7 @@ test_that("'.inc_t_by_d' works correctly", {
         ii <- ((.hours_in_day(d0, tz) == 24) & (.hours_in_day(d1, tz) == 24))
         expect_true(all(h0[ii] == h1[ii]) && all(h1[h0 != h1] == h0[h0 != h1] + 1L))
     }
-    for (tz in intersect(OlsonNames(), names(.tz_missing_days()))) {
+    for (tz in intersect(.OlsonNames(), names(.tz_missing_days()))) {
         dd <- unname(.tz_missing_days()[[tz]]) + (-2L:-1L)
         dd2 <- dd + 1L:2L
         tt <- .dhz2t(dd, 12 * 3600, integer(), tz)

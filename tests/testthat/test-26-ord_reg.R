@@ -11,7 +11,7 @@ d <- pmin(sample.int(31L, size = NN, replace = TRUE),
 dd <- tind(y = y, m = m, d = d)
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 
@@ -292,7 +292,7 @@ test_that("'extend_regular' work correctly", {
     expect_equal(extend_regular(x0, 4), x1)
     x1 <- date_time("2025-03-30", H = c(0, 2), tz = tz)
     expect_equal(extend_regular(x0, -2), x1)
-    if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
+    if ((tz <- "Europe/Warsaw") %in% .OlsonNames()) {
         x0 <- date_time("2025-03-30", H = c(4:8), tz = tz)
         x1 <- date_time("2025-03-30", H = c(9:12), tz = tz)
         expect_equal(extend_regular(x0, 4), x1)

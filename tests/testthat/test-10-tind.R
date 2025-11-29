@@ -22,7 +22,7 @@ M <- sample.int(60L, size = NN, replace = TRUE) - 1L
 S <- floor(runif(20, 0, 600)) / 10
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 
@@ -144,7 +144,7 @@ test_that("'tind' (constructor) works correctly", {
         expect_equal(.t2d(unclass(dt0), tz), unclass(dd1))
         expect_equal(.t2h(unclass(dt0), tz), unclass(hh1))
     }
-    if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
+    if ((tz <- "Europe/Warsaw") %in% .OlsonNames()) {
         warn <- paste0("NAs introduced; first occurrence: ",
                        "y[1] = 2022, m[1] = 3, d[1] = 27, H[3] = 2; ",
                        "time zone: ", tz)

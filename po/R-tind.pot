@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: tind 0.2.2\n"
-"POT-Creation-Date: 2025-11-07 09:03\n"
+"Project-Id-Version: tind 0.2.3\n"
+"POT-Creation-Date: 2025-11-29 15:04\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,6 +182,9 @@ msgid "positive integer expected for type %s"
 msgstr ""
 
 msgid "positive number expected for type %s"
+msgstr ""
+
+msgid "time zone %s currently not supported by %s"
 msgstr ""
 
 msgid "assuming %s refers to time zone %s"

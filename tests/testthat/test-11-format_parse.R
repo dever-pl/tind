@@ -7,7 +7,7 @@ nms <- sample(letters, NN, replace = TRUE)
 # nms <- NULL
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", #"Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 
@@ -144,7 +144,7 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
     }
 
     # some corner cases
-    if ((tz <- "Etc/GMT+1") %in% OlsonNames()) {
+    if ((tz <- "Etc/GMT+1") %in% .OlsonNames()) {
         xx <- tind(y = 2021, m = 1, d = 1, H = 7, tz = "Etc/GMT+1")
         warn <- "time zone abbreviation not available"
         expect_warning(res <- format(xx, "%F %R %Z"), warn)

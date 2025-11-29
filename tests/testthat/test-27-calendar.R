@@ -2,7 +2,7 @@ context("calendrical computations")
 # ###################################################################
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 
@@ -399,7 +399,7 @@ test_that("'hours_in_day' and 'is.dst' work correctly", {
     expect_equal(is.dst(tt), rep(c(rep(FALSE, 24L), NA), 4L))
     expect_equal(is.dst(tt), is.dst(as.POSIXlt(tt)))
 
-    if ((tz <- "Europe/Warsaw") %in% OlsonNames()) {
+    if ((tz <- "Europe/Warsaw") %in% .OlsonNames()) {
         hd <- c(24., 23, 25, 24)
         expect_equal(hours_in_day(dd, tz), hd)
         expect_equal(hours_in_day(as.tind(dd, tz = tz)), hd)
@@ -411,7 +411,7 @@ test_that("'hours_in_day' and 'is.dst' work correctly", {
                                        rep(FALSE, 24L), NA))
         expect_equal(is.dst(tt), is.dst(as.POSIXlt(tt)))
     }
-    if ((tz <- "America/New_York") %in% OlsonNames()) {
+    if ((tz <- "America/New_York") %in% .OlsonNames()) {
         hd <- c(23., 24, 24, 25)
         expect_equal(hours_in_day(dd, tz), hd)
         expect_equal(hours_in_day(as.tind(dd, tz = tz)), hd)

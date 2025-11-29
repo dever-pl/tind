@@ -18,7 +18,7 @@ test_that("'tzone' and 'tzone<-' methods work correctly", {
     expect_equal(tzone(ctpc), Sys.timezone())
     expect_equal(tzone(ctpl), Sys.timezone())
     expect_equal(tzone(cti), Sys.timezone())
-    for (tz in sample(OlsonNames(), min(5L, length(OlsonNames())))) {
+    for (tz in sample(.OlsonNames(), min(5L, length(.OlsonNames())))) {
         tzone(ct) <- tz
         tzone(ctpc) <- tz
         tzone(ctpl) <- tz
@@ -52,7 +52,7 @@ test_that("'tzone' and 'tzone<-' methods work correctly", {
 
 
 # time zones for tests
-tzs <- intersect(OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
+tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
                                  "UTC", "Etc/GMT+1",
                                  "Europe/London", "America/New_York"))
 

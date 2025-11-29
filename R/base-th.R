@@ -151,8 +151,8 @@
 
 .d2t0 <- function(d, tz)
 {
-    ## NOTE: Tested to work correctly for all dates since 1923-01-01 in 598 time
-    ## zones supported by R 4.3.1 on Linux. For most time zones should also work
+    ## NOTE: Tested to work correctly for all dates since 1923-01-01 in 597 time
+    ## zones supported by R 4.4.1 on Linux. For most time zones should also work
     ## correctly before that date.
     ## The are three main reasons behind complexity of this code:
     ## - There are over 100 time zones in which midnight was missing (a day did
