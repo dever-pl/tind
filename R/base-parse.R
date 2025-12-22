@@ -132,7 +132,7 @@
         d <- res[[1L]]
         hms <- res[[2L]]
         z <- res[[3L]]
-        if (!length(z) || anyNA(z) && all(is.na(z))) {
+        if (anyNA(z) && all(is.na(z))) {
             res <- .dhz2t(d, hms, integer(), .check_tz(tz), 2L)
         } else {
             # UTC offset >= 100000 means index of tz abbreviation times 100000

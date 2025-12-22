@@ -208,7 +208,6 @@ match_ampm(const char **x, SEXP table, int start)
 // time index parsing
 // ========================================================
 
-
 // parse
 TIND__ATTRIBUTE_FUNCTION
 SEXP
@@ -217,7 +216,7 @@ parse(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
 {
     size_t n = XLENGTH(sx), nok = 0, i;
     int nof = length(sfmt);
-    SEXP sy, shms, sz;
+    SEXP sy = R_NilValue, shms = R_NilValue, sz = R_NilValue;
     int *py = 0, *pz = 0;
     double *phms = 0;
     // behavior on error:
@@ -230,23 +229,20 @@ parse(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
     int typeh = (*CHAR(STRING_ELT(stype, 0)) == 'h');
     int allna = 1;
 
+    if (!typeh) {
+        sy = PROTECT(allocVector(INTSXP, n));
+        py = INTEGER(sy);
+        for (i = 0; i < n; ++i) py[i] = NA_INTEGER;
+    }
+    if (typet || typeh) {
+        shms = PROTECT(allocVector(REALSXP, n));
+        phms = REAL(shms);
+        for (i = 0; i < n; ++i) phms[i] = NA_REAL;
+    }
     if (typet) {
-        sy = PROTECT(allocVector(INTSXP, n));
-        shms = PROTECT(allocVector(REALSXP, n));
         sz = PROTECT(allocVector(INTSXP, n));
-        py = INTEGER(sy);
-        phms = REAL(shms);
         pz = INTEGER(sz);
-    } else if (typeh) {
-        sy = R_NilValue;
-        shms = PROTECT(allocVector(REALSXP, n));
-        sz = R_NilValue;
-        phms = REAL(shms);
-    } else {
-        sy = PROTECT(allocVector(INTSXP, n));
-        shms = R_NilValue;
-        sz = R_NilValue;
-        py = INTEGER(sy);
+        for (i = 0; i < n; ++i) pz[i] = NA_INTEGER;
     }
 
     for (i = 0; i < n; ++i) {
@@ -255,10 +251,7 @@ parse(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
 Rprintf("  X: %s\n", x0);
 #endif /* DEBUG_TIND_PARSE */
         // handle empty / NA
-        if (is_na_empty(x0)) {
-            if (typeh) phms[i] = NA_REAL; else py[i] = NA_INTEGER;
-            continue;
-        }
+        if (is_na_empty(x0)) continue;
 
         allna = 0;
         int ok = 0;
@@ -421,8 +414,8 @@ Rprintf("  -> FMT: %c, OK: %d\n", *pfmt, ok);
                 }
                 if (h_fl) {
                     hms = (min_fl && s_fl) ? validatehms(h, min, s) :
-                                    (min_fl ? validatehms(h, min, 0.) :
-                                                validatehms(h, 0, 0.));
+                                   (min_fl ? validatehms(h, min, 0.) :
+                                             validatehms(h, 0, 0.));
                     if (!(R_FINITE(hms))) ok = 0;
                 }
             }
@@ -442,11 +435,8 @@ Rprintf("  => OK: %d\n", ok);
         }
 
         if (!ok) {
-            if (errbeh) {
-                if (!nok) nok = i + 1;
-                if (typeh) phms[i] = NA_REAL; else py[i] = NA_INTEGER;
-            }
-            else { UNPROTECT(1 + 2 * typet); return R_NilValue; }
+            if (!errbeh) { UNPROTECT(1 + 2 * typet); return R_NilValue; }
+            if (!nok) nok = i + 1;
         } else {
             if (!typeh) py[i] = yqmwd;
             if (typeh || typet) phms[i] = hms;
@@ -469,6 +459,7 @@ Rprintf("  => OK: %d\n", ok);
 }
 
 
+
 // strptind
 TIND__ATTRIBUTE_FUNCTION
 SEXP
@@ -477,7 +468,7 @@ strptind(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
 {
     size_t n = XLENGTH(sx), nok = 0, i;
     int nof = length(sfmt);
-    SEXP sy, shms, sz;
+    SEXP sy = R_NilValue, shms = R_NilValue, sz = R_NilValue;
     int *py = 0, *pz = 0;
     double *phms = 0;
     // behavior on error:
@@ -490,23 +481,20 @@ strptind(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
     int typeh = (*CHAR(STRING_ELT(stype, 0)) == 'h');
     int allna = 1;
 
+    if (!typeh) {
+        sy = PROTECT(allocVector(INTSXP, n));
+        py = INTEGER(sy);
+        for (i = 0; i < n; ++i) py[i] = NA_INTEGER;
+    }
+    if (typet || typeh) {
+        shms = PROTECT(allocVector(REALSXP, n));
+        phms = REAL(shms);
+        for (i = 0; i < n; ++i) phms[i] = NA_REAL;
+    }
     if (typet) {
-        sy = PROTECT(allocVector(INTSXP, n));
-        shms = PROTECT(allocVector(REALSXP, n));
         sz = PROTECT(allocVector(INTSXP, n));
-        py = INTEGER(sy);
-        phms = REAL(shms);
         pz = INTEGER(sz);
-    } else if (typeh) {
-        sy = R_NilValue;
-        shms = PROTECT(allocVector(REALSXP, n));
-        sz = R_NilValue;
-        phms = REAL(shms);
-    } else {
-        sy = PROTECT(allocVector(INTSXP, n));
-        shms = R_NilValue;
-        sz = R_NilValue;
-        py = INTEGER(sy);
+        for (i = 0; i < n; ++i) pz[i] = NA_INTEGER;
     }
 
     for (i = 0; i < n; ++i) {
@@ -515,10 +503,7 @@ strptind(SEXP sx, SEXP sfmt, SEXP stype, SEXP sbeh, SEXP scnames, SEXP sznames,
 Rprintf("  X: %s\n", x0);
 #endif /* DEBUG_TIND_PARSE */
         // handle empty / NA
-        if (is_na_empty(x0)) {
-            if (typeh) phms[i] = NA_REAL; else py[i] = NA_INTEGER;
-            continue;
-        }
+        if (is_na_empty(x0)) continue;
 
         allna = 0;
         int ok = 0;
@@ -743,11 +728,8 @@ Rprintf("  => OK: %d\n", ok);
         }
 
         if (!ok) {
-            if (errbeh) {
-                if (!nok) nok = i + 1;
-                if (typeh) phms[i] = NA_REAL; else py[i] = NA_INTEGER;
-            }
-            else { UNPROTECT(1 + 2 * typet); return R_NilValue; }
+            if (!errbeh) { UNPROTECT(1 + 2 * typet); return R_NilValue; }
+            if (!nok) nok = i + 1;
         } else {
             if (!typeh) py[i] = yqmwd;
             if (typeh || typet) phms[i] = hms;

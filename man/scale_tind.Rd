@@ -115,29 +115,41 @@ using \code{limits} argument to \code{scale_*_tind}.
 }
 \examples{
 \donttest{
-# load ggplot2
-library(ggplot2)
 # artificial data
 d <- seq(floor_t(today(), "y"), ceiling_t(today(), "y", ceiling = "last"))
 df <- data.frame(d = d, D = as.Date(d), y = cumsum(rnorm(length(d))),
                  q = paste0("Q", quarter(d)))
+# load ggplot2
+have_ggplot2 <- require("ggplot2", quietly = FALSE)
 # default scale
-ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw()
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw()
+}
 # compare with the default scale for Date
-ggplot(df) + geom_line(aes(x = D, y = y)) + theme_bw()
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = D, y = y)) + theme_bw()
+}
 # change format
-ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
-    scale_x_tind(format = "\%b '\%y")
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
+        scale_x_tind(format = "\%b '\%y")
+}
 # set breaks every 4 months
-ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
-    scale_x_tind(breaks = "4m")
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
+        scale_x_tind(breaks = "4m")
+}
 # set limits
-ggplot(df) + geom_line(aes(x = d, y = y), na.rm = TRUE) + theme_bw() +
-    scale_x_tind(limits = c(today() \%-m\% 4, today()))
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = d, y = y), na.rm = TRUE) + theme_bw() +
+        scale_x_tind(limits = c(today() \%-m\% 4, today()))
+}
 # facets with custom formatting and reduced number of breaks
-ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
-    scale_x_tind(n.breaks = 4, format = "\%b '\%y") +
-    facet_wrap(~q, scales = "free_x")
+if (have_ggplot2) {
+    ggplot(df) + geom_line(aes(x = d, y = y)) + theme_bw() +
+        scale_x_tind(n.breaks = 4, format = "\%b '\%y") +
+        facet_wrap(~q, scales = "free_x")
+}
 }
 
 }
