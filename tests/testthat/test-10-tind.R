@@ -39,8 +39,7 @@ test_that("'tind' (constructor) works correctly", {
     err <- paste0("duplicated time index components: ", dQuote("m"))
     expect_error(tind(y = 1999, m = 1, m = 2), err, fixed = TRUE)
     err <- paste0("type inferred (", .ti_type2char("y", dash = TRUE),
-                  ") is different from type provided as argument (",
-                  .ti_type2char("d", dash = TRUE), ")")
+                  ") is different from ", .ti_type2char("d", dash = FALSE))
     expect_error(tind(y = 1999, type = "d"), err, fixed = TRUE)
     warn <- paste0("the following components will be ignored: ", .ti_comp2char("u"),
                    "; type inferred: ", .ti_type2char("y"))

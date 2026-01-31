@@ -178,8 +178,9 @@ tind <- function(..., length = 0L, type = NULL, tz = NULL)
         stop(mes, call. = FALSE, domain = NA)
     }
     if (!is.null(type) && type != tpign[[1L]]) {
-        mes <- gettextf("type inferred (%s) is different from type provided as argument (%s)",
-                        .ti_type2char(tpign[[1L]], dash = TRUE), .ti_type2char(type, dash = TRUE))
+        mes <- gettextf("type inferred (%s) is different from %s",
+                        .ti_type2char(tpign[[1L]], dash = TRUE),
+                        .ti_type2char(type))
         stop(mes, call. = FALSE, domain = NA)
     }
     type <- tpign[[1L]]

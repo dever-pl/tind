@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tind 0.0.53\n"
-"POT-Creation-Date: 2025-11-29 15:04\n"
+"POT-Creation-Date: 2026-01-31 11:00\n"
 "PO-Revision-Date: 2025-12-21 23:23+0100\n"
 "Last-Translator: Grzegorz Klima <dever@post.pl>\n"
 "Language-Team: Grzegorz Klima <dever@post.pl>\n"
@@ -317,6 +317,21 @@ msgstr "podaj argument %s, %s lub %s"
 msgid "trying to convert a data frame with no columns to %s"
 msgstr "próba konwersji tabeli bez kolumn do %s"
 
+msgid "type inferred (%s) is different from %s"
+msgstr "typ wywnioskowany (%s) różny od %s"
+
+msgid "it is required when a data frame has numeric columns only"
+msgstr "jest wymagany, gdy tabela ma wyłącznie kolumny liczbowe"
+
+msgid "numbers of columns (%d) and time index components (%d) differ"
+msgstr "liczby kolumn (%d) i składowych indeksu (%d) się różnią"
+
+msgid "the following components are redundant: %s"
+msgstr "następujące składowe są zbędne: %s"
+
+msgid "type inferred: %s"
+msgstr "typ wywnioskowany: %s"
+
 msgid "TRUE/FALSE/NA expected"
 msgstr "oczekiwano wartości TRUE/FALSE/NA"
 
@@ -392,14 +407,8 @@ msgstr "następujące nieprawidłowe specyfikacje formatu zostały zignorowane: 
 msgid "conflicting types inferred: %s"
 msgstr "wywnioskowano sprzeczne typy: %s"
 
-msgid "type inferred (%s) is different from type provided as argument (%s)"
-msgstr "typ wywnioskowany (%s) różny od typu podanego jako argument (%s)"
-
 msgid "the following components will be ignored: %s"
 msgstr "następujące składowe zostaną zignorowane: %s"
-
-msgid "type inferred: %s"
-msgstr "typ wywnioskowany: %s"
 
 msgid "time index type mismatch in %s"
 msgstr "niezgodność typów indeksów w %s"

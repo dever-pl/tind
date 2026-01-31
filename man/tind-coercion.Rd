@@ -49,9 +49,10 @@ inluding \code{numeric}, \code{integer}, \code{character}, \code{Date},
 for particular time index type (seconds, days, weeks etc. since ...).
 
 For years, quarters, months, weeks, and dates, \code{as.integer} returns
-representation in the form \code{YYYY}, \code{YYYYQ}, \code{YYYYMM}, \code{YYYYWW},
-and \code{YYYYMMDD}, respectively. For other index types, \code{as.integer}
-returns internal representation of time indices converted to integer.
+representation in the form \code{YYYY}, \code{YYYYQ}, \code{YYYYMM},
+\code{YYYYWW}, and \code{YYYYMMDD}, respectively. For other index types,
+\code{as.integer} returns internal representation of time indices converted
+to integer.
 
 \code{as.character} returns character vector with standard (ISO 8601)
 representation of time indices. For customisable output formats,

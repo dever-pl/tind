@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tind 0.2.3\n"
-"POT-Creation-Date: 2025-11-29 15:04\n"
+"POT-Creation-Date: 2026-01-31 11:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -304,6 +304,21 @@ msgstr ""
 msgid "trying to convert a data frame with no columns to %s"
 msgstr ""
 
+msgid "type inferred (%s) is different from %s"
+msgstr ""
+
+msgid "it is required when a data frame has numeric columns only"
+msgstr ""
+
+msgid "numbers of columns (%d) and time index components (%d) differ"
+msgstr ""
+
+msgid "the following components are redundant: %s"
+msgstr ""
+
+msgid "type inferred: %s"
+msgstr ""
+
 msgid "TRUE/FALSE/NA expected"
 msgstr ""
 
@@ -367,13 +382,7 @@ msgstr ""
 msgid "conflicting types inferred: %s"
 msgstr ""
 
-msgid "type inferred (%s) is different from type provided as argument (%s)"
-msgstr ""
-
 msgid "the following components will be ignored: %s"
-msgstr ""
-
-msgid "type inferred: %s"
 msgstr ""
 
 msgid "time index type mismatch in %s"

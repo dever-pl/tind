@@ -212,8 +212,7 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
     warnspf <- paste0("ignoring invalid format specifications: ", dQuote("%m%d"))
     expect_warning(strptind(character(), c("%Y-%j", "%m%d")), warnspf, fixed = TRUE)
     errtype <- paste0("type inferred (", dQuote("m"), " - month) ",
-                      "is different from type provided as argument (", dQuote("d"),
-                      " - date)")
+                      "is different from ", dQuote("d"), " (date)")
     expect_error(strptind(character(), "%Y-%m", type = "d"), errtype, fixed = TRUE)
     errtype <- paste0("conflicting types inferred: ", dQuote("m"), " (month), ",
                       dQuote("d"), " (date)")
@@ -237,8 +236,7 @@ test_that("'format', 'strptind', and 'parse_t' work correctly", {
     errsinv <- "cannot infer type / construct time index"
     expect_error(parse_t(character(), c("mdy", "md")), errsinv, fixed = TRUE)
     errtype <- paste0("type inferred (", dQuote("m"), " - month) ",
-                      "is different from type provided as argument (", dQuote("d"),
-                      " - date)")
+                      "is different from ", dQuote("d"), " (date)")
     expect_error(parse_t(character(), "ym", type = "d"), errtype, fixed = TRUE)
     errtype <- paste0("conflicting types inferred: ", dQuote("m"), " (month), ",
                       dQuote("d"), " (date)")

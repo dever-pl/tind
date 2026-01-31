@@ -121,10 +121,17 @@ argument (which is forwarded to \code{\link{parse_t}}).
 \strong{Data frames}
 
 If a data frame has one column, it is converted using appropriate method
-depending on the column type. In case there are two or more columns, they are
-pasted and the resulting character vector is parsed. As this may not be
-computationally efficient, other ways of constructing \code{tind} should be
-considered, for example, use of \code{\link{tind}} constructor.
+depending on the column type. In case there are two or more columns, the approach
+depends on column types. If there are two columns representing dates and times
+(time of day) either as \code{tind}s or other classes recognised by the package,
+date-time indices are constructed using \code{\link{date_time}} function.
+When all columns are numeric, the method forwards to \code{\link{tind}} constructor.
+\code{order} argument has to be provided (via \code{...}) indicating order
+of time index components in the columns. In the general case, all columns
+are pasted (with spaces separating them) and the resulting character vector
+is parsed. This will again require \code{order} argument (or \code{type},
+or \code{format}). Due to pasting and subsequent parsing, this may not be
+computationally efficient for larger datasets.
 
 \strong{\code{Date} and \code{POSIXt} classes}
 
