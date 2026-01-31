@@ -3,8 +3,8 @@ context("tind - coercion")
 
 # time zones for tests
 tzs <- intersect(.OlsonNames(), c("Asia/Tokyo", "Europe/Warsaw",
-                                 "UTC", "Etc/GMT+1",
-                                 "Europe/London", "America/New_York"))
+                                  "UTC", "Etc/GMT+1",
+                                  "Europe/London", "America/New_York"))
 
 # test sample size
 NN <- 100L
@@ -354,7 +354,8 @@ test_that("'as.POSIX[cl]t.tind' and 'as.tind.POSIX[cl]t' work correctly", {
 
 test_that("'as.data.frame.tind' and 'as.tind.data.frame' work correctly", {
     xd <- as.tind(dd)
-    xt <- as.tind(round(nt), "t")
+    # use UTC to avoid warnings on ambiguous date-time indices (due to DST changes)
+    xt <- as.tind(round(nt), "t", tz = "UTC")
     dfd <- as.data.frame(xd)
     dft <- as.data.frame(xt)
     expect_true(is.data.frame(dfd))
@@ -368,13 +369,44 @@ test_that("'as.data.frame.tind' and 'as.tind.data.frame' work correctly", {
     expect_equal(dft[[1L]], xt)
     expect_equal(as.tind(dft), xt)
 
+    # date and time in two columns
+    tdf <- as.data.frame(date_time_split(xt))
+    expect_equal(xt, as.tind(tdf, tz = "UTC"))
+    expect_equal(xt, as.tind(tdf[2L:1L], tz = "UTC"))
+    expect_warning(as.tind(tdf, tz = "UTC", order = "DT"))
+    expect_equal(as.tind(tdf, tz = "UTC"), as.tind(tdf, type = "t", tz = "UTC"))
+    expect_error(as.tind(tdf, type = "d"), "^type inferred")
+
+    # all columns numeric
+    ddf0 <- data.frame(y = dd %/% 10000, m = dd %% 10000 %/% 100, d = dd %% 100)
+    err <- paste0("^", sQuote("order"), " argument missing")
+    expect_error(as.tind(ddf0), err)
+    for (ord in c("ymd", "mdy", "dmy")) {
+        ddf <- ddf0[unlist(strsplit(ord, ""))]
+        expect_equal(xd, as.tind(ddf, order = ord))
+    }
+    expect_silent(as.tind(ddf, order = ord, type = "d"))
+    expect_equal(xd, as.tind(ddf, order = ord, type = "d"))
+    err <- "^type inferred \\([^\\)]+\\) is different"
+    expect_error(as.tind(ddf, order = ord, type = "m"), err)
+    err <- paste0("^invalid ", sQuote("order"), " argument")
+    expect_error(as.tind(ddf0, order = letters), err)
+    expect_error(as.tind(ddf0, order = 0), err)
+    err <- "^numbers of columns"
+    expect_error(as.tind(ddf0, order = "ym"), err)
+    err <- paste0("^the following components are redundant: ", dQuote("d"))
+    ddf <- ddf0[c("y", "d")]
+    expect_error(as.tind(ddf, order = "yd"), err)
+
+    xt <- as.tind(round(nt), "t") # time zone is the default system time zone now
     xt <- xt[!is.na(xt)]
     chd <- format(xt, "%F")
     chh <- format(xt, "%T%z")
     dft2 <- data.frame(chd, chh)
+    expect_equal(xt, as.tind(dft2, format = "%F %T%z"))
     expect_equal(xt, as.tind(dft2))
 
-    expect_equal(as.tind(dft2[, 1L]), as.tind(xt, "d"))
+    expect_equal(as.tind(dft2[1L]), as.tind(xt, "d"))
 
     err <- paste0("trying to convert a data frame with no columns to ", sQuote("tind"))
     expect_error(as.tind(dft2[, 0L]), err, fixed = TRUE)

@@ -115,10 +115,17 @@
 #' \strong{Data frames}
 #'
 #' If a data frame has one column, it is converted using appropriate method
-#' depending on the column type. In case there are two or more columns, they are
-#' pasted and the resulting character vector is parsed. As this may not be
-#' computationally efficient, other ways of constructing \code{tind} should be
-#' considered, for example, use of \code{\link{tind}} constructor.
+#' depending on the column type. In case there are two or more columns, the approach
+#' depends on column types. If there are two columns representing dates and times
+#' (time of day) either as \code{tind}s or other classes recognised by the package,
+#' date-time indices are constructed using \code{\link{date_time}} function.
+#' When all columns are numeric, the method forwards to \code{\link{tind}} constructor.
+#' \code{order} argument has to be provided (via \code{...}) indicating order
+#' of time index components in the columns. In the general case, all columns
+#' are pasted (with spaces separating them) and the resulting character vector
+#' is parsed. This will again require \code{order} argument (or \code{type},
+#' or \code{format}). Due to pasting and subsequent parsing, this may not be
+#' computationally efficient for larger datasets.
 #'
 #' \strong{\code{Date} and \code{POSIXt} classes}
 #'
@@ -291,12 +298,12 @@ as.tind.character <- function(x, type = NULL, format = NULL, order = NULL,
 
     # forward to strptind
     if (!is.null(format))
-        return (do.call(strptind, c(list(x = x, format = format),
-                                    locale = locale, tz = tz, type = type)))
+        return (do.call(strptind, list(x = x, format = format, locale = locale,
+                                       tz = tz, type = type)))
     # forward to parse_t
     if (!is.null(order))
-        return (do.call(parse_t, c(list(x = x, order = order),
-                                   locale = locale, tz = tz, type = type)))
+        return (do.call(parse_t, list(x = x, order = order, locale = locale,
+                                      tz = tz, type = type)))
     # automatic parsing
     ind <- .parse(x, type, locale, tz)
     if (is.null(ind)) {
@@ -349,8 +356,77 @@ as.tind.data.frame <- function(x, ...)
                         sQuote("tind"))
         stop(mes, call. = FALSE, domain = NA)
     }
+
+    # single column
     if (nc == 1L) return (as.tind(x[[1L]], ...))
-    return (as.tind(do.call(paste, as.list(x)), ...))
+
+    # handle dots
+    args <- list(...)
+
+    # date and time in two columns -> date_time
+    # e.g., data.table represents date-time in two columns
+    if (nc == 2L) {
+        tp1 <- tryCatch(ti_type(x[[1L]], long = FALSE), error = function(e) "")
+        tp2 <- tryCatch(ti_type(x[[2L]], long = FALSE), error = function(e) "")
+        if (all(c("d", "h") %in% c(tp1, tp2))) {
+            d <- if (tp1 == "d") as.tind(x[[1L]]) else as.tind(x[[2L]])
+            H <- if (tp1 == "d") as.tind(x[[2L]]) else as.tind(x[[1L]])
+            type <- args$type
+            args$type <- NULL
+            tz <- args$tz
+            args$tz <- NULL
+            do.call(chkDots, c(args, list(which.call = -2L)))
+            if (!is.null(type) && (type != "t")) {
+                mes <- gettextf("type inferred (%s) is different from %s",
+                                .ti_type2char("t", dash = TRUE), .ti_type2char(type))
+                stop(mes, call. = FALSE, domain = NA)
+            }
+            return (date_time(d, H, tz = tz))
+        }
+    }
+
+    # all columns numeric -> tind constructor
+    if (all(sapply(x, is.numeric))) {
+        # check order
+        order <- args$order
+        args$order <- NULL
+        if (is.null(order)) {
+            mes0 <- gettextf("%s argument missing", sQuote("order"))
+            mes1 <- gettextf("it is required when a data frame has numeric columns only")
+            stop(paste0(mes0, "; ", mes1), domain = NA)
+        }
+        if (!is.character(order) || (length(order) != 1L)) {
+            mes0 <- gettextf("invalid %s argument", sQuote("order"))
+            mes1 <- gettextf("character string expected")
+            stop(paste0(mes0, "; ", mes1), domain = NA)
+        }
+        order <- gsub("[\\.\t\n ]", "", order)
+        if (nchar(order) != nc) {
+            mes <- gettextf("numbers of columns (%d) and time index components (%d) differ",
+                            nc, length(order))
+            stop(mes, domain = NA)
+        }
+        comp <- unlist(strsplit(order, ""))
+        tpig <- .infer_type(comp)
+        if (length(tpig[[2L]])) {
+            mes0 <- gettextf("the following components are redundant: %s",
+                             .ti_comp2char(tpig[[2L]]))
+            mes1 <- gettextf("order: %s", dQuote(order))
+            mes2 <- gettextf("type inferred: %s", .ti_type2char(tpig[[1L]]))
+            stop(paste0(mes0, "; ", mes1, "; ", mes2), domain = NA)
+        }
+        targs <- as.list(x)
+        names(targs) <- comp
+        type <- args$type
+        args$type <- NULL
+        tz <- args$tz
+        args$tz <- NULL
+        do.call(chkDots, c(args, list(which.call = -2L)))
+        return (do.call(tind, c(targs, list(type = type, tz = tz))))
+    }
+
+    # fallback (slow due to pasting and parsing)
+    return (do.call(as.tind, c(list(do.call(paste, x)), args)))
 }
 
 
@@ -424,9 +500,10 @@ as.time <- function(x, ...)
 #' for particular time index type (seconds, days, weeks etc. since ...).
 #'
 #' For years, quarters, months, weeks, and dates, \code{as.integer} returns
-#' representation in the form \code{YYYY}, \code{YYYYQ}, \code{YYYYMM}, \code{YYYYWW},
-#' and \code{YYYYMMDD}, respectively. For other index types, \code{as.integer}
-#' returns internal representation of time indices converted to integer.
+#' representation in the form \code{YYYY}, \code{YYYYQ}, \code{YYYYMM},
+#' \code{YYYYWW}, and \code{YYYYMMDD}, respectively. For other index types,
+#' \code{as.integer} returns internal representation of time indices converted
+#' to integer.
 #'
 #' \code{as.character} returns character vector with standard (ISO 8601)
 #' representation of time indices. For customisable output formats,
