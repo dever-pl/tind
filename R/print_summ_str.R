@@ -178,13 +178,13 @@ summary.tinterval <- function(object, ...)
 #' @exportS3Method utils::str
 str.tind <- function(object, ...)
 {
-    if (!(n <- length(object))) {
+    n <- length(object)
+    if (!n) {
         md <- substr(typeof(object), 1L, 1L)
         cat(sprintf(" 'tind' %s(0)\n", if (md == "i") "int" else "num"))
         return (invisible(NULL))
     }
 
-    n <- length(object)
     inf <- sprintf(" tind [1:%d]", n)
     fmt <- format(utils::head(object, 10L))
     fmt[is.na(fmt)] <- "NA"
@@ -205,13 +205,13 @@ str.tind <- function(object, ...)
 #' @exportS3Method utils::str
 str.tdiff <- function(object, ...)
 {
-    if (!(n <- length(object))) {
+    n <- length(object)
+    if (!n) {
         md <- substr(typeof(object), 1L, 1L)
         cat(sprintf(" 'tdiff' %s(0)\n", if (md == "i") "int" else "num"))
         return (invisible(NULL))
     }
 
-    n <- length(object)
     inf <- sprintf(" tdiff [1:%d]", n)
     fmt <- format(utils::head(object, 10L))
     fmt[is.na(fmt)] <- "NA"
