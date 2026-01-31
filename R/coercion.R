@@ -403,7 +403,7 @@ as.tind.data.frame <- function(x, ...)
         order <- gsub("[\\.\t\n ]", "", order)
         if (nchar(order) != nc) {
             mes <- gettextf("numbers of columns (%d) and time index components (%d) differ",
-                            nc, length(order))
+                            nc, nchar(order))
             stop(mes, domain = NA)
         }
         comp <- unlist(strsplit(order, ""))
