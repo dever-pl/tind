@@ -10,6 +10,7 @@
 \alias{as.times}
 \alias{as.IDate}
 \alias{as.ITime}
+\alias{as_hms}
 \alias{as.tind.yearmon}
 \alias{as.yearmon.tind}
 \alias{as.tind.yearqtr}
