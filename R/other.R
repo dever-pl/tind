@@ -1,7 +1,7 @@
 #
 # This file is a part of tind.
 #
-# Copyright (c) Grzegorz Klima 2025
+# Copyright (c) Grzegorz Klima 2025, 2026
 #
 # ################################################## #
 # working with other representations of time indices #
@@ -34,7 +34,7 @@
 #'
 #' @name tind-other
 #' @aliases as.yearmon as.yearqtr as.timeDate as.chron as.dates as.times
-#' as.IDate as.ITime
+#' as.IDate as.ITime as_hms
 #'
 #' @seealso \code{\link{as.tind}} and \link{tind-coercion} for conversions
 #' to and from \code{tind}, \code{\link{date2num}} and \code{\link{num2date}}

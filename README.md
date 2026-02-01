@@ -1,4 +1,5 @@
 # A Common Representation of Time Indices of Different Types [R package]
+
 Provides an easy-to-use `tind` class representing time indices
 of different types (years, quarters, months, ISO 8601 weeks, dates,
 time of day, date-time, and arbitrary integer/numeric indices).

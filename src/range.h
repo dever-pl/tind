@@ -1,7 +1,7 @@
 /*
  * This file is a part of tind.
  *
- * Copyright (c) Grzegorz Klima 2025
+ * Copyright (c) Grzegorz Klima 2025, 2026
  *
  ******************************************************
  * fast range for integer and double vectors w/o Infs *

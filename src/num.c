@@ -1,7 +1,7 @@
 /*
  * This file is a part of ats.
  *
- * Copyright (c) Grzegorz Klima 2025
+ * Copyright (c) Grzegorz Klima 2025, 2026
  *
  ********************************************************************
  * conversion to/from YYYYMM, YYYYMMDD, etc. numeric representation *

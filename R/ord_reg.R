@@ -1,7 +1,7 @@
 #
 # This file is a part of tind.
 #
-# Copyright (c) Grzegorz Klima 2025
+# Copyright (c) Grzegorz Klima 2025, 2026
 #
 # ###################################################### #
 # working with ordered and regularly spaced time indices #
