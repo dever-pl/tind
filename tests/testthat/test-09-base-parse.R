@@ -101,7 +101,7 @@ test_that("'.parse_num' works correctly", {
 
     # h
     warn <- paste0("^NAs introduced; first position [0-9]+: [-+eE0-9]+",
-                   "; representation: seconds since midnight$")
+                   "; representation: seconds since midnight \\([-0-9]+\\)$")
     expect_equal(.parse_num(numeric(), "h"), double())
     expect_equal(.parse_num(integer(), "h"), double())
     expect_equal(.parse_num(7200., "h"), 7200.)

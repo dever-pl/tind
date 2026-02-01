@@ -42,13 +42,15 @@
             mes2 <- gettextf("type: %s", .ti_type2char(type))
             warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
         } else {
-            if (type == "t")
+            if (type == "t") {
                 mes2a <- gettextf("seconds since the Epoch")
-            else if (type == "h")
+            } else if (type == "h") {
                 mes2a <- gettextf("seconds since midnight")
-            else
+                mes2a <- paste0(mes2a, " (", paste(.limits("h"), collapse = "-"), ")")
+            } else {
                 mes2a <- switch(type, y = "YYYY", q = "YYYYQ", m = "YYYYMM",
                                       w = "YYYYWW", d = "YYYYMMDD")
+            }
             mes2 <- gettextf("representation: %s", mes2a)
             warning(paste0(mes0, "; ", mes1, "; ", mes2),
                     call. = FALSE, domain = NA)

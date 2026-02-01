@@ -26,6 +26,8 @@
 \alias{as.IDate.tind}
 \alias{as.tind.ITime}
 \alias{as.ITime.tind}
+\alias{as.tind.hms}
+\alias{as_hms.tind}
 \title{Conversion between \code{tind} and Other Time Index Representations}
 \usage{
 \method{as.tind}{yearmon}(x, ...)
@@ -59,6 +61,10 @@ as.IDate(x, ...)
 \method{as.tind}{ITime}(x, ...)
 
 as.ITime(x)
+
+\method{as.tind}{hms}(x, ...)
+
+as_hms(x)
 }
 \arguments{
 \item{x}{an R object to be converted.}
@@ -78,7 +84,8 @@ package \pkg{base}, \pkg{tind} currently supports conversion between
 \code{tind} and the following classes: \code{yearmon}, \code{yearqtr}
 (both from package \pkg{zoo}), \code{timeDate} (from package \pkg{timeDate}),
 \code{chron}, \code{dates}, \code{times} (from package \pkg{chron}),
-and \code{IDate}, \code{ITime} (from package \pkg{data.table}).
+\code{IDate}, \code{ITime} (from package \pkg{data.table}),
+and \code{hms} (from package \pkg{hms}).
 }
 \details{
 Date-time indices resulting from conversion of \code{chron} objects

@@ -16,7 +16,7 @@ Description: Provides an easy-to-use tind class representing time indices
     "Calendar FAQ" by Claus Tøndering <https://www.tondering.dk/claus/calendar.html>.
 Depends: R (>= 3.6.0)
 Suggests: crayon, methods, stats, testthat, knitr, rmarkdown, fansi, htmltools
-Enhances: utils, graphics, ggplot2, zoo, timeDate, chron, data.table
+Enhances: utils, graphics, ggplot2, zoo, timeDate, chron, data.table, hms
 Collate: base-utils.R base-in.R base-yqmwd.R base-tz.R base-th.R
     base-res.R base-pretty.R base-locale.R base-types.R base-parse.R
     tind.R format.R parse.R coercion.R methods.R tdiff.R tinterval.R types.R

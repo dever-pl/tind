@@ -16,7 +16,8 @@
 #' \code{tind} and the following classes: \code{yearmon}, \code{yearqtr}
 #' (both from package \pkg{zoo}), \code{timeDate} (from package \pkg{timeDate}),
 #' \code{chron}, \code{dates}, \code{times} (from package \pkg{chron}),
-#' and \code{IDate}, \code{ITime} (from package \pkg{data.table}).
+#' \code{IDate}, \code{ITime} (from package \pkg{data.table}),
+#' and \code{hms} (from package \pkg{hms}).
 #'
 #' @details
 #' Date-time indices resulting from conversion of \code{chron} objects
@@ -367,7 +368,47 @@ as.ITime.tind <- function(x, ...)
 }
 
 
-## NOTE: a trick to turn off R CMD check warning
+
+# hms::hms
+# ###################################################################
+
+
+.tind_coercible.hms <- function(x) TRUE
+
+
+#' @keywords internal
+#' @export
+ti_type.hms <- function(x, long = TRUE, valid = FALSE)
+{
+    .checkTRUEFALSE(long)
+    .checkTRUEFALSE(valid)
+    return (.ti_type("h", long, valid = valid, rm.names = TRUE))
+}
+
+
+#' @rdname tind-other
+#' @export
+as.tind.hms <- function(x, ...)
+{
+    res <- as.tind(unclass(x), "h")
+    return (res)
+}
+
+
+#' @rdname tind-other
+#' @usage as_hms(x)
+#' @exportS3Method hms::as_hms
+as_hms.tind <- function(x, ...)
+{
+    .expect_type(.get.type(x), "h", 1L)
+    res <- structure(.unclass(x), units = "secs", class = c("hms", "difftime"))
+    return (res)
+}
+
+
+
+## NOTE: a trick to turn off R CMD check warnings
+# ###################################################################
 as.yearmon  <- NULL
 as.yearqtr  <- NULL
 as.timeDate <- NULL
@@ -376,6 +417,7 @@ as.dates    <- NULL
 as.times    <- NULL
 as.IDate    <- NULL
 as.ITime    <- NULL
+as_hms      <- NULL
 
 
 

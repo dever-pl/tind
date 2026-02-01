@@ -117,6 +117,23 @@ test_that("data.table::IDate and data.table::ITime are handled correctly", {
 })
 
 
+test_that("hms::hms is handled correctly", {
+    skip_on_cran()
+    skip_if_not_installed("hms")
+    N <- 10
+    H <- sample(0:23, N, replace = TRUE)
+    M <- sample(0:59, N, replace = TRUE)
+    S <- sample(0:59, N, replace = TRUE)
+    th <- tind(H = H, M = M, S = S)
+    HMS <- hms::as_hms(th)
+    expect_true(hms::is_hms(HMS))
+    expect_true(.tind_coercible(HMS))
+    expect_equal(ti_type(HMS, long = FALSE), "h")
+    expect_equal(HMS, hms::hms(seconds = S, minutes = M, hours = H))
+    expect_equal(as.tind(HMS), th)
+})
+
+
 test_that("'date2num' and 'num2date' work correctly", {
     # MATLAB
     dd <- 730377
