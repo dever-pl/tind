@@ -64,6 +64,7 @@ ti_type.yearmon <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.yearmon <- function(x, ...)
 {
+    chkDots(...)
     res <- yf2tind(.unclass(x), "m")
     return (res)
 }
@@ -75,6 +76,7 @@ as.tind.yearmon <- function(x, ...)
 as.yearmon.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "m", 1L)
+    chkDots(...)
     return (structure(year_frac(x), class = "yearmon"))
 }
 
@@ -96,6 +98,7 @@ ti_type.yearqtr <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.yearqtr <- function(x, ...)
 {
+    chkDots(...)
     res <- yf2tind(.unclass(x), "q")
     return (res)
 }
@@ -107,6 +110,7 @@ as.tind.yearqtr <- function(x, ...)
 as.yearqtr.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "q", 1L)
+    chkDots(...)
     return (structure(year_frac(x), class = "yearqtr"))
 }
 
@@ -139,6 +143,7 @@ as.tind.timeDate <- function(x, digits = 0L, ...)
                         sQuote("FinCenter"), dQuote(x@FinCenter))
         warning(mes, call. = FALSE, domain = NA)
     }
+    chkDots(...)
     res <- as.tind.POSIXct(x@Data, tz = tz, digits = digits)
     return (res)
 }
@@ -150,6 +155,7 @@ as.tind.timeDate <- function(x, digits = 0L, ...)
 as.timeDate.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "t", 1L)
+    chkDots(...)
     tz <- .get.tz(x)
     x <- as.POSIXct(.unclass(x), tz = "GMT", origin = "1970-01-01")
     res <- methods::new("timeDate", Data = x, FinCenter = tz)
@@ -199,6 +205,7 @@ ti_type.chron <- function(x, long = TRUE, valid = FALSE)
 as.tind.chron <- function(x, digits = 0L, ...)
 {
     digits <- .check_digits(digits)
+    chkDots(...)
     res <- as.tind(round(.unclass(x) * 86400, digits = digits), tz = "UTC")
     return (res)
 }
@@ -210,6 +217,7 @@ as.tind.chron <- function(x, digits = 0L, ...)
 as.chron.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), c("d", "h", "t"), 1L)
+    chkDots(...)
     if (.get.type(x) == "h") return (as.times.tind(x))
     if (.get.type(x) == "d") return (as.dates.tind(x))
     x <- as.tzone(x, "UTC")
@@ -243,6 +251,7 @@ ti_type.dates <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.dates <- function(x, ...)
 {
+    chkDots(...)
     ind <- .validate_d(.unclass(x))
     res <- .tind(ind, "d")
     return (res)
@@ -255,6 +264,7 @@ as.tind.dates <- function(x, ...)
 as.dates.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "d", 1L)
+    chkDots(...)
     res <- .unclass(x)
     return (structure(.require_mode(res, "double"),
                       format = "m/d/y",
@@ -281,6 +291,7 @@ ti_type.times <- function(x, long = TRUE, valid = FALSE)
 as.tind.times <- function(x, digits = 0L, ...)
 {
     digits <- .check_digits(digits)
+    chkDots(...)
     res <- as.tind(round(unclass(x) * 86400, digits = digits), "h")
     return (res)
 }
@@ -292,6 +303,7 @@ as.tind.times <- function(x, digits = 0L, ...)
 as.times.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "h", 1L)
+    chkDots(...)
     res <- structure(unclass(x) / 86400, format = "h:m:s", class = "times")
     return (res)
 }
@@ -318,6 +330,7 @@ ti_type.IDate <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.IDate <- function(x, ...)
 {
+    chkDots(...)
     ind <- .validate_d(.jdn2d(2440588L + unclass(x)))
     res <- .tind(ind, "d")
     return (res)
@@ -330,6 +343,7 @@ as.tind.IDate <- function(x, ...)
 as.IDate.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "d", 1L)
+    chkDots(...)
     res <- structure(.unclass(x), class = c("IDate", "Date"))
     return (res)
 }
@@ -352,6 +366,7 @@ ti_type.ITime <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.ITime <- function(x, ...)
 {
+    chkDots(...)
     res <- as.tind(unclass(x), "h")
     return (res)
 }
@@ -363,6 +378,7 @@ as.tind.ITime <- function(x, ...)
 as.ITime.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "h", 1L)
+    chkDots(...)
     res <- structure(.unclass(x), class = "ITime")
     return (res)
 }
@@ -390,6 +406,7 @@ ti_type.hms <- function(x, long = TRUE, valid = FALSE)
 #' @export
 as.tind.hms <- function(x, ...)
 {
+    chkDots(...)
     res <- as.tind(unclass(x), "h")
     return (res)
 }
@@ -401,6 +418,7 @@ as.tind.hms <- function(x, ...)
 as_hms.tind <- function(x, ...)
 {
     .expect_type(.get.type(x), "h", 1L)
+    chkDots(...)
     res <- structure(.unclass(x), units = "secs", class = c("hms", "difftime"))
     return (res)
 }

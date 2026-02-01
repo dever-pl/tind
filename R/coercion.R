@@ -247,6 +247,7 @@ as.tind.numeric <- function(x, type = NULL, tz = NULL, ...)
     typetz <- .check_type_tz(type, tz)
     type <- typetz$type
     tz <- typetz$tz
+    chkDots(...)
     # type provided
     if (!is.null(type)) {
         ind <- .parse_num(x, type)
@@ -270,6 +271,7 @@ as.tind.numeric <- function(x, type = NULL, tz = NULL, ...)
 #' @export
 as.tind.logical <- function(x, type = NULL, tz = NULL, ...)
 {
+    chkDots(...)
     if (any(!is.na(x))) warning("NAs introduced by coercion", domain = "tind")
     return (tind(length = length(x), type = type, tz = tz))
 }
@@ -288,13 +290,13 @@ as.tind.character <- function(x, type = NULL, format = NULL, order = NULL,
     typetz <- .check_type_tz(type, tz)
     type <- typetz$type
     tz <- typetz$tz
-
     if (!is.null(type) && (type %in% c("i", "n")) &&
         (!is.null(format) || !is.null(order))){
         mes <- gettextf("%s or %s provided for type %s",
                         sQuote("format"), sQuote("order"), .ti_type2char(type))
         stop(mes, call. = FALSE, domain = NA)
     }
+    chkDots(...)
 
     # forward to strptind
     if (!is.null(format))
@@ -325,6 +327,7 @@ as.tind.factor <- function(x, ...) as.tind(levels(x), ...)[as.integer(x)]
 #' @export
 as.tind.Date <- function(x, ...)
 {
+    chkDots(...)
     ind <- .validate_d(.unclass(x))
     return (.tind(ind, "d"))
 }
@@ -336,6 +339,7 @@ as.tind.POSIXct <- function(x, tz = NULL, digits = 0L, ...)
 {
     tz <- .check_tz(if (!is.null(tz)) tz else attr(x, "tzone"))
     ind <- .validate_t(round(.unclass(x), .check_digits(digits)))
+    chkDots(...)
     return (.tind(ind, "t", tz))
 }
 
@@ -436,6 +440,7 @@ as.tind.tind <- function(x, type = NULL, tz = NULL, ...)
 {
     if (is.null(type) && is.null(tz)) return (x)
     typetz <- .check_type_tz(type, tz)
+    chkDots(...)
     if ((typetz$type == .get.type(x)) && is.null(tz)) return (x)
     return (.require_type(x, typetz$type, typetz$tz))
 }

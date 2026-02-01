@@ -439,16 +439,16 @@ bizday_diff <- function(d1, d2, calendar, start.incl = TRUE, end.incl = FALSE)
 #' @export
 daycount_frac <- function(d1, d2, convention)
 {
-    .dcconv <- list(`30/360` = c("30/360 Bond Basis", "360/360",
-                                 "ISDA 2006 Section 4.16(f)"),
-                    `30E/360` = c("Eurobond basis", "30/360 ICMA", "30/360 ISMA",
-                                  "ICMA Rule 251.1(ii), 251.2",
-                                  "ISDA 2006 Section 4.16(g)"),
-                    `ACT/ACT` = c("Actual/Actual", "Actual/Actual ISDA",
-                                  "ISDA 2006 Section 4.16(b)"),
-                    `ACT/365F` = c("Actual/365 Fixed",
-                                   "ISDA 2006 Section 4.16(d)"),
-                    `ACT/360` = c("Actual/360", "ISDA 2006 Section 4.16(e)"))
+    .dcconv <- list(`30/360`    = c("30/360 Bond Basis", "360/360",
+                                    "ISDA 2006 Section 4.16(f)"),
+                    `30E/360`   = c("Eurobond basis", "30/360 ICMA",
+                                    "30/360 ISMA", "ICMA Rule 251.1(ii), 251.2",
+                                    "ISDA 2006 Section 4.16(g)"),
+                    `ACT/ACT`   = c("Actual/Actual", "Actual/Actual ISDA",
+                                    "ISDA 2006 Section 4.16(b)"),
+                    `ACT/365F`  = c("Actual/365 Fixed",
+                                    "ISDA 2006 Section 4.16(d)"),
+                    `ACT/360`   = c("Actual/360", "ISDA 2006 Section 4.16(e)"))
     if (missing(convention)) convention <- NULL
     convention <- .match.arg(convention, .dcconv)
 
