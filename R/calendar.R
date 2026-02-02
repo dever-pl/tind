@@ -539,7 +539,7 @@ is.dst <- function(x)
 #'
 #' \code{easter} returns the date of Easter in a year.
 #'
-#' @param y,q,m an object of \code{tind} class or an R object coercible to it.
+#' @param y,q,m,d an object of \code{tind} class or an R object coercible to it.
 #' @param nth a numeric value or vector of indices (1--366 for \code{nth_day_of_year},
 #'            1--5 for \code{nth_dw_in_month}). A positive integer (vector) for
 #'            \code{nth_dw_after} and \code{nth_dw_before}.

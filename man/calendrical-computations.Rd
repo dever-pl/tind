@@ -33,7 +33,7 @@ easter(y)
 1--5 for \code{nth_dw_in_month}). A positive integer (vector) for
 \code{nth_dw_after} and \code{nth_dw_before}.}
 
-\item{y, q, m}{an object of \code{tind} class or an R object coercible to it.}
+\item{y, q, m, d}{an object of \code{tind} class or an R object coercible to it.}
 
 \item{dw}{a numeric value or vector of days of week (values in range 1--7
 with Monday as the 1st day).}
