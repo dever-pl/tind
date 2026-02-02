@@ -32,28 +32,30 @@
                      w = .Call(C_num2w, xx), d = .Call(C_num2d, xx))
     }
 
-    nok <- !is.na(x) & is.na(xx)
-    if (any(nok)) {
-        nok <- which.max(nok)
-        mes0 <- gettextf("NAs introduced")
-        mes1 <- gettextf("first position %s: %s", format(nok, scientific = FALSE),
-                         as.character(x[nok]))
-        if (type %in% c("i", "n")) {
-            mes2 <- gettextf("type: %s", .ti_type2char(type))
-            warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
-        } else {
-            if (type == "t") {
-                mes2a <- gettextf("seconds since the Epoch")
-            } else if (type == "h") {
-                mes2a <- gettextf("seconds since midnight")
-                mes2a <- paste0(mes2a, " (", paste(.limits("h"), collapse = "-"), ")")
+    if (anyNA(xx)) {
+        nok <- !is.na(x) & is.na(xx)
+        if (any(nok)) {
+            nok <- which.max(nok)
+            mes0 <- gettextf("NAs introduced")
+            mes1 <- gettextf("first position %s: %s", format(nok, scientific = FALSE),
+                            as.character(x[nok]))
+            if (type %in% c("i", "n")) {
+                mes2 <- gettextf("type: %s", .ti_type2char(type))
+                warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
             } else {
-                mes2a <- switch(type, y = "YYYY", q = "YYYYQ", m = "YYYYMM",
-                                      w = "YYYYWW", d = "YYYYMMDD")
+                if (type == "t") {
+                    mes2a <- gettextf("seconds since the Epoch")
+                } else if (type == "h") {
+                    mes2a <- gettextf("seconds since midnight")
+                    mes2a <- paste0(mes2a, " (", paste(.limits("h"), collapse = "-"), ")")
+                } else {
+                    mes2a <- switch(type, y = "YYYY", q = "YYYYQ", m = "YYYYMM",
+                                        w = "YYYYWW", d = "YYYYMMDD")
+                }
+                mes2 <- gettextf("representation: %s", mes2a)
+                warning(paste0(mes0, "; ", mes1, "; ", mes2),
+                        call. = FALSE, domain = NA)
             }
-            mes2 <- gettextf("representation: %s", mes2a)
-            warning(paste0(mes0, "; ", mes1, "; ", mes2),
-                    call. = FALSE, domain = NA)
         }
     }
 
@@ -94,14 +96,16 @@
 
     if (type %in% c("i", "n")) {
         res <- do.call(paste0(".validate_", type), list(x))
-        nok <- !is.na(x) & is.na(res)
-        if (any(nok)) {
-            pos <- which.max(nok)
-            mes0 <- gettextf("NAs introduced")
-            mes1 <- gettextf("first position %s: %s", format(pos, scientific = FALSE),
-                             dQuote(x[pos]))
-            mes2 <- gettextf("type: %s", .ti_type2char(type))
-            warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
+        if (anyNA(res)) {
+            nok <- !is.na(x) & is.na(res)
+            if (any(nok)) {
+                pos <- which.max(nok)
+                mes0 <- gettextf("NAs introduced")
+                mes1 <- gettextf("first position %s: %s", format(pos, scientific = FALSE),
+                                dQuote(x[pos]))
+                mes2 <- gettextf("type: %s", .ti_type2char(type))
+                warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
+            }
         }
         return (list(res, type, NULL))
     }
@@ -155,8 +159,10 @@
             res <- .dhz2t(d, hms, z, tz, 2L)
         }
         if (is.null(tz)) tz <- .check_tz(tz)
-        nna <- !is.na(x) & is.na(res)
-        napos <- if (any(nna)) which.max(nna) else 0L
+        if (anyNA(res)) {
+            nna <- !is.na(x) & is.na(res)
+            napos <- if (any(nna)) which.max(nna) else 0L
+        } else napos <- 0L
     } else {
         napos <- if (length(res) == 4L) res[[4L]] else 0L
         res <- if (type == "h") res[[2L]] else res[[1L]]

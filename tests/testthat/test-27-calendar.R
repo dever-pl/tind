@@ -480,6 +480,30 @@ test_that("'last_dw_in_month' works correctly", {
 })
 
 
+test_that("'nth_dw_after/before' work correctly", {
+    expect_error(nth_dw_after(1, 1, tind(type = "y")), errcast)
+    expect_error(nth_dw_after(1, 1, tind(type = "m")), errcast)
+    expect_error(nth_dw_after(1, 1, tind(type = "n")), errcast)
+    expect_error(nth_dw_before(1, 1, tind(type = "y")), errcast)
+    expect_error(nth_dw_before(1, 1, tind(type = "m")), errcast)
+    expect_error(nth_dw_before(1, 1, tind(type = "n")), errcast)
+
+    expect_equal(nth_dw_after(c(1, 3), 7, as.date(20260503)),
+                 tind(y = 2026, m = 5, d = c(10, 24)))
+    expect_equal(nth_dw_before(1:2, 7, as.date(20251224)),
+                 tind(y = 2025, m = 12, d = c(21, 14)))
+
+    expect_warning(nth_dw_after(1, 8, 20260503), warnna)
+    expect_warning(nth_dw_after(1, 0, 20260503), warnna)
+    expect_warning(nth_dw_after(0, 1, 20260503), warnna)
+    expect_warning(nth_dw_after(0, 1, 20260503), warnna)
+    expect_warning(nth_dw_before(1, 8, 20260503), warnna)
+    expect_warning(nth_dw_before(1, 0, 20260503), warnna)
+    expect_warning(nth_dw_before(0, 1, 20260503), warnna)
+    expect_warning(nth_dw_before(0, 1, 20260503), warnna)
+})
+
+
 test_that("'easter' works correctly", {
     expect_error(easter(tind(type = "n")), errcast)
     eas <- c(20180401L, 20190421L, 20200412L, 20210404L, 20220417L, 20230409L)

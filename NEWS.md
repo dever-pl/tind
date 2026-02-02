@@ -3,6 +3,7 @@
 ## New Features
 
 - Added support for class `hms` from package of the same name (conversion to/from).
+- Added `nth_dw_after` and `nth_dw_before` calculating the nth occurrence of a day of week after or before given date.
 
 ## Improvements
 

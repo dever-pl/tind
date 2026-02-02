@@ -42,6 +42,8 @@
                    validate_ymd = .Call(C_validate_ymd, X, Y, Z),
                    validate_ywu = .Call(C_validate_ywu, X, Y, Z),
                    nthdwinmonth = .Call(C_nthdwinmonth, X, Y, Z),
+                   nthdwafter   = .Call(C_nthdwafter, X, Y, Z),
+                   nthdwbefore  = .Call(C_nthdwbefore, X, Y, Z),
                    validate_hms = .Call(C_validate_hms, X, Y, Z)))
 }
 
@@ -218,4 +220,12 @@
 .nth_dw_in_month <- function(nth, dw, m)
     .Call_3("nthdwinmonth", .require_mode(nth, "integer"),
                             .require_mode(dw, "integer"), m)
+
+.nth_dw_after <- function(nth, dw, d)
+    .Call_3("nthdwafter", .require_mode(nth, "integer"),
+                          .require_mode(dw, "integer"), d)
+
+.nth_dw_before <- function(nth, dw, d)
+    .Call_3("nthdwbefore", .require_mode(nth, "integer"),
+                           .require_mode(dw, "integer"), d)
 

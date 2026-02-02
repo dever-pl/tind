@@ -124,6 +124,41 @@
 }
 
 
+
+# check if NAs were introduced
+# ###################################################################
+
+.check_na_introduced <- function(x, ..., tz = NULL)
+{
+    if (!anyNA(x)) return (invisible(NULL))
+    args <- list(...)
+    nna <- is.na(x)
+    lapply(args, function(arg) nna <<- suppressWarnings(nna & !is.na(arg)))
+    if (!any(nna)) return (invisible(NULL))
+    narg <- length(args)
+    ii <- which.max(nna)
+    iis <- (ii - 1L) %% sapply(args, length) + 1L
+    first <- character(narg)
+    for (j in seq_len(narg)) {
+        first[j] <- if (is.character(args[[j]])) dQuote(args[[j]][[iis[j]]])
+                    else as.character(args[[j]][[iis[j]]])
+    }
+    first <- paste0(names(args), "[", format(iis, scientific = FALSE), "] = ",
+                    first)
+    first <- toString(first)
+
+    mes1 <- gettextf("NAs introduced")
+    mes2 <- gettextf("first occurrence: %s", first)
+    mes3 <- NULL
+    if (!is.null(tz)) {
+        mes3 <- gettextf("time zone: %s", tz)
+    }
+
+    if (is.null(mes3)) warning(paste0(mes1, "; ", mes2), call. = FALSE, domain = NA)
+    else warning(paste0(mes1, "; ", mes2, "; ", mes3), call. = FALSE, domain = NA)
+}
+
+
 # an extension of base::match.arg handling named lists of choices
 # ###################################################################
 

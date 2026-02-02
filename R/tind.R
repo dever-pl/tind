@@ -238,23 +238,10 @@ tind <- function(..., length = 0L, type = NULL, tz = NULL)
         if (type == "h") res <- resh
         tz <- NULL
     }
+
     # check NAs
-    nna0 <- rep(TRUE, n)
-    lapply(comp, function(x) nna0 <<- suppressWarnings(nna0 & !is.na(x)))
-    nas <- is.na(res)
-    if (any(nna0 & nas)) {
-        mes0 <- gettextf("NAs introduced")
-        ii <- which.max(nna0 & nas)
-        first <- character(length(comp))
-        for (j in seq_along(comp)) {
-            iij <- (ii - 1L) %% len[j] + 1L
-            first[j] <- sprintf("%s[%s] = %s", names(comp)[j],
-                                format(iij, scientific = FALSE), comp[[j]][iij])
-        }
-        mes1 <- gettextf("first occurrence: %s", toString(first))
-        if (type == "t") mes1 <- paste0(mes1, "; ", gettextf("time zone: %s", tz))
-        warning(paste0(mes0, "; ", mes1), call. = FALSE, domain = NA)
-    }
+    do.call(.check_na_introduced, c(list(res), comp, list(tz = tz)))
+
     return (.tind(res, type, tz))
 }
 

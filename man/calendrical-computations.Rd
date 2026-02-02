@@ -7,6 +7,8 @@
 \alias{last_day_in_quarter}
 \alias{nth_dw_in_month}
 \alias{last_dw_in_month}
+\alias{nth_dw_after}
+\alias{nth_dw_before}
 \alias{easter}
 \title{Calendrical Computations in \pkg{tind} Package}
 \usage{
@@ -20,11 +22,16 @@ nth_dw_in_month(nth, dw, m)
 
 last_dw_in_month(dw, m)
 
+nth_dw_after(nth, dw, d)
+
+nth_dw_before(nth, dw, d)
+
 easter(y)
 }
 \arguments{
 \item{nth}{a numeric value or vector of indices (1--366 for \code{nth_day_of_year},
-1--5 for \code{nth_dw_in_month}).}
+1--5 for \code{nth_dw_in_month}). A positive integer (vector) for
+\code{nth_dw_after} and \code{nth_dw_before}.}
 
 \item{y, q, m}{an object of \code{tind} class or an R object coercible to it.}
 
@@ -48,6 +55,9 @@ of week in a month.
 
 \code{last_dw_in_month} returns the date of the last day
 of week in a month.
+
+\code{nth_dw_after} and \code{nth_dw_before} calculate the nth occurrence
+of a day of week after or before given date.
 
 \code{easter} returns the date of Easter in a year.
 }

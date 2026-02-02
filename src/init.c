@@ -84,6 +84,8 @@ R_CallMethodDef callMethods[] = {
     {"validate_ymd",        (DL_FUNC) &validate_ymd,        3},
     {"validate_ywu",        (DL_FUNC) &validate_ywu,        3},
     {"nthdwinmonth",        (DL_FUNC) &nthdwinmonth,        3},
+    {"nthdwafter",          (DL_FUNC) &nthdwafter,          3},
+    {"nthdwbefore",         (DL_FUNC) &nthdwbefore,         3},
     // datetime
     {"validate_t",          (DL_FUNC) &validate_t,          1},
     {"validate_h",          (DL_FUNC) &validate_h,          1},

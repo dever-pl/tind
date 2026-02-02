@@ -292,14 +292,16 @@ as.tzone.tind <- function(x, tz)
     tz0 <- .get.tz(x)
     tz <- .check_tz(tz)
     res <- .tind(.astz(.unclass(x), tz0, tz), "t", tz)
-    nok <- !is.na(x) & is.na(res)
-    if (any(nok)) {
-        nok <- which.max(nok)
-        mes1 <- gettextf("NAs introduced")
-        mes2 <- gettextf("first position %s: %s", format(nok, scientific = FALSE),
-                         .t2char(x[nok], tz = tz0, FALSE, FALSE))
-        mes3 <- gettextf("time zone: %s", .check_tz(tz))
-        warning(paste0(mes1, "; ", mes2, "; ", mes3), call. = FALSE, domain = NA)
+    if (anyNA(res)) {
+        nok <- !is.na(x) & is.na(res)
+        if (any(nok)) {
+            nok <- which.max(nok)
+            mes1 <- gettextf("NAs introduced")
+            mes2 <- gettextf("first position %s: %s", format(nok, scientific = FALSE),
+                            .t2char(x[nok], tz = tz0, FALSE, FALSE))
+            mes3 <- gettextf("time zone: %s", tz)
+            warning(paste0(mes1, "; ", mes2, "; ", mes3), call. = FALSE, domain = NA)
+        }
     }
 
     return (res)

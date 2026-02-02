@@ -261,7 +261,7 @@ year <- function(x) .unclass(.require_type(as.tind(x), "y", lower = TRUE))
 #' @export
 quarter <- function(x)
 {
-    q <- .unclass(.require_type(as.tind(x), "q", lower = TRUE))
+    q <- .require_type(as.tind(x), "q", lower = TRUE)
     return (.q2qrtr(q))
 }
 
@@ -277,7 +277,7 @@ month <- function(x, labels = FALSE, abbreviate = TRUE, locale = NULL)
 {
     .checkTRUEFALSE(labels)
     m <- .require_type(as.tind(x), "m", lower = TRUE)
-    m <- .unclass(.m2mnth(m))
+    m <- .m2mnth(m)
     if (!labels) return (m)
     attributes(m) <- list(levels = month_names(locale, abbreviate),
                           class = c("ordered", "factor"))
@@ -298,7 +298,7 @@ months.tind <- function(x, abbreviate = FALSE)
 #' @export
 week <- function(x)
 {
-    w <- .unclass(.require_type(as.tind(x), "w", lower = TRUE))
+    w <- .require_type(as.tind(x), "w", lower = TRUE)
     return (.w2week(w))
 }
 
@@ -307,7 +307,7 @@ week <- function(x)
 #' @export
 day <- function(x)
 {
-    d <- .unclass(.require_type(as.tind(x), "d", lower = TRUE))
+    d <- .require_type(as.tind(x), "d", lower = TRUE)
     return (.d2day(d))
 }
 
@@ -316,7 +316,7 @@ day <- function(x)
 #' @export
 day_of_year <- function(x)
 {
-    d <- .unclass(.require_type(as.tind(x), "d", lower = TRUE))
+    d <- .require_type(as.tind(x), "d", lower = TRUE)
     return (.day_of_year(d))
 }
 
@@ -326,7 +326,7 @@ day_of_year <- function(x)
 day_of_week <- function(x, labels = FALSE, abbreviate = TRUE, locale = NULL)
 {
     .checkTRUEFALSE(labels)
-    d <- .unclass(.require_type(as.tind(x), "d", lower = TRUE))
+    d <- .require_type(as.tind(x), "d", lower = TRUE)
     d <- .day_of_week(d)
     if (!labels) return (d)
     attributes(d) <- list(levels = weekday_names(locale, abbreviate),
@@ -352,8 +352,8 @@ hour <- function(x)
     x <- as.tind(x)
     .expect_type(.get.type(x), c("t", "h"), 1L)
     type <- .get.type(x)
+    if (type == "h") return (.h2hour(x))
     tz <- .get.tz(x)
-    if (type == "h") return (.h2hour(.unclass(x)))
     return (.t2hour(.unclass(x), tz = tz))
 }
 
@@ -376,8 +376,8 @@ minute <- function(x)
     x <- as.tind(x)
     .expect_type(.get.type(x), c("t", "h"), 1L)
     type <- .get.type(x)
-    tz <- .get.tz(x)
     if (type == "h") return (.h2min(x))
+    tz <- .get.tz(x)
     return (.t2min(.unclass(x), tz = tz))
 }
 
@@ -390,8 +390,8 @@ second <- function(x)
     x <- as.tind(x)
     .expect_type(.get.type(x), c("t", "h"), 1L)
     type <- .get.type(x)
-    tz <- .get.tz(x)
     if (type == "h") return (.h2sec(x))
+    tz <- .get.tz(x)
     return (.t2sec(.unclass(x), tz = tz))
 }
 
@@ -454,7 +454,7 @@ is.leap_year <- function(x)
 days_in_year <- function(x)
 {
     y <- .require_type(as.tind(x), "y", lower = TRUE)
-    return (365L + .is.leap_year(y))
+    return (.days_in_year(y))
 }
 
 
@@ -534,11 +534,15 @@ is.dst <- function(x)
 #' \code{last_dw_in_month} returns the date of the last day
 #' of week in a month.
 #'
+#' \code{nth_dw_after} and \code{nth_dw_before} calculate the nth occurrence
+#' of a day of week after or before given date.
+#'
 #' \code{easter} returns the date of Easter in a year.
 #'
 #' @param y,q,m an object of \code{tind} class or an R object coercible to it.
 #' @param nth a numeric value or vector of indices (1--366 for \code{nth_day_of_year},
-#'          1--5 for \code{nth_dw_in_month}).
+#'            1--5 for \code{nth_dw_in_month}). A positive integer (vector) for
+#'            \code{nth_dw_after} and \code{nth_dw_before}.
 #' @param dw a numeric value or vector of days of week (values in range 1--7
 #'           with Monday as the 1st day).
 #'
@@ -583,20 +587,9 @@ NULL
 #' @export
 nth_day_of_year <- function(nth, y)
 {
-    y <- .unclass(.require_type(as.tind(y), "y", lower = TRUE))
+    y <- .require_type(as.tind(y), "y", lower = TRUE)
     d <- .validate_yj(y, nth)
-    nok <- suppressWarnings(!(is.na(y) | is.na(nth)) & is.na(d))
-    if (any(nok)) {
-        mes1 <- gettextf("NAs introduced")
-        ii <- which.max(nok)
-        iin <- (ii - 1L) %% length(nth) + 1L
-        iix <- (ii - 1L) %% length(y) + 1L
-        first <- sprintf("nth[%s] = %s, y[%s] = %s",
-                         format(iin, scientific = FALSE), as.character(nth[iin]),
-                         format(iix, scientific = FALSE), .y2char(y[iix]))
-        mes2 <- gettextf("first occurrence: %s", first)
-        warning(paste0(mes1, "; ", mes2), call. = FALSE, domain = NA)
-    }
+    .check_na_introduced(d, nth = nth, y = y)
     return (.tind(d, "d"))
 }
 
@@ -605,7 +598,7 @@ nth_day_of_year <- function(nth, y)
 #' @export
 last_day_in_month <- function(m)
 {
-    m <- .unclass(.require_type(as.tind(m), "m", lower = TRUE))
+    m <- .require_type(as.tind(m), "m", lower = TRUE)
     return (.tind(.last_day_in_month(m), "d"))
 }
 
@@ -614,8 +607,8 @@ last_day_in_month <- function(m)
 #' @export
 last_day_in_quarter <- function(q)
 {
-    q <- .unclass(.require_type(as.tind(q), "q", lower = TRUE))
-    return (.tind(.last_day_in_month(.q2m(q + 1L) - 1L), "d"))
+    q <- .require_type(as.tind(q), "q", lower = TRUE)
+    return (.tind(.last_day_in_month(.q2m(q) + 2L), "d"))
 }
 
 
@@ -623,22 +616,9 @@ last_day_in_quarter <- function(q)
 #' @export
 nth_dw_in_month <- function(nth, dw, m)
 {
-    m <- .unclass(.require_type(as.tind(m), "m", lower = TRUE))
+    m <- .require_type(as.tind(m), "m", lower = TRUE)
     d <- .nth_dw_in_month(nth, dw, m)
-    nok <- suppressWarnings(!(is.na(nth) | is.na(dw) | is.na(m)) & is.na(d))
-    if (any(nok)) {
-        mes1 <- gettextf("NAs introduced")
-        ii <- which.max(nok)
-        iin <- (ii - 1L) %% length(nth) + 1L
-        iid <- (ii - 1L) %% length(dw) + 1L
-        iix <- (ii - 1L) %% length(m) + 1L
-        first <- sprintf("nth[%s] = %s, dw[%s] = %s, m[%s] = %s",
-                         format(iin, scientific = FALSE), as.character(nth[iin]),
-                         format(iid, scientific = FALSE), as.character(dw[iid]),
-                         format(iix, scientific = FALSE), .m2char(m[iix]))
-        mes2 <- gettextf("first occurrence: %s", first)
-        warning(paste0(mes1, "; ", mes2), call. = FALSE, domain = NA)
-    }
+    .check_na_introduced(d, nth = nth, dw = dw, m = m)
     return (.tind(d, "d"))
 }
 
@@ -647,21 +627,32 @@ nth_dw_in_month <- function(nth, dw, m)
 #' @export
 last_dw_in_month <- function(dw, m)
 {
-    m <- .unclass(.require_type(as.tind(m), "m", lower = TRUE))
+    m <- .require_type(as.tind(m), "m", lower = TRUE)
     d <- .last_dw_in_month(dw, m)
-    nok <- suppressWarnings(!(is.na(dw) | is.na(m)) & is.na(d))
-    if (any(nok)) {
-        mes1 <- gettextf("NAs introduced")
-        ii <- which.max(nok)
-        iid <- (ii - 1L) %% length(dw) + 1L
-        iix <- (ii - 1L) %% length(m) + 1L
-        first <- sprintf("dw[%s] = %s, m[%s] = %s",
-                         format(iid, scientific = FALSE), as.character(dw[iid]),
-                         format(iix, scientific = FALSE), .m2char(m[iix]))
-        mes2 <- gettextf("first occurrence: %s", first)
-        warning(paste0(mes1, "; ", mes2), call. = FALSE, domain = NA)
-    }
+    .check_na_introduced(d, dw = dw, m = m)
     return (.tind(d, "d"))
+}
+
+
+#' @rdname calendrical-computations
+#' @export
+nth_dw_after <- function(nth, dw, d)
+{
+    d <- .require_type(as.tind(d), "d", lower = TRUE)
+    da <- .nth_dw_after(nth, dw, d)
+    .check_na_introduced(da, nth = nth, dw = dw, d = d)
+    return (.tind(da, "d"))
+}
+
+
+#' @rdname calendrical-computations
+#' @export
+nth_dw_before <- function(nth, dw, d)
+{
+    d <- .require_type(as.tind(d), "d", lower = TRUE)
+    db <- .nth_dw_before(nth, dw, d)
+    .check_na_introduced(db, nth = nth, dw = dw, d = d)
+    return (.tind(db, "d"))
 }
 
 
@@ -669,7 +660,7 @@ last_dw_in_month <- function(dw, m)
 #' @export
 easter <- function(y)
 {
-    y <- .unclass(.require_type(as.tind(y), "y", lower = TRUE))
+    y <- .require_type(as.tind(y), "y", lower = TRUE)
     return (.tind(.easter(y), "d"))
 }
 
@@ -828,29 +819,31 @@ date_time <- function(d, H, M, S, tz = NULL, grid = FALSE)
     res <- .dhz2t(dd, HMS, integer(), tz, 1L)
 
     # check NAs
-    nok <- suppressWarnings(!(is.na(d) | is.na(H) | is.na(M) | is.na(S)) & is.na(res))
-    if (any(nok)) {
-        ii <- which.max(nok)
-        iid <- if (grid) (ii - 1L) %/% nhms + 1L else (ii - 1L) %% nd + 1L
-        first <- sprintf("d[%d] = %s", iid, .d2char(d[iid]))
-        iih <- (ii - 1L) %% nh + 1L
-        if (hnum) {
-            first <- c(first, sprintf("H[%d] = %s", iih, H[iih]))
-            if (!mmis) {
-                iim <- (ii - 1L) %% nm + 1L
-                first <- c(first, sprintf("M[%d] = %s", iim, M[iim]))
+    if (anyNA(res)) {
+        nok <- suppressWarnings(!(is.na(d) | is.na(H) | is.na(M) | is.na(S)) & is.na(res))
+        if (any(nok)) {
+            ii <- which.max(nok)
+            iid <- if (grid) (ii - 1L) %/% nhms + 1L else (ii - 1L) %% nd + 1L
+            first <- sprintf("d[%d] = %s", iid, .d2char(d[iid]))
+            iih <- (ii - 1L) %% nh + 1L
+            if (hnum) {
+                first <- c(first, sprintf("H[%d] = %s", iih, H[iih]))
+                if (!mmis) {
+                    iim <- (ii - 1L) %% nm + 1L
+                    first <- c(first, sprintf("M[%d] = %s", iim, M[iim]))
+                }
+                if (!smis) {
+                    iis <- (ii - 1L) %% ns + 1L
+                    first <- c(first, sprintf("S[%d] = %s", iis, S[iis]))
+                }
+            } else {
+                first <- c(first, sprintf("H[%d] = %s", iih, .h2char(HMS[iih])))
             }
-            if (!smis) {
-                iis <- (ii - 1L) %% ns + 1L
-                first <- c(first, sprintf("S[%d] = %s", iis, S[iis]))
-            }
-        } else {
-            first <- c(first, sprintf("H[%d] = %s", iih, .h2char(HMS[iih])))
+            mes0 <- gettextf("NAs introduced")
+            mes1 <- gettextf("first occurrence: %s", toString(first))
+            mes2 <- gettextf("time zone: %s", tz)
+            warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
         }
-        mes0 <- gettextf("NAs introduced")
-        mes1 <- gettextf("first occurrence: %s", toString(first))
-        mes2 <- gettextf("time zone: %s", tz)
-        warning(paste0(mes0, "; ", mes1, "; ", mes2), call. = FALSE, domain = NA)
     }
 
     return (.tind(res, "t", tz))

@@ -647,3 +647,38 @@ test_that("'.nth_dw_in_month' works correctly", {
     expect_equal(unname(.nth_dw_in_month(nn, 8L, mm)), rep(NA_integer_, NN))
 })
 
+
+test_that("'.nth_dw_after/before' work correctly", {
+    nn <- sample.int(10L, size = NN, replace = TRUE)
+    dw <- sample.int(7L, size = NN, replace = TRUE)
+    da <- .nth_dw_after(nn, dw, dd)
+    db <- .nth_dw_before(nn, dw, dd)
+    expect_equal(unname(.day_of_week(da)), dw)
+    expect_equal(unname(.day_of_week(db)), dw)
+    expect_true(all(da > dd + (nn - 1) * 7) && all(da <= dd + nn * 7))
+    expect_true(all(db >= dd - nn * 7) && all(db < dd - (nn - 1) * 7))
+    expect_equal(.nth_dw_after(integer(), dw, dd), integer())
+    expect_equal(.nth_dw_after(nn, integer(), dd), integer())
+    expect_equal(.nth_dw_after(nn, dw, integer()), integer())
+    expect_equal(.nth_dw_before(integer(), dw, dd), integer())
+    expect_equal(.nth_dw_before(nn, integer(), dd), integer())
+    expect_equal(.nth_dw_before(nn, dw, integer()), integer())
+    warn <- "longer object length is not a multiple of shorter object length"
+    expect_warning(.nth_dw_in_month(nn[1L:2L], dw[1L:3L], mm[1L:3L]), warn, fixed = TRUE)
+    expect_warning(.nth_dw_in_month(nn[1L:3L], dw[1L:2L], mm[1L:3L]), warn, fixed = TRUE)
+    expect_warning(.nth_dw_in_month(nn[1L:3L], dw[1L:3L], mm[1L:2L]), warn, fixed = TRUE)
+    expect_equal(unname(.nth_dw_after(0L, dw, dd)), rep(NA_integer_, NN))
+    expect_equal(unname(.nth_dw_after(nn, 8L, dd)), rep(NA_integer_, NN))
+    expect_equal(unname(.nth_dw_after(nn, dw, NA_integer_)), rep(NA_integer_, NN))
+    expect_equal(unname(.nth_dw_before(0L, dw, dd)), rep(NA_integer_, NN))
+    expect_equal(unname(.nth_dw_before(nn, 8L, dd)), rep(NA_integer_, NN))
+    expect_equal(unname(.nth_dw_before(nn, dw, NA_integer_)), rep(NA_integer_, NN))
+    # corner cases
+    dd <- .limits("d")[1L]
+    expect_false(any(is.na(.nth_dw_after(nn, dw, dd))))
+    expect_true(all(is.na(.nth_dw_before(nn, dw, dd))))
+    dd <- .limits("d")[2L]
+    expect_true(all(is.na(.nth_dw_after(nn, dw, dd))))
+    expect_false(any(is.na(.nth_dw_before(nn, dw, dd))))
+})
+
